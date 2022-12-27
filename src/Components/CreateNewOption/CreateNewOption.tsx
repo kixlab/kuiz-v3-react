@@ -1,7 +1,7 @@
 import React from 'react';
 import "./CreateNewOption.scss";
 
-function CreateNewOption() {
+const CreateNewOption = () => {
     return (
             <div>
                 <h3>Create New Option</h3>

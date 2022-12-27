@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./LogIn.scss";
 
-function Login() {
+function LogIn() {
     return (
         <div>
             <h1 style={{textAlign:'center'}}>KUIZ</h1>
@@ -84,4 +84,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default LogIn;

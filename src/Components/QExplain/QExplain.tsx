@@ -1,7 +1,7 @@
 import React from 'react';
 import "./QExplain.scss";
 
-function QExplain(props:{type:string}) {
+const QExplain = (props:{type:string}) => {
     let label='';
 
     if (props.type=="Objective"){

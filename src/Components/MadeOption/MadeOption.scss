@@ -1,0 +1,49 @@
+.RowFlex {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    padding-bottom: 16px;
+}
+
+.Tag {
+    color:white;
+    font-size: 12px;
+    padding: 4px 8px 4px 8px;
+    border-radius: 6px;
+}
+
+#Answer {
+    background-color: rgb(30, 144, 30);
+}
+
+#Distractor {
+    background-color: rgb(220, 51, 51);
+}
+
+.QSymbol {
+    font-size: 18px;
+    font-weight: 600;
+    color: #919191;
+}
+
+#EditBtns {
+    justify-content:right;
+}
+
+#DeleteBtn {
+    font-weight: 500;
+    color: #858585;
+    cursor: pointer;
+}
+
+#MoveBtn {
+    font-weight: 500;
+    padding-left: 8px;
+    color: #1c548f;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#MoveBtn:hover,#DeleteBtn:hover {
+    text-decoration: underline;
+}
