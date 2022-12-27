@@ -3,9 +3,9 @@ import "./CreateNewOption.scss";
 
 function CreateNewOption() {
     return (
-            <div className='LabelBox'>
+            <div>
                 <h3>Create New Option</h3>
-                <div>
+                <div className='Toggles'>
                     <div id="Ans" className="ToggleBtn"><strong>Answer</strong></div>
                     <div id="Dist" className="ToggleBtn"><strong>Distractor</strong></div>
                 </div>

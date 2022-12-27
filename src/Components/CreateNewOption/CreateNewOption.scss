@@ -4,7 +4,6 @@ input[type=text] {
     border: 1px solid #bdbdbd;
     width: 100%;
     box-sizing: border-box;
-    margin-top: 16px;
     font-size: 16px;
 }
 input[type=text]::placeholder {
@@ -15,29 +14,8 @@ input[type=text]:focus {
     outline-color: #3d8add;
 }
 
-.CatBtn {
-    background-color: #e1e5eb;
-    margin-top: 16px;
-    padding: 4px 16px 4px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #3d8add;
-    font-size: 24px;
-}
-
-.CatBtn:hover {
-    background-color: #ced8e4;
-}
-
-#CatInput {
-    border:none;
-    width: 95%;
-    background: none;
-    margin: 0;
-}
-
-#CatInput:focus {
-    outline:none;
+.Toggles {
+    margin-bottom: 20px;
 }
 
 .ToggleBtn {
@@ -70,13 +48,38 @@ input[type=text]:focus {
     color: white;
 }
 
+.CatBtn {
+    background-color: #e1e5eb;
+    margin-top: 12px;
+    padding: 4px 16px 4px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #3d8add;
+    font-size: 24px;
+}
+
+.CatBtn:hover {
+    background-color: #ced8e4;
+}
+
+#CatInput {
+    border:none;
+    width: 95%;
+    background: none;
+    margin: 0;
+}
+
+#CatInput:focus {
+    outline:none;
+}
+
 .Categories {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     gap: 6px;
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .Category {

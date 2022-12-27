@@ -6,7 +6,7 @@ import "./DetailAndCreateOption.scss";
 
 function DetailAndCreateOption() {
     return (
-        <BoxShadow>
+        <QuestionBox>
             <QExplain type="Objective"/>
             <QExplain type="Explanation"/>
             <DividerLine/>
@@ -18,12 +18,12 @@ function DetailAndCreateOption() {
             </div>
             <DividerLine/>
             <CreateNewOption/>
-        </BoxShadow>
+        </QuestionBox>
     )
 }
 
-const BoxShadow = styled.div`
-    box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
+//QuestionBox is here!
+const QuestionBox = styled.div`
     border-radius: 8px;
     background-color: white;
     margin: 40px 0 40px 0;
