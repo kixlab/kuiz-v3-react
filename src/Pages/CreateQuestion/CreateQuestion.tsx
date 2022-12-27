@@ -3,9 +3,9 @@ import "./CreateQuestion.scss";
 
 function CreateQuestion() {
     return (
-            <div className='LabelBox'>
-                
-            </div>
+        <div className='LabelBox'>
+            
+        </div>
     )
 }
 

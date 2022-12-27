@@ -1,52 +1,65 @@
 .SideTab {
-    width: 300px;
-    height: 100vh;
-    font-size: x-large;
-    text-align: center;
-    background-color: white;
-    box-shadow: 0px 10px 16px rgba(40, 40, 40, 0.16);
-    padding-top: 60px;
-    box-sizing: border-box;
+    width: 100vw;
     position: fixed;
+    top:0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 30px 20px 30px;
+    background-color: #f7fafd;
+    box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
+    box-sizing: border-box;
+    z-index: 5;
+}
+
+#Logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3d8add;
 }
 
 .ProfileImg {
   background-image: '';
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 32px;
+  height: 32px;
   background-color: #f1f1f1;
-  margin: 30px auto 30px auto;
 }
 
-.NavBtn {
-  font-size: 18px;
-  padding: 20px 0 20px 0;
+.Menu {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  color: #212121;
+  align-items: center;
+  font-size: 14px;
+}
+
+.MenuBtn:hover {
   color: #3d8add;
-}
-
-.NavBtn:hover {
-  background-color: #f1f1f1;
   cursor: pointer;
 }
 
 @media (max-width: 599px) {
-    .SideTab {
-      width: 100vw;
-      height: auto;
-      font-size: x-small;
-      display: flex;
-      align-items: center;
-      box-shadow: none;
-      border-bottom: 1px solid #dbdbdb;
-      padding: 0px 20px 0px 20px;
-    }
+  .SideTab {
+    padding: 12px;
+  }
 
-    .ProfileImg{
-      display: none;
-    }
-
-    .NavBtn {
-      font-size: 14px;
-    }
+  #Logo {
+    font-size: 16px;
+  }
+  .Menu {
+    flex-direction: column;
+    font-size: 14px;
+    display: none;
+    padding-top: 48px;
+    padding-bottom: 20px;
+  }
+  .MenuBtn {
+    padding: 4px 0 4px 0;
+  }
+  .ProfileImg {
+    width: 28px;
+    height: 28px;
+  }
   }

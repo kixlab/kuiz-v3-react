@@ -6,14 +6,36 @@ html {
 
 .App {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
 }
 
 .Box {
-  width: calc(100vw - 400px);
+  width: 70vw;
   position: absolute;
-  right: 30px;
+  top: 80px;
+  margin: 0 auto 0 auto;
+  box-sizing: border-box;
 }
+
+button {
+  width: 100%;
+  height:48px;
+  padding: 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #3d8add;
+  color: white;
+  font-size: 16px;
+}
+button:hover{
+  background-color: #205e9f;
+  cursor: pointer;
+}
+button:disabled{
+  background-color: #bdbdbd;
+}
+
+
 
 @media (max-width: 599px) {
   .App {
@@ -23,6 +45,6 @@ html {
   .Box {
     width: calc(100vw - 40px);
     margin: 0 20px 0 20px;
-    padding-top: 60px;
-}
+    top: 50px;
+  }
 }
