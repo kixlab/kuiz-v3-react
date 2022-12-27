@@ -13,9 +13,9 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   return (
     <div className="App">
-      <Gnb loginState={isLoggedIn}/>
-      <div className='Box'>
       <Router>
+        <Gnb loginState={isLoggedIn}/>
+        <div className='Box'>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LogIn />} />
@@ -24,8 +24,8 @@ function App() {
           <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
           <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4}/>}/>
         </Routes>
+        </div>
       </Router>
-      </div>
     </div>
   );
 }
