@@ -1,24 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import './App.scss';
+import Gnb from './Components/Gnb/Gnb';
+import Login from './Pages/LogIn/LogIn';
+import Enroll from './Pages/Enroll/Enroll';
+import MainPage from './Pages/MainPage/MainPage';
+import DetailAndCreateOption from './Pages/DetailAndCreateOption/DetailAndCreateOption';
+import CreateQuestion from './Pages/CreateQuestion/CreateQuestion';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Gnb loginState={isLoggedIn}/>
+      <div className='Box'>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/enroll" element={<Enroll />}/>
+          <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
+          <Route path="/createQuestion" element={<CreateQuestion />}/>
+        </Routes>
+      </Router>
+      </div>
     </div>
   );
 }

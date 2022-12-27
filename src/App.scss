@@ -1,0 +1,28 @@
+html {
+  background-color: #e6eaef;
+  // font-family: 'Courier New', Courier, monospace;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.App {
+  display: flex;
+  flex-direction: row;
+}
+
+.Box {
+  width: calc(100vw - 400px);
+  position: absolute;
+  right: 30px;
+}
+
+@media (max-width: 599px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .Box {
+    width: calc(100vw - 40px);
+    margin: 0 20px 0 20px;
+    padding-top: 60px;
+}
+}

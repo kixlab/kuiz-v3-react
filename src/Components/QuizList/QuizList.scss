@@ -1,0 +1,34 @@
+.QuizList {
+    display: grid;
+    grid-template-columns: auto 100px 140px;
+    place-items: center;
+    text-align: center;
+    background-color: white;
+}
+
+.item {
+    padding: 0 16px 0 16px;
+}
+
+#Header {
+    background-color: #3d8add;
+    color: white;
+    border-radius: 8px 8px 0 0;
+    margin-top: 40px;
+    height: 54px;
+}
+
+#Content {
+    padding: 16px 0 16px 0;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+#Content:hover {
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+#End {
+    border-radius: 0 0 8px 8px;
+    padding: 16px 0 16px 0;
+}

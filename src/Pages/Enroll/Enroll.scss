@@ -1,0 +1,42 @@
+#CodeInputBox {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 100px 60px 30px 60px;
+    box-sizing: border-box;
+    font-size: 18px;
+}
+
+#ClassCodeInput {
+    width: 200px;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #cdcdcd;
+    font-size: 16px;
+}
+
+#ClassCodeInput::placeholder{
+    color: #bdbdbd;
+}
+
+#ClassCodeInput:focus{
+    border: 1px solid #212121;
+}
+
+button {
+    width: 234px;
+    padding: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #3d8add;
+    color: white;
+    font-size: 16px;
+}
+button:hover{
+    background-color: #205e9f;
+    cursor: pointer;
+}
+button:disabled{
+    background-color: #bdbdbd;
+}

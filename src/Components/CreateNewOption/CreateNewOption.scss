@@ -1,0 +1,97 @@
+input[type=text] {
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #bdbdbd;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 16px;
+    font-size: 16px;
+}
+input[type=text]::placeholder {
+    color: #b7bfc7;
+}
+
+input[type=text]:focus {
+    outline-color: #3d8add;
+}
+
+.CatBtn {
+    background-color: #e1e5eb;
+    margin-top: 16px;
+    padding: 4px 16px 4px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #3d8add;
+    font-size: 24px;
+}
+
+.CatBtn:hover {
+    background-color: #ced8e4;
+}
+
+#CatInput {
+    border:none;
+    width: 95%;
+    background: none;
+    margin: 0;
+}
+
+#CatInput:focus {
+    outline:none;
+}
+
+.ToggleBtn {
+    display: inline-block;
+    padding: 8px 12px 8px 12px;
+    text-align: center;
+    border-radius: 20px;
+    border: 2px solid #222;
+    cursor: pointer;
+}
+
+#Ans {
+    border-color: rgb(30, 144, 30);
+    color: rgb(10, 80, 10);
+    margin-right: 8px;
+}
+
+#Ans:checked {
+    background-color: rgb(30, 144, 30);
+    color: white;
+}
+
+#Dist {
+    border-color: rgb(220, 51, 51);
+    color: rgb(205, 0, 0);
+}
+
+#Dist:active {
+    background-color: rgb(220, 51, 51);
+    color: white;
+}
+
+.Categories {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 6px;
+    font-size: 14px;
+    margin-top: 12px;
+}
+
+.Category {
+    padding: 8px 16px 10px 16px;
+    border-radius: 20px;
+    background-color: #e1e5eb;
+    color: #212121;
+    cursor: pointer;
+}
+
+.Category:hover {
+    background-color: #ced8e4;
+}
+
+#SubmitBtn {
+    margin-top: 20px;
+    width: 100%;
+}
