@@ -1,25 +1,35 @@
 .QuizList {
     display: grid;
     grid-template-columns: auto 100px 140px;
-    place-items: center;
-    text-align: center;
     background-color: white;
+    place-items: left;
+    padding: 20px;
+    // height: 64px;
 }
 
 .item {
-    padding: 0 16px 0 16px;
+    padding-right: 20px;
+    overflow: hidden;
+    white-space: normal;
+    line-height: 1.3;
+    max-height: 2.6em;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+
 }
 
 #Header {
+    height: auto;
     background-color: #3d8add;
     color: white;
     border-radius: 8px 8px 0 0;
     margin-top: 40px;
-    height: 54px;
 }
 
 #Content {
-    padding: 16px 0 16px 0;
     border-bottom: 1px solid #dbdbdb;
 }
 
@@ -30,5 +40,4 @@
 
 #End {
     border-radius: 0 0 8px 8px;
-    padding: 16px 0 16px 0;
 }
