@@ -10,7 +10,7 @@ import CreateQuestion from './Pages/CreateQuestion/CreateQuestion';
 import MyPage from './Pages/MyPage/MyPage';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   useEffect (() => {
     console.log(isLoggedIn);
   }, [isLoggedIn])

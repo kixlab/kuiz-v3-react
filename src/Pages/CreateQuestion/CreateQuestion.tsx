@@ -6,12 +6,16 @@ import TextEditor from '../../Components/TextEditor/TextEditor';
 import "./CreateQuestion.scss";
 
 function CreateQuestion() {
+    function getCategory(cat:string) {
+        console.log(cat);
+    }
+
     return (
         <CreateQBox>
             <div>
                 <div className='QuestionLabel'>Learning Objective</div>
                 {/* <input type='text' placeholder='Write down the objective'/> */}
-                <CategoryInput />
+                <CategoryInput getCategory={getCategory}/>
             </div>
             <TextEditor title="Question Stem"/>
             <TextEditor title="Explanation"/>

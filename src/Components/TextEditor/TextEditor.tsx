@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './TextEditor.scss';
 
@@ -9,6 +10,7 @@ const TextEditor = (props:{title:string}) => {
     const [editorState, setEditorState] = useState<EditorState>(() => EditorState.createEmpty());
     const onEditorStateChange = (editorState:EditorState) => {
       setEditorState(editorState);
+      console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
     }
     return (
       <div>

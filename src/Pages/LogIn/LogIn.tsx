@@ -22,17 +22,17 @@ function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
     }
 
     //demo로 일단 대충 로그인 된 척 만든 코드
-    const preLogin = (res:any) => {
-        setUserInfo({...userInfo,
-            email:"cjswo07@gmail.com",
-            name:"soyeong"
-        })
-        console.log(res, userInfo)
-        if (res.error=="popup_closed_by_user" && props.isLoggedIn==false){
-            props.login(props.isLoggedIn);
-            navigate('/');
-        }
-    }
+    // const preLogin = (res:any) => {
+    //     setUserInfo({...userInfo,
+    //         email:"cjswo07@gmail.com",
+    //         name:"soyeong"
+    //     })
+    //     console.log(res, userInfo)
+    //     if (res.error=="popup_closed_by_user" && props.isLoggedIn==false){
+    //         props.login(props.isLoggedIn);
+    //         navigate('/');
+    //     }
+    // }
 
     //TODO: 토큰 받기
 
@@ -119,7 +119,7 @@ function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
                 clientId={googleClientId}
                 buttonText="Sign in with Google"
                 onSuccess={res => onLoginSuccess(res)}
-                onFailure={res => preLogin(res)}
+                // onFailure={res => preLogin(res)}
             />
         </div>
     )
