@@ -1,4 +1,5 @@
 import React from 'react';
+import CategoryInput from '../CategoryInput/CategoryInput';
 import "./CreateNewOption.scss";
 
 const CreateNewOption = () => {
@@ -11,11 +12,7 @@ const CreateNewOption = () => {
                 </div>
                 <div>
                     <input type="text" placeholder='Suggest an answer or distractor for this question'></input>
-                    <div className="CatBtn">+<input id="CatInput" type="text" placeholder='Select categories for your option or add your own'/></div>
-                    <div className='Categories'>
-                        <div className='Category'>Common misconception</div>
-                        <div className='Category'>Form similar to answer</div>
-                    </div>
+                    <CategoryInput />
                     <button id="SubmitBtn" disabled>Submit</button>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import CategoryInput from '../../Components/CategoryInput/CategoryInput';
 import EditorContainer from '../../Components/TextEditor/TextEditor';
 import TextEditor from '../../Components/TextEditor/TextEditor';
 import "./CreateQuestion.scss";
@@ -9,7 +10,8 @@ function CreateQuestion() {
         <CreateQBox>
             <div>
                 <div className='QuestionLabel'>Learning Objective</div>
-                <input type='text' placeholder='Write down the objective'/>
+                {/* <input type='text' placeholder='Write down the objective'/> */}
+                <CategoryInput />
             </div>
             <TextEditor title="Question Stem"/>
             <TextEditor title="Explanation"/>

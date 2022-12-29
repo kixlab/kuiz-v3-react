@@ -8,7 +8,7 @@ const Gnb = (props: {loginState:boolean}) => {
     return (
         <div className='SideTab'>
             <div id="Logo" onClick={() => navigate("/")}>📖KUIZ</div>
-            {props.loginState && <>
+            {props.loginState==true && <>
                 <div className='Menu'>
                     <div className='MenuBtn' onClick={() => navigate("/createQuestion")}>Create Question</div>
                     <div className='MenuBtn' onClick={() => navigate("/question/createOption")}>Create Options</div>
