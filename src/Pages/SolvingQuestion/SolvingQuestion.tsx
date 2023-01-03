@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export function SolvingQuestion() {
     //from DB (this is an example options) -> should edit
@@ -8,6 +10,9 @@ export function SolvingQuestion() {
 
     return (
         <QuestionBox>
+            <ReturnBtn onClick={()=>console.log("back to the quizList")}>
+                <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
+			</ReturnBtn>
             <Label>Q. What is the question?</Label>
             <div>
                 {options.map((e,idx) => {
@@ -18,8 +23,8 @@ export function SolvingQuestion() {
             </div>
             <BtnDisplay>
                 <FillBtn>Submit</FillBtn>
-                <StrokeBtn>Button2</StrokeBtn>
-                <StrokeBtn>Button3</StrokeBtn>
+                <StrokeBtn>Shuffle Answers</StrokeBtn>
+                <StrokeBtn>Report Question Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
     )
@@ -38,11 +43,20 @@ const QuestionBox = styled.div`
     }
 `
 
+const ReturnBtn = styled.div`
+    cursor: pointer;
+    font-weight: 500;
+    color: #616161;
+    :hover {
+        color: #919191;
+    }
+`
+
 const Label = styled.div`
     font-size: 20px;
     font-weight: 700;
     line-height: 1.4;
-    padding: 8px 0 16px;
+    padding: 8px 0 0 0;
     @media (max-width: 599px) {
         font-size: 16px;
         padding: 0px;
@@ -86,7 +100,7 @@ const FillBtn = styled.button`
 const StrokeBtn = styled.button`
     color: #212121;
     background-color: #fff;
-    border: 1px solid #2C3B44;
+    border: 1px solid #616161;
     :hover {
         background-color: #E9EEF4;
     }
