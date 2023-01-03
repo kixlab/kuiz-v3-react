@@ -1,23 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function SolvingQuestion() {
-    //from DB (this is an example options) -> should edit
-    const optiondb: string[] = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
-    const [options, setOptions] = useState<string[]>(optiondb);
-    const [selectedOption, setSelectedOption] = useState<string>(optiondb[0]);
+    const navigate = useNavigate();
+    //SAMPLE OPTION LIST
+    const sampleOptions: Array<string> = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
+    const [qInfo, setQInfo] = useState<Object>();
+    const [options, setOptions] = useState<Array<string>>(sampleOptions);
+    const [selectedOption, setSelectedOption] = useState<string>(sampleOptions[0]);
+    const ansRef = useRef();
 
-    function shuffleOptions() {
-        const tmpOptions = [...options];
-        tmpOptions.sort(() => Math.random()-0.5)
-        setOptions(tmpOptions);
+    /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
+    const qid = useParams().id;
+	const cid = useParams().cid;
+
+    function shuffle(arr:Array<any>) {
+        return [...arr].sort(() => 0.5 - Math.random())
     }
+
+    function getMultipleRandom(arr: Array<any>, num: number) {
+		const shuffled = shuffle(arr);
+		return shuffled.slice(0, num);
+	}
+
+    function getShuffledOptions() {
+        axios.get(`${process.env.REACT_APP_BACK_END}/question/detail/load?qid=` + qid).then((res) => {
+			axios
+				.get(`${process.env.REACT_APP_BACK_END}/question/load/cluster?qid=` + qid)
+				.then((res2) => {
+					const cluster = res2.data.cluster;
+					const ans = cluster.filter((c:any) => c.representative.is_answer).map((e:any) => e.representative);
+					const dis = cluster.filter((c:any) => !c.representative.is_answer).map((e:any) => e.representative);
+					const ansList = getMultipleRandom(ans, 1);
+					const disList = getMultipleRandom(dis, 3);
+
+                    ansRef.current = ans;
+					setOptions(shuffle(ansList.concat(disList)));
+				})
+				.catch((err) => console.log(err));
+            setQInfo(res.data.qinfo);
+		});
+        setSelectedOption('');
+    }
+    */
 
     return (
         <QuestionBox>
-            <ReturnBtn onClick={()=>console.log("back to the quizList")}>
+            <ReturnBtn onClick={()=>navigate('/')}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
 			</ReturnBtn>
             <Label>Q. What is the question?</Label>
@@ -30,7 +63,8 @@ export function SolvingQuestion() {
             </div>
             <BtnDisplay>
                 <FillBtn>Submit</FillBtn>
-                <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
+                {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
+                <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn>
                 <StrokeBtn>Report Question Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
@@ -107,7 +141,7 @@ const FillBtn = styled.button`
 const StrokeBtn = styled.button`
     color: #212121;
     background-color: #fff;
-    border: 1px solid #616161;
+    border: 1px solid #858585;
     :hover {
         background-color: #E9EEF4;
     }
