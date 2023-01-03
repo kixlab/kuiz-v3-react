@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export function SolvingQuestion() {
     //from DB (this is an example options) -> should edit
-    const options: string[] = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
-    const [selectedOption, setSelectedOption] = useState<number>(0);
+    const optiondb: string[] = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
+    const [options, setOptions] = useState<string[]>(optiondb);
+    const [selectedOption, setSelectedOption] = useState<string>(optiondb[0]);
+
+    function shuffleOptions() {
+        const tmpOptions = [...options];
+        tmpOptions.sort(() => Math.random()-0.5)
+        setOptions(tmpOptions);
+    }
 
     return (
         <QuestionBox>
@@ -17,13 +24,13 @@ export function SolvingQuestion() {
             <div>
                 {options.map((e,idx) => {
                     return (
-                        <Option onClick={()=> setSelectedOption(idx)} selected={selectedOption} keyNum={idx}>{e}</Option>
+                        <Option onClick={()=> setSelectedOption(e)} selected={selectedOption} val={e} key={idx}>{e}</Option>
                     )
                 })}
             </div>
             <BtnDisplay>
                 <FillBtn>Submit</FillBtn>
-                <StrokeBtn>Shuffle Answers</StrokeBtn>
+                <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
                 <StrokeBtn>Report Question Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
@@ -76,8 +83,8 @@ const Option = styled.div`
     @media (max-width: 599px) {
         font-size: 13px;
     }
-    ${({ keyNum, selected } : {keyNum: number, selected: number}) => {
-        return keyNum==selected ? 
+    ${({ val, selected } : {val: string, selected: string}) => {
+        return val==selected ? 
             `border-color: #3d8add;
             color: #3372B6;
             font-weight: 500;
