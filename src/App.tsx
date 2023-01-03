@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import './App.scss';
-import Gnb from './Components/Gnb/Gnb';
+import { Gnb } from './Components/Gnb/Gnb';
 import LogIn from './Pages/LogIn/LogIn';
 import Enroll from './Pages/Enroll/Enroll';
 import MainPage from './Pages/MainPage/MainPage';
