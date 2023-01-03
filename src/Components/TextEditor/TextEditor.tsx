@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import styled from '@emotion/styled';
+import { useState } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import './TextEditor.scss';
 
-const TextEditor = (props:{title:string}) => {
+export const TextEditor = (props:{title:string}) => {
   
     const [editorState, setEditorState] = useState<EditorState>(() => EditorState.createEmpty());
     const onEditorStateChange = (editorState:EditorState) => {
@@ -14,7 +14,7 @@ const TextEditor = (props:{title:string}) => {
     }
     return (
       <div>
-        <div className="QuestionLabel">{props.title}</div>
+        <QuestionLabel>{props.title}</QuestionLabel>
         <Editor
           editorState={editorState}
           editorStyle={editorStyle}
@@ -28,11 +28,16 @@ const TextEditor = (props:{title:string}) => {
     );
   }
 
-  const editorStyle = {
-    border: '1px solid #dbdbdb',
-    padding: '16px',
-    borderRadius: '2px',
-    height: '200px',
-  };
+const editorStyle = {
+  border: '1px solid #dbdbdb',
+  padding: '16px',
+  borderRadius: '2px',
+  height: '200px',
+};
 
-export default TextEditor;
+const QuestionLabel = styled.div`
+  color: #3d8add;
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 12px;
+`
