@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CreateNewOption } from '../../Components/CreateNewOption/CreateNewOption';
-import QExplain from '../../Components/QExplain/QExplain';
+import { QExplain } from '../../Components/QExplain/QExplain';
 import "./DetailAndCreateOption.scss";
 
 function DetailAndCreateOption() {
