@@ -57,7 +57,11 @@ const CatBox = styled.div`
 `
 
 const CatInput = styled.input`
-    border:none;
+    padding: 16px;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
     outline: none;
     background: none;
     margin: 0;
