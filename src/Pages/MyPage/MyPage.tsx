@@ -1,6 +1,6 @@
 import React from 'react';
 import { MadeOption } from '../../Components/MadeOption/MadeOption';
-import MadeStem from '../../Components/MadeStem/MadeStem';
+import { MadeStem } from '../../Components/MadeStem/MadeStem';
 import QuizListContent from '../../Components/QuizList/QuizListContent';
 import QuizListHeader from '../../Components/QuizList/QuizListHeader';
 import "./MyPage.scss";
