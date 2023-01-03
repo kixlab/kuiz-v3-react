@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CategoryInput from '../../Components/CategoryInput/CategoryInput';
+import { CategoryInput } from '../../Components/CategoryInput/CategoryInput';
 import EditorContainer from '../../Components/TextEditor/TextEditor';
 import TextEditor from '../../Components/TextEditor/TextEditor';
 import "./CreateQuestion.scss";

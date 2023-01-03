@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, ComponentProps } from 'react';
-import "./CategoryInput.scss";
+import { useEffect, useRef, useState } from 'react';
+import styled from '@emotion/styled';
 
-const CategoryInput = (props:{ getCategory: Function }) => {
+export const CategoryInput = (props:{ getCategory: Function }) => {
     const inputRef = useRef<string>("");
     //추후에 DB로부터 받아올 예정..? 받아와야하나?
     const [catList, setCatList] = useState<string[]>(["Common misconception", "Form similar to answer"]);
@@ -21,25 +21,90 @@ const CategoryInput = (props:{ getCategory: Function }) => {
 
     return (
             <div>
-                <div className="CatBox">+
-                    <input onChange={(e) => inputRef.current = e.target.value}
-                        id="CatInput"
+                <CatBox>+
+                    <CatInput style={{border: 'none'}} onChange={(e) => inputRef.current = e.target.value}
                         type="text"
                         placeholder='Select categories for your option or add your own'/>
-                    <div onClick={addCategory} id="AddBtn">Add</div>
-                </div>
-                <div className='Categories'>
+                    <AddBtn onClick={addCategory} >Add</AddBtn>
+                </CatBox>
+                <Categories>
                     {catList.map((e,idx) => {
                         return (
                             <div key={idx} 
                                 onClick={() => {setSelectedCat(e); props.getCategory(e);}} 
-                                className={e===selectedCat ? 'CategoryAct' : 'Category'}
-                            >{e}</div>
+                            >
+                                {e===selectedCat ? <CategoryAct>{e}</CategoryAct>: <Category>{e}</Category>}
+                            </div>
                         )
                     })}
-                </div>
+                </Categories>
             </div>
     )
 }
 
-export default CategoryInput;
+
+const CatBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #e1e5eb;
+    margin-top: 12px;
+    padding: 4px 16px 4px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+`
+
+const CatInput = styled.input`
+    border:none;
+    outline: none;
+    background: none;
+    margin: 0;
+    &:focus {
+        border:none;
+        outline:none;
+    }
+`
+
+const AddBtn = styled.div`
+    color: #3d8add;
+    border-bottom: 1px solid rgba(0,0,0,0);
+    cursor: pointer;
+    &:hover{
+        color: #2062aa;
+        border-color: #2062aa;
+    }
+`
+
+const Categories = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 6px;
+    font-size: 14px;
+    margin-top: 10px;
+`
+
+
+const Category = styled.div`
+    padding: 8px 16px 10px 16px;
+    border-radius: 20px;
+    background-color: #e1e5eb;
+    color: #212121;
+    cursor: pointer;
+    &:hover {
+        background-color: #ced8e4;
+    }
+`
+const CategoryAct = styled.div`
+    padding: 8px 16px 10px 16px;
+    border-radius: 20px;
+    background-color: #e1e5eb;
+    color: #212121;
+    cursor: pointer;
+    background-color: #b9c6d6;
+    &:hover {
+        background-color: #ced8e4;
+    }
+`

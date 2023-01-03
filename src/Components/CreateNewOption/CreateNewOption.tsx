@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CategoryInput from '../CategoryInput/CategoryInput';
+import { CategoryInput } from '../CategoryInput/CategoryInput';
 import "./CreateNewOption.scss";
 
 const CreateNewOption = () => {
