@@ -28,3 +28,6 @@ jobs:
 
       - name: type check
         run: yarn type-check
+
+      - name: lint
+        run: yarn lint
