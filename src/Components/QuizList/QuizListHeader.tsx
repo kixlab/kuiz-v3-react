@@ -1,14 +1,27 @@
-import React from 'react';
-import "./QuizList.scss";
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
-const QuizListHeader = () => {
+export const QuizListHeader = () => {
     return (
-        <div id="Header" className="QuizList">
+        <QuizList id="Header">
             <div>Question</div>
             <div># of Options</div>
             <div>Last Updated</div>
-        </div>
+        </QuizList>
     )
 }
 
-export default QuizListHeader;
+const QuizList = styled.div`
+    display: grid;
+    grid-template-columns: auto 100px 140px;
+    background-color: white;
+    place-items: left;
+    padding: 20px;
+    ${props=>props.id === 'Header' && css`
+        height: auto;
+        background-color: #3d8add;
+        color: white;
+        border-radius: 8px 8px 0 0;
+        margin-top: 40px;
+    `}
+`

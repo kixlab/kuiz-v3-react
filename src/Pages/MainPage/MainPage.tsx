@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import QuizListContent from '../../Components/QuizList/QuizListContent';
-import QuizListHeader from '../../Components/QuizList/QuizListHeader';
+import { QuizListContent } from '../../Components/QuizList/QuizListContent';
+import { QuizListHeader } from '../../Components/QuizList/QuizListHeader';
 import "./MainPage.scss";
 
 function MainPage() {
