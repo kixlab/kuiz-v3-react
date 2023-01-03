@@ -12,7 +12,8 @@ export function SolvingQuestion() {
     const [qInfo, setQInfo] = useState<Object>();
     const [options, setOptions] = useState<Array<string>>(sampleOptions);
     const [selectedOption, setSelectedOption] = useState<string>(sampleOptions[0]);
-    const ansRef = useRef();
+    const [isAnswered, setIsAnswered] = useState<boolean>(false);
+    const ansRef = useRef<string>('');
 
     /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
     const qid = useParams().id;
@@ -48,6 +49,16 @@ export function SolvingQuestion() {
     }
     */
 
+    function submit() {
+        //DEMO VALUE FOR SIMULATING
+        ansRef.current = 'Answer';
+        if (selectedOption == ansRef.current) {
+            alert("CORRECT!");
+            setIsAnswered(true);
+        }
+        else console.log("WRONG")
+    }
+
     return (
         <QuestionBox>
             <ReturnBtn onClick={()=>navigate('/')}>
@@ -57,18 +68,25 @@ export function SolvingQuestion() {
             <div>
                 {options.map((e,idx) => {
                     return (
-                        <Option onClick={()=> setSelectedOption(e)} selected={selectedOption} val={e} key={idx}>{e}</Option>
-                    )
-                })}
+                        <Option onClick={()=> isAnswered==false && setSelectedOption(e)} state={isAnswered} selected={selectedOption} val={e} key={idx}>{e}</Option>
+                    )})
+                }
             </div>
             <BtnDisplay>
-                <FillBtn>Submit</FillBtn>
-                {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
-                <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn>
+                {isAnswered==false ? <>
+                    <FillBtn onClick={submit}>Submit</FillBtn>
+                    <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn> {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
+                </> : <FillBtn>Add Option</FillBtn>}
                 <StrokeBtn>Report Question Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
     )
+}
+
+interface OptionProps {
+    state: boolean, 
+    val: string,
+    selected: string,
 }
 
 const QuestionBox = styled.div`
@@ -104,21 +122,24 @@ const Label = styled.div`
     }
 `
 
-const Option = styled.div`
+const Option = styled.div<OptionProps>`
     background-color: #E9EEF4;
     padding: 16px;
     margin-bottom: 8px;
     border-radius: 6px;
-    cursor: pointer;
     border: 1.5px solid rgba(0,0,0,0);
     :hover {
-        background-color: #D4E4F3;
+        ${(props) => {
+            return props.state==false ? 
+                `background-color: #D4E4F3;
+                cursor: pointer;` : null;
+        }}
     }
     @media (max-width: 599px) {
         font-size: 13px;
     }
-    ${({ val, selected } : {val: string, selected: string}) => {
-        return val==selected ? 
+    ${(props) => {
+        return props.val==props.selected ? 
             `border-color: #3d8add;
             color: #3372B6;
             font-weight: 500;
