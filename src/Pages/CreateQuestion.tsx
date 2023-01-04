@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { CategoryInput } from '../../Components/CategoryInput/CategoryInput';
-import { TextEditor } from '../../Components/TextEditor/TextEditor';
+import { CategoryInput } from '../Components/CategoryInput';
+import { TextEditor } from '../Components/TextEditor';
 
 export function CreateQuestion() {
     function getCategory(cat:string) {

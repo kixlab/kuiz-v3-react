@@ -1,18 +1,22 @@
 import './App.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import { Gnb } from './Components/Gnb/Gnb';
-import { LogIn } from './Pages/LogIn/LogIn';
-import { Enroll } from './Pages/Enroll/Enroll';
-import { MainPage } from './Pages/MainPage/MainPage';
-import { DetailAndCreateOption } from './Pages/DetailAndCreateOption/DetailAndCreateOption';
-import { CreateQuestion } from './Pages/CreateQuestion/CreateQuestion';
-import { MyPage } from './Pages/MyPage/MyPage';
-import { SolvingQuestion } from './Pages/SolvingQuestion/SolvingQuestion';
+import { Gnb } from './Components/Gnb';
+import { LogIn } from './Pages/LogIn';
+import { Enroll } from './Pages/Enroll';
+import { MainPage } from './Pages/MainPage';
+import { DetailAndCreateOption } from './Pages/DetailAndCreateOption';
+import { CreateQuestion } from './Pages/CreateQuestion';
+import { MyPage } from './Pages/MyPage';
+import { SolvingQuestion } from './Pages/SolvingQuestion';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
-  
+
+  useEffect(() => {
+    console.log(isLoggedIn)
+    setIsLoggedIn(true);
+  }, [])
 
   return (
     <div className='App'>

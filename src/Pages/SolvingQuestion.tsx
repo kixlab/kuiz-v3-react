@@ -9,15 +9,15 @@ export function SolvingQuestion() {
     const navigate = useNavigate();
     //SAMPLE OPTION LIST
     const sampleOptions: Array<string> = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
-    const [qInfo, setQInfo] = useState<Object>();
+    // const [qInfo, setQInfo] = useState<Object>();
     const [options, setOptions] = useState<Array<string>>(sampleOptions);
     const [selectedOption, setSelectedOption] = useState<string>('');
     const [isAnswered, setIsAnswered] = useState<boolean>(false);
     const ansRef = useRef<string>('');
 
-    /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
     const qid = useParams().id;
 	const cid = useParams().cid;
+    /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
 
     function shuffle(arr:Array<any>) {
         return [...arr].sort(() => 0.5 - Math.random())

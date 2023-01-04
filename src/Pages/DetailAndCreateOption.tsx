@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { CreateNewOption } from '../../Components/CreateNewOption/CreateNewOption';
-import { QExplain } from '../../Components/QExplain/QExplain';
+import { CreateNewOption } from '../Components/CreateNewOption';
+import { QExplain } from '../Components/QExplain';
 
 export function DetailAndCreateOption() {
     return (

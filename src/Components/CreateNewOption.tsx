@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CategoryInput } from '../CategoryInput/CategoryInput';
+import { CategoryInput } from './CategoryInput';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
