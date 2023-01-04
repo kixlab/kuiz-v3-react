@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
-import "./Enroll.scss";
+import styled from '@emotion/styled';
 
-function Enroll() {
+export function Enroll() {
     return (
-        <div id="CodeInputBox">
+        <CodeInputBox>
             <strong>Class code</strong>
-            <input type="text" id="ClassCodeInput" placeholder='Enter code'></input>
-            <button id="EnrollBtn">Enter</button>
-        </div>
+            <ClassCodeInput type="text" placeholder='Enter code' />
+            <EnrollBtn>Enter</EnrollBtn>
+        </CodeInputBox>
     )
 }
 
-export default Enroll;
+const CodeInputBox = styled.div`
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 100px 60px 30px 60px;
+    box-sizing: border-box;
+    font-size: 18px;
+`
+
+const ClassCodeInput = styled.input`
+    width: 234px;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #cdcdcd;
+    font-size: 16px;
+    &:placeholder{
+        color: #bdbdbd;
+    }
+    &:focus{
+        outline: none;
+        border: 1px solid #212121;
+    }
+`
+
+const EnrollBtn = styled.button`
+    width: 234px;
+`

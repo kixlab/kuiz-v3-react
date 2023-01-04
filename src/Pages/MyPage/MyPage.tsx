@@ -1,29 +1,28 @@
-import React from 'react';
+import styled from '@emotion/styled';
 import { MadeOption } from '../../Components/MadeOption/MadeOption';
 import { MadeStem } from '../../Components/MadeStem/MadeStem';
 import { QuizListContent } from '../../Components/QuizList/QuizListContent';
 import { QuizListHeader } from '../../Components/QuizList/QuizListHeader';
-import "./MyPage.scss";
 
-function MyPage(props:{stemNum:number, optionNum:number}) {
+export function MyPage(props:{stemNum:number, optionNum:number}) {
     return (
         <div>
             <div>
-                <div className='DataLabel'><div style={{color:'#212121'}}>Created Question Stems</div>{props.stemNum}</div>
-                <div className='MadeLists'>
+                <DataLabel><div style={{color:'#212121'}}>Created Question Stems</div>{props.stemNum}</DataLabel>
+                <MadeLists>
                     <MadeStem />
                     <MadeStem />
                     <MadeStem />
-                </div>
+                </MadeLists>
             </div>
             <div>
-                <div className='DataLabel'><div style={{color:'#212121'}}>Created Options</div>{props.optionNum}</div>
-                <div className='MadeLists'>
+                <DataLabel><div style={{color:'#212121'}}>Created Options</div>{props.optionNum}</DataLabel>
+                <MadeLists>
                     <MadeOption optionType='Distractor'/>
                     <MadeOption optionType='Answer'/>
                     <MadeOption optionType='Distractor'/>
                     <MadeOption optionType='Distractor'/>
-                </div>
+                </MadeLists>
             </div>
             <button>Log Out</button>
         </div>
@@ -31,5 +30,17 @@ function MyPage(props:{stemNum:number, optionNum:number}) {
     )
 }
 
+const MadeLists = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+`
 
-export default MyPage;
+const DataLabel = styled.div`
+    color: #1f74ce;
+    font-weight: 700;
+    padding: 30px 0 16px;
+    display: flex;
+    gap: 10px;
+`

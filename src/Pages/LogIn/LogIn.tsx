@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
-import "./LogIn.scss";
+import styled from '@emotion/styled';
 
-function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
+export function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
     const navigate = useNavigate();
 
     let googleClientId:string = process.env.REACT_APP_CLIENT_ID||"";
@@ -40,7 +40,7 @@ function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
     return (
         <div>
             <h1 style={{textAlign:'center'}}>KUIZ</h1>
-            <div className='IntroBox'>
+            <IntroBox>
                 <div>
                     <strong>KOR</strong>
                     <br />
@@ -113,7 +113,7 @@ function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
                     <br />
                     Thank you.
                 </div>
-            </div>
+            </IntroBox>
             <button style={{padding:8, marginTop:20}}>Google Login</button>
             <GoogleLogin 
                 clientId={googleClientId}
@@ -125,4 +125,12 @@ function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
     )
 }
 
-export default LogIn;
+const IntroBox = styled.div`
+    border-radius: 8px;
+    background-color: white;
+    padding: 30px;
+    box-sizing: border-box;
+    @media (max-width:599px) {
+        box-sizing: border-box;
+    }
+`
