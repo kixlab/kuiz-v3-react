@@ -1,5 +1,5 @@
 import './App.scss';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { Gnb } from './Components/Gnb/Gnb';
 import { LogIn } from './Pages/LogIn/LogIn';
@@ -12,10 +12,10 @@ import { SolvingQuestion } from './Pages/SolvingQuestion/SolvingQuestion';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
-
-  useEffect(() => {
-    console.log(isLoggedIn)
-  }, [isLoggedIn])
+  
+  function login(state:boolean) {
+    setIsLoggedIn(!state);
+  }
 
   return (
     <div className='App'>
