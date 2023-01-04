@@ -5,7 +5,7 @@ export const Gnb = (props: {loginState:boolean}) => {
     const navigate = useNavigate();
 
     return (
-        <NavTab>
+        <SideTab className='SideTab'>
             <Logo onClick={() => navigate("/")}>📖KUIZ</Logo>
             {props.loginState==true && <>
                 <Menu>
@@ -17,11 +17,11 @@ export const Gnb = (props: {loginState:boolean}) => {
                 <ProfileImg onClick={() => navigate("/login")}></ProfileImg>
             </>
             }
-        </NavTab>
+        </SideTab>
     )
 }
 
-const NavTab = styled.div`
+const SideTab = styled.div`
     width: 100vw;
     height: 60px;
     position: fixed;
