@@ -13,9 +13,6 @@ import { SolvingQuestion } from './Pages/SolvingQuestion/SolvingQuestion';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
   
-  function login(state:boolean) {
-    setIsLoggedIn(!state);
-  }
 
   return (
     <div className='App'>
@@ -25,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/solve" element={<SolvingQuestion />} />
-          <Route path="/login" element={<LogIn isLoggedIn={isLoggedIn} login={login}/>} />
+          <Route path="/login" element={<LogIn />} />
           <Route path="/enroll" element={<Enroll />}/>
           <Route path="/createQuestion" element={<CreateQuestion />}/>
           <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
