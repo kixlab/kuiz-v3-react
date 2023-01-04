@@ -3,7 +3,7 @@ import GoogleLogin from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-export function LogIn() {
+export function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
   const googleClientId: string = process.env.REACT_APP_CLIENT_ID || ''
   const [userInfo, setUserInfo] = useState({
     email: '',
@@ -15,19 +15,6 @@ export function LogIn() {
     setUserInfo({ ...userInfo, email: res.profileObj.email, name: res.profileObj.name })
     console.log(userInfo)
   }
-
-  //demo로 일단 대충 로그인 된 척 만든 코드
-  // const preLogin = (res:any) => {
-  //     setUserInfo({...userInfo,
-  //         email:"cjswo07@gmail.com",
-  //         name:"soyeong"
-  //     })
-  //     console.log(res, userInfo)
-  //     if (res.error=="popup_closed_by_user" && props.isLoggedIn==false){
-  //         props.login(props.isLoggedIn);
-  //         navigate('/');
-  //     }
-  // }
 
   //TODO: 토큰 받기
 
