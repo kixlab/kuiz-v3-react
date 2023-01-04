@@ -5,10 +5,11 @@ export const Gnb = (props: {loginState:boolean}) => {
     const navigate = useNavigate();
 
     return (
-        <SideTab className='SideTab'>
+        <NavTab>
             <Logo onClick={() => navigate("/")}>📖KUIZ</Logo>
             {props.loginState==true && <>
                 <Menu>
+                    <MenuBtn onClick={() => navigate("/solve")}>Solve Problem</MenuBtn>
                     <MenuBtn onClick={() => navigate("/createQuestion")}>Create Question</MenuBtn>
                     <MenuBtn onClick={() => navigate("/question/createOption")}>Create Options</MenuBtn>
                     <MenuBtn onClick={() => navigate("/mypage")}>My Page</MenuBtn>
@@ -16,11 +17,11 @@ export const Gnb = (props: {loginState:boolean}) => {
                 <ProfileImg onClick={() => navigate("/login")}></ProfileImg>
             </>
             }
-        </SideTab>
+        </NavTab>
     )
 }
 
-const SideTab = styled.div`
+const NavTab = styled.div`
     width: 100vw;
     height: 60px;
     position: fixed;
