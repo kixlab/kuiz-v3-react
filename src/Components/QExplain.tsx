@@ -1,7 +1,6 @@
-import React from 'react';
-import "./QExplain.scss";
+import styled from '@emotion/styled';
 
-const QExplain = (props:{type:string}) => {
+export const QExplain = (props:{type:string}) => {
     let label='';
 
     if (props.type=="Objective"){
@@ -11,11 +10,15 @@ const QExplain = (props:{type:string}) => {
     
     return (
             <div className='LabelBox'>
-                <div className='Label'>{label}</div>
+                <Label>{label}</Label>
                 <div>abcd</div>
             </div>
 
     )
 }
 
-export default QExplain;
+const Label = styled.div`
+    color: #1f74ce;
+    font-weight: 700;
+    padding: 30px 0 16px;
+`

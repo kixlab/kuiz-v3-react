@@ -1,10 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import CreateNewOption from '../../Components/CreateNewOption/CreateNewOption';
-import QExplain from '../../Components/QExplain/QExplain';
-import "./DetailAndCreateOption.scss";
+import styled from '@emotion/styled';
+import { CreateNewOption } from '../Components/CreateNewOption';
+import { QExplain } from '../Components/QExplain';
 
-function DetailAndCreateOption() {
+export function DetailAndCreateOption() {
     return (
         <QuestionBox>
             <QExplain type="Objective"/>
@@ -12,9 +10,9 @@ function DetailAndCreateOption() {
             <DividerLine/>
             <div className='Label'>Q. abcd</div>
             <div>
-                <div className='Option'>✅Option1</div>
-                <div className='Option'>❌Option1</div>
-                <div className='Option'>❌Option1</div>
+                <Option>✅Option1</Option>
+                <Option>❌Option1</Option>
+                <Option>❌Option1</Option>
             </div>
             <DividerLine/>
             <CreateNewOption/>
@@ -37,4 +35,9 @@ const DividerLine = styled.hr`
     margin-top: 30px;
 `
 
-export default DetailAndCreateOption;
+const Option = styled.div`
+    background-color: #f1f1f1;
+    padding: 16px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+`

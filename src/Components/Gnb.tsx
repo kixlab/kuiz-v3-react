@@ -1,12 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export const Gnb = (props: {loginState:boolean}) => {
     const navigate = useNavigate();
 
     return (
-        <NavTab>
+        <SideTab className='SideTab'>
             <Logo onClick={() => navigate("/")}>📖KUIZ</Logo>
             {props.loginState==true && <>
                 <Menu>
@@ -18,11 +17,11 @@ export const Gnb = (props: {loginState:boolean}) => {
                 <ProfileImg onClick={() => navigate("/login")}></ProfileImg>
             </>
             }
-        </NavTab>
+        </SideTab>
     )
 }
 
-const NavTab = styled.div`
+const SideTab = styled.div`
     width: 100vw;
     height: 60px;
     position: fixed;
@@ -48,10 +47,27 @@ const Logo = styled.div`
     font-weight: 700;
     color: #3d8add;
     cursor: pointer;
-    :hover {
+    &:hover{
         color: #346191;
     }
-    @media (max-width: 599px) font-size: 16px;
+    @media (max-width: 599px) {
+        font-size: 16px;
+    }
+`
+
+const ProfileImg = styled.div`
+    display: none;
+    background-image: '';
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    background-color: #346191;
+    cursor: pointer;
+    @media (max-width: 599px) {
+        width: 28px;
+        height: 28px;
+        display: flex;
+    }
 `
 
 const Menu = styled.div`
@@ -74,7 +90,7 @@ const MenuBtn = styled.div`
     line-height: 60px;
     vertical-align: middle;
     border-bottom: 2px solid rgba(0,0,0,0);
-    :hover {
+    &:hover{
         color: #3d8add;
         border-color: #3d8add;
         cursor: pointer;
@@ -84,20 +100,5 @@ const MenuBtn = styled.div`
         text-align: center;
         padding: 4px 0 4px 0;
         border: none;
-    }
-`
-
-const ProfileImg = styled.div`
-    display: none;
-    background-image: '';
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    background-color: #346191;
-    cursor: pointer;
-    @media (max-width: 599px) {
-        width: 28px;
-        height: 28px;
-        display: flex;
     }
 `
