@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
 import { MadeOption } from '../Components/MadeOption';
 import { MadeStem } from '../Components/MadeStem';
+import { googleLogout } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 
-export function MyPage(props:{stemNum:number, optionNum:number}) {
+export function MyPage(props:{ stemNum:number, optionNum:number, logout: (state:boolean) => void }) {
+    const navigate = useNavigate();
+
     return (
         <div>
             <div>
@@ -22,7 +26,11 @@ export function MyPage(props:{stemNum:number, optionNum:number}) {
                     <MadeOption optionType='Distractor'/>
                 </MadeLists>
             </div>
-            <button>Log Out</button>
+            <button onClick={() => {
+                googleLogout(); 
+                props.logout(false);
+                navigate('/login');
+                }}>Log Out</button>
         </div>
 
     )
