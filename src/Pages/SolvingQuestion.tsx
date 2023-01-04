@@ -77,7 +77,7 @@ export function SolvingQuestion() {
                     <FillBtn onClick={submit}>Submit</FillBtn>
                     <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn> {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
                 </> : <FillBtn>Add Option</FillBtn>}
-                <StrokeBtn>Report Question Error</StrokeBtn>
+                <StrokeBtn>Report Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
     )

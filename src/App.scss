@@ -4,19 +4,6 @@ html {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.App {
-  display: flex;
-  justify-content: center;
-}
-
-.Box {
-  width: 70vw;
-  position: absolute;
-  top: 80px;
-  margin: 0 auto 0 auto;
-  box-sizing: border-box;
-}
-
 button {
   width: 100%;
   height:48px;
@@ -34,18 +21,4 @@ button:hover{
 }
 button:disabled{
   background-color: #bdbdbd;
-}
-
-
-
-@media (max-width: 599px) {
-  .App {
-    flex-direction: column;
-  }
-
-  .Box {
-    width: calc(100vw - 40px);
-    margin: 0 20px 0 20px;
-    top: 50px;
-  }
 }

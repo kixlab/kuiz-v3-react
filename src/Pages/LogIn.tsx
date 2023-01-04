@@ -1,23 +1,36 @@
-import { useState } from 'react';
-import GoogleLogin from 'react-google-login';
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import styled from '@emotion/styled';
+import jwtDecode from 'jwt-decode';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export function LogIn() {
-  const googleClientId: string = process.env.REACT_APP_CLIENT_ID || ''
-//   const [userInfo, setUserInfo] = useState({
-//     email: '',
-//     name: '',
-//   })
-//   const onLoginSuccess = (res: Object) => {
-//     //TODO: 서버에서 해당 사용자 데이터 불러와서 맞는지 체크
+interface Profile {
+    email: string,
+    name: string,
+    img: string
+}
 
-//     setUserInfo({ ...userInfo, res })
-//     console.log(userInfo)
-//   }
+export function LogIn(props: { login: (state: boolean) => void }) {
+    const navigate = useNavigate();
+    const userProfileRef = useRef<Profile | null>();
 
-  //TODO: 토큰 받기
+    function loginSuccess(res:CredentialResponse) {
+        if (res.credential) {
+            const pfData: any = jwtDecode(res.credential);
+            userProfileRef.current = {
+                email: pfData.email,
+                name: pfData.name,
+                img: pfData.picture
+            }
+        }
+        props.login(true);
+        navigate('/');
+        //MAKE GLOBAL VAL FROM REF
+    }
 
-  return (
+    //TODO: 토큰 받기
+
+    return (
         <div>
             <h1 style={{textAlign:'center'}}>KUIZ</h1>
             <IntroBox>
@@ -94,13 +107,14 @@ export function LogIn() {
                     Thank you.
                 </div>
             </IntroBox>
-            <button style={{padding:8, marginTop:20}}>Google Login</button>
-            <GoogleLogin 
-                clientId={googleClientId}
-                buttonText="Sign in with Google"
-                // onSuccess={res => onLoginSuccess(res)}
-                // onFailure={res => preLogin(res)}
-            />
+            <GoogleBtnBox>
+                <GoogleOAuthProvider clientId={`${process.env.REACT_APP_CLIENT_ID}`}>
+                    <GoogleLogin 
+                        onSuccess={(res) => loginSuccess(res)}
+                        onError={() => console.log('err')}
+                    />
+                </GoogleOAuthProvider>
+            </GoogleBtnBox>
         </div>
     )
 }
@@ -113,4 +127,8 @@ const IntroBox = styled.div`
     @media (max-width:599px) {
         box-sizing: border-box;
     }
+`
+
+const GoogleBtnBox = styled.div`
+    margin: 20px 0 30px 0;
 `
