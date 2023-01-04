@@ -11,14 +11,11 @@ import MyPage from './Pages/MyPage/MyPage';
 import { SolvingQuestion } from './Pages/SolvingQuestion/SolvingQuestion';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  useEffect (() => {
-    console.log(isLoggedIn);
-  }, [isLoggedIn])
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
 
-  function login(state:boolean) {
-    setIsLoggedIn(!state);
-  }
+  useEffect(() => {
+    console.log(isLoggedIn)
+  }, [isLoggedIn])
 
   return (
     <div className="App">
@@ -37,7 +34,7 @@ function App() {
         </div>
       </Router>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
