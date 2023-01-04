@@ -5,17 +5,11 @@ interface Props {
   getCategory: (categories: string) => void
 }
 
-const CategoryInput = ({ getCategory }: Props) => {
+export const CategoryInput = ({ getCategory }: Props) => {
   const inputRef = useRef<string>('')
   //추후에 DB로부터 받아올 예정..? 받아와야하나?
   const [catList, setCatList] = useState<string[]>(['Common misconception', 'Form similar to answer'])
   const [selectedCat, setSelectedCat] = useState<string>('')
-export const CategoryInput = (props:{ getCategory: Function }) => {
-    const inputRef = useRef<string>("");
-    //추후에 DB로부터 받아올 예정..? 받아와야하나?
-    const [catList, setCatList] = useState<string[]>(["Common misconception", "Form similar to answer"]);
-    const [selectedCat, setSelectedCat] = useState<string>("");
-
   function addCategory() {
     if (!catList.includes(inputRef.current) && inputRef.current != '') setCatList([inputRef.current, ...catList])
     else if (inputRef.current == '') alert('Please enter the category') //no input case
@@ -40,7 +34,7 @@ export const CategoryInput = (props:{ getCategory: Function }) => {
                     {catList.map((e,idx) => {
                         return (
                             <div key={idx} 
-                                onClick={() => {setSelectedCat(e); props.getCategory(e);}} 
+                                onClick={() => {setSelectedCat(e); getCategory(e);}} 
                             >
                                 {e===selectedCat ? <CategoryAct>{e}</CategoryAct>: <Category>{e}</Category>}
                             </div>
