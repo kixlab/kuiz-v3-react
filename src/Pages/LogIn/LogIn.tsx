@@ -3,7 +3,7 @@ import GoogleLogin from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-export function LogIn(props:{ isLoggedIn:boolean, login: Function}) {
+export function LogIn() {
   const googleClientId: string = process.env.REACT_APP_CLIENT_ID || ''
   const [userInfo, setUserInfo] = useState({
     email: '',
