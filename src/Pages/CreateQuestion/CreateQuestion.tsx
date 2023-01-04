@@ -1,8 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { CategoryInput } from '../../Components/CategoryInput/CategoryInput';
 import { TextEditor } from '../../Components/TextEditor/TextEditor';
-import "./CreateQuestion.scss";
 
 function CreateQuestion() {
     function getCategory(cat:string) {
