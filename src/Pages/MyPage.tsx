@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { MadeOption } from '../../Components/MadeOption/MadeOption';
-import { MadeStem } from '../../Components/MadeStem/MadeStem';
+import { MadeOption } from '../Components/MadeOption';
+import { MadeStem } from '../Components/MadeStem';
 
 export function MyPage(props:{stemNum:number, optionNum:number}) {
     return (

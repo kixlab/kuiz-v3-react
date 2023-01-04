@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { QuizListContent } from '../../Components/QuizList/QuizListContent';
-import { QuizListHeader } from '../../Components/QuizList/QuizListHeader';
+import { QuizListContent } from '../Components/QuizListContent';
+import { QuizListHeader } from '../Components/QuizListHeader';
 
 export function MainPage() {
     return (
