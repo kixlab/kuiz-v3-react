@@ -2,9 +2,10 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
 import { Post } from '../utils/apiRequest'
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 
 //SAMPLE OPTION LIST
 const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
