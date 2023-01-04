@@ -5,8 +5,8 @@ import { Gnb } from './Components/Gnb/Gnb';
 import LogIn from './Pages/LogIn/LogIn';
 import Enroll from './Pages/Enroll/Enroll';
 import MainPage from './Pages/MainPage/MainPage';
-import DetailAndCreateOption from './Pages/DetailAndCreateOption/DetailAndCreateOption';
-import CreateQuestion from './Pages/CreateQuestion/CreateQuestion';
+import { DetailAndCreateOption } from './Pages/DetailAndCreateOption/DetailAndCreateOption';
+import { CreateQuestion } from './Pages/CreateQuestion/CreateQuestion';
 import MyPage from './Pages/MyPage/MyPage';
 
 function App() {

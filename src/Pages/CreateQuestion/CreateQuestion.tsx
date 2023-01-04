@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { CategoryInput } from '../../Components/CategoryInput/CategoryInput';
 import { TextEditor } from '../../Components/TextEditor/TextEditor';
 
-function CreateQuestion() {
+export function CreateQuestion() {
     function getCategory(cat:string) {
         console.log(cat);
     }
@@ -35,5 +35,3 @@ const CreateQBox = styled.div`
     gap: 30px;
     margin: 30px 0 30px 0;
 `
-
-export default CreateQuestion;
