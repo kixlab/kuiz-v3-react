@@ -1,33 +1,19 @@
 import { useState } from 'react';
 import GoogleLogin from 'react-google-login';
-import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 export function LogIn() {
   const googleClientId: string = process.env.REACT_APP_CLIENT_ID || ''
-  const [userInfo, setUserInfo] = useState({
-    email: '',
-    name: '',
-  })
-  const onLoginSuccess = (res: any) => {
-    //TODO: 서버에서 해당 사용자 데이터 불러와서 맞는지 체크
+//   const [userInfo, setUserInfo] = useState({
+//     email: '',
+//     name: '',
+//   })
+//   const onLoginSuccess = (res: Object) => {
+//     //TODO: 서버에서 해당 사용자 데이터 불러와서 맞는지 체크
 
-    setUserInfo({ ...userInfo, email: res.profileObj.email, name: res.profileObj.name })
-    console.log(userInfo)
-  }
-
-  //demo로 일단 대충 로그인 된 척 만든 코드
-  // const preLogin = (res:any) => {
-  //     setUserInfo({...userInfo,
-  //         email:"cjswo07@gmail.com",
-  //         name:"soyeong"
-  //     })
-  //     console.log(res, userInfo)
-  //     if (res.error=="popup_closed_by_user" && props.isLoggedIn==false){
-  //         props.login(props.isLoggedIn);
-  //         navigate('/');
-  //     }
-  // }
+//     setUserInfo({ ...userInfo, res })
+//     console.log(userInfo)
+//   }
 
   //TODO: 토큰 받기
 
@@ -112,7 +98,7 @@ export function LogIn() {
             <GoogleLogin 
                 clientId={googleClientId}
                 buttonText="Sign in with Google"
-                onSuccess={res => onLoginSuccess(res)}
+                // onSuccess={res => onLoginSuccess(res)}
                 // onFailure={res => preLogin(res)}
             />
         </div>
