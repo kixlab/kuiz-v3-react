@@ -10,22 +10,21 @@ export function CreateQuestion() {
     return (
         <CreateQBox>
             <div>
-                <div className='QuestionLabel'>Learning Objective</div>
+                <QuestionLabel>Learning Objective</QuestionLabel>
                 {/* <input type='text' placeholder='Write down the objective'/> */}
                 <CategoryInput getCategory={getCategory}/>
             </div>
             <TextEditor title="Question Stem"/>
             <TextEditor title="Explanation"/>
             <div>
-                <div className='QuestionLabel'>Answer</div>
-                <input type='text' placeholder='Suggest an answer'/>
+                <QuestionLabel>Answer</QuestionLabel>
+                <Input type='text' placeholder='Suggest an answer'/>
             </div>
             <button disabled>Submit</button>
         </CreateQBox>
     )
 }
 
-//CreateQBox is here!
 const CreateQBox = styled.div`
     background-color: white;
     padding: 30px;
@@ -34,4 +33,27 @@ const CreateQBox = styled.div`
     flex-direction: column;
     gap: 30px;
     margin: 30px 0 30px 0;
+`
+
+const QuestionLabel = styled.div`
+    color: #3d8add;
+    font-size: 18px;
+    font-weight: 700;
+    padding-bottom: 12px;
+`
+
+const Input = styled.input`
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #bdbdbd;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    &:placeholder {
+        color: #b7bfc7;
+    }
+    &:focus{
+        outline:none;
+        border-color: #212121;
+    }
 `

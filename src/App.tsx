@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import './App.scss';
+import { useState, useEffect } from 'react';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { Gnb } from './Components/Gnb/Gnb';
 import { LogIn } from './Pages/LogIn/LogIn';
 import { Enroll } from './Pages/Enroll/Enroll';
@@ -20,7 +20,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Gnb loginState={isLoggedIn}/>
         <div className='Box'>
