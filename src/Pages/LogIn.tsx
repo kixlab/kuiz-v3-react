@@ -23,6 +23,7 @@ export function LogIn(props: { login: (state: boolean) => void }) {
                 img: pfData.picture
             }
         }
+        console.log(userProfileRef.current);
         props.login(true);
         navigate('/');
         //MAKE GLOBAL VAL FROM REF
