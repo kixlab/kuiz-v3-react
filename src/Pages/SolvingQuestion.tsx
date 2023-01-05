@@ -1,21 +1,28 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Modal } from '../Components/Modal';
+
+const sampleOptions: Array<string> = ["Answer", "Distractor1", "Distractor2", "Distractor3"];
 
 export function SolvingQuestion() {
     const navigate = useNavigate();
     //SAMPLE OPTION LIST
-    const sampleOptions: Array<string> = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
     // const [qInfo, setQInfo] = useState<Object>();
     const [options, setOptions] = useState<Array<string>>(sampleOptions);
     const [selectedOption, setSelectedOption] = useState<string>('');
     const [isAnswered, setIsAnswered] = useState<boolean>(false);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const [errMsg, setErrMsg] = useState<string>('');
+    const errRef = useRef<string>('');
     const ansRef = useRef<string>('');
 
     const qid = useParams().id;
 	const cid = useParams().cid;
+
+
     /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
 
     function shuffle(arr:Array<any>) {
@@ -47,8 +54,11 @@ export function SolvingQuestion() {
         setSelectedOption('');
     }
     */
+   function onClickToggleModal() {
+        setIsOpenModal(!isOpenModal);
+   }
 
-    function submit() {
+    function solvingSubmit() {
         //DEMO VALUE FOR SIMULATING
         ansRef.current = 'Answer';
         if (selectedOption == ansRef.current) {
@@ -56,6 +66,17 @@ export function SolvingQuestion() {
             setIsAnswered(true);
         }
         else console.log("WRONG")
+    }
+
+    function submitReport() {
+        console.log("Submit", errMsg);
+        setErrMsg('');
+        onClickToggleModal();
+    }
+
+    function cancleReport() {
+        setErrMsg('');
+        onClickToggleModal();
     }
 
     return (
@@ -73,10 +94,22 @@ export function SolvingQuestion() {
             </div>
             <BtnDisplay>
                 {isAnswered==false ? <>
-                    <FillBtn onClick={submit}>Submit</FillBtn>
+                    <FillBtn onClick={solvingSubmit}>Submit</FillBtn>
                     <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn> {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
                 </> : <FillBtn>Add Option</FillBtn>}
-                <StrokeBtn>Report Question Error</StrokeBtn>
+                {isOpenModal==true && <>
+                    <Modal>
+                        <Label>Report Error</Label>
+                        <DialogContent>
+                            <Input onChange={(e) => setErrMsg(e.target.value)} type='text' placeholder='Write down the error'/>
+                            <BtnDisplay>
+                                <FillBtn onClick={submitReport} disabled={errMsg=='' ? true : false}>Report</FillBtn>
+                                <StrokeBtn onClick={cancleReport}>Cancel</StrokeBtn>
+                            </BtnDisplay>
+                        </DialogContent>
+                    </Modal>
+                </> }
+                <StrokeBtn onClick={onClickToggleModal}>Report Error</StrokeBtn>
             </BtnDisplay>
         </QuestionBox>
     )
@@ -147,6 +180,33 @@ const Option = styled.div<OptionProps>`
     }}
 `
 
+//Modal Interface
+
+const DialogContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`
+
+const Input = styled.input`
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #bdbdbd;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    &:placeholder {
+        color: #b7bfc7;
+    }
+    &:focus{
+        outline:none;
+        border-color: #212121;
+    }
+    @media (max-width: 599px) {
+        font-size: 13px;
+    }
+`
+
 const BtnDisplay = styled.div`
     display: flex;
     flex-direction: row;
@@ -161,7 +221,7 @@ const FillBtn = styled.button`
 const StrokeBtn = styled.button`
     color: #212121;
     background-color: #fff;
-    border: 1px solid #858585;
+    border: 1px solid #bdbdbd;
     :hover {
         background-color: #E9EEF4;
     }
