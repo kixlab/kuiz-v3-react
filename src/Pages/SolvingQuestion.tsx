@@ -1,19 +1,23 @@
-import { useRef, useState } from 'react';
-import styled from '@emotion/styled';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate, useParams } from 'react-router-dom';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
+import { Post } from '../utils/apiRequest'
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
+
+//SAMPLE OPTION LIST
+const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
 
 export function SolvingQuestion() {
-    const navigate = useNavigate();
-    //SAMPLE OPTION LIST
-    const sampleOptions: Array<string> = ["Answer", "Distractor1", "Distractor2", "Distractor3"]
-    // const [qInfo, setQInfo] = useState<Object>();
-    const [options, setOptions] = useState<Array<string>>(sampleOptions);
-    const [selectedOption, setSelectedOption] = useState<string>('');
-    const [isAnswered, setIsAnswered] = useState<boolean>(false);
-    const ansRef = useRef<string>('');
+  const navigate = useNavigate()
+  const [options, setOptions] = useState(sampleOptions)
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [isAnswered, setIsAnswered] = useState(false)
+  const [answer, setAnswer] = useState<number | null>(null)
 
+  /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
     const qid = useParams().id;
 	const cid = useParams().cid;
     /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
@@ -48,124 +52,152 @@ export function SolvingQuestion() {
     }
     */
 
-    function submit() {
-        //DEMO VALUE FOR SIMULATING
-        ansRef.current = 'Answer';
-        if (selectedOption == ansRef.current) {
-            alert("CORRECT!");
-            setIsAnswered(true);
-        }
-        else console.log("WRONG")
-    }
+  useEffect(() => {
+    setAnswer(0)
+  }, [])
 
-    return (
-        <QuestionBox>
-            <ReturnBtn onClick={()=>navigate('/')}>
-                <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
-			</ReturnBtn>
-            <Label>Q. What is the question?</Label>
-            <div>
-                {options.map((e,idx) => {
-                    return (
-                        <Option onClick={()=> isAnswered==false && setSelectedOption(e)} state={isAnswered} selected={selectedOption} val={e} key={idx}>{e}</Option>
-                    )})
-                }
-            </div>
-            <BtnDisplay>
-                {isAnswered==false ? <>
-                    <FillBtn onClick={submit}>Submit</FillBtn>
-                    <StrokeBtn onClick={() => {setOptions([...options].sort(()=> Math.random()-0.5)); setSelectedOption('')}}>Shuffle Answers</StrokeBtn> {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
-                </> : <FillBtn>Add Option</FillBtn>}
-                <StrokeBtn>Report Question Error</StrokeBtn>
-            </BtnDisplay>
-        </QuestionBox>
-    )
-}
+  const submit = useCallback(() => {
+    //DEMO VALUE FOR SIMULATING
+    if (selectedOption == answer) {
+      alert('CORRECT!')
+      setIsAnswered(true)
+    } else console.log('WRONG')
+  }, [])
 
-interface OptionProps {
-    state: boolean, 
-    val: string,
-    selected: string,
+  const report = useCallback(async () => {
+    // TODO: Needs to put actual uid and comments
+    await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
+      uid: 'FAKE_UID',
+      comment: 'FAKE_COMMENT',
+    })
+  }, [])
+
+  const clickOption = useCallback(
+    (i: number) => () => {
+      if (isAnswered == false) {
+        setSelectedOption(i)
+      }
+    },
+    []
+  )
+
+  const shuffle = useCallback(() => {
+    setOptions([...options].sort(() => Math.random() - 0.5))
+    setSelectedOption(null)
+  }, [])
+
+  return (
+    <QuestionBox>
+      <ReturnBtn onClick={() => navigate('/')}>
+        <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
+      </ReturnBtn>
+      <Label>Q. What is the question?</Label>
+      <div>
+        {options.map((e, i) => {
+          return (
+            <Option onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i} key={i}>
+              {e}
+            </Option>
+          )
+        })}
+      </div>
+      <BtnDisplay>
+        {isAnswered == false ? (
+          <>
+            <FillBtn onClick={submit}>Submit</FillBtn>
+            <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
+            {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
+          </>
+        ) : (
+          <FillBtn>Add Option</FillBtn>
+        )}
+        <StrokeBtn onClick={report}>Report Question Error</StrokeBtn>
+      </BtnDisplay>
+    </QuestionBox>
+  )
 }
 
 const QuestionBox = styled.div`
-    background-color: white;
-    padding: 40px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin: 30px;
-    @media (max-width: 599px) {
-        margin: 30px 0 30px 0;
-    }
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 30px;
+  @media (max-width: 599px) {
+    margin: 30px 0 30px 0;
+  }
 `
 
 const ReturnBtn = styled.div`
-    cursor: pointer;
-    font-weight: 500;
-    color: #616161;
-    :hover {
-        color: #919191;
-    }
+  cursor: pointer;
+  font-weight: 500;
+  color: #616161;
+  :hover {
+    color: #919191;
+  }
 `
 
 const Label = styled.div`
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.4;
-    padding: 8px 0 0 0;
-    @media (max-width: 599px) {
-        font-size: 16px;
-        padding: 0px;
-    }
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 8px 0 0 0;
+  @media (max-width: 599px) {
+    font-size: 16px;
+    padding: 0px;
+  }
 `
 
-const Option = styled.div<OptionProps>`
-    background-color: #E9EEF4;
+const Option = styled.div<{ state: boolean; selected: boolean }>`
+  ${({ state, selected }) => css`
+    background-color: #e9eef4;
     padding: 16px;
     margin-bottom: 8px;
     border-radius: 6px;
-    border: 1.5px solid rgba(0,0,0,0);
-    :hover {
-        ${(props) => {
-            return props.state==false ? 
-                `background-color: #D4E4F3;
-                cursor: pointer;` : null;
-        }}
-    }
-    @media (max-width: 599px) {
-        font-size: 13px;
-    }
-    ${(props) => {
-        return props.val==props.selected ? 
-            `border-color: #3d8add;
-            color: #3372B6;
-            font-weight: 500;
-            background-color: #D4E4F3` : null;
+    border: 1.5px solid rgba(0, 0, 0, 0);
 
-    }}
+    ${!state &&
+    css`
+      :hover {
+        background-color: #d4e4f3;
+        cursor: pointer;
+      }
+    `}
+    @media (max-width: 599px) {
+      font-size: 13px;
+    }
+
+    ${selected &&
+    css`
+      border-color: #3d8add;
+      color: #3372b6;
+      font-weight: 500;
+      background-color: #d4e4f3;
+    `}
+  `}
 `
 
 const BtnDisplay = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
 `
 const FillBtn = styled.button`
-    @media (max-width: 599px) {
+  @media (max-width: 599px) {
     font-size: 14px;
-    }
+  }
 `
 
 const StrokeBtn = styled.button`
-    color: #212121;
-    background-color: #fff;
-    border: 1px solid #858585;
-    :hover {
-        background-color: #E9EEF4;
-    }
-    @media (max-width: 599px) {
-        font-size: 14px;
-    }
+  color: #212121;
+  background-color: #fff;
+  border: 1px solid #858585;
+  :hover {
+    background-color: #e9eef4;
+  }
+  @media (max-width: 599px) {
+    font-size: 14px;
+  }
 `
