@@ -1,27 +1,29 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from '@emotion/styled'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
+import { Post } from '../utils/apiRequest'
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import { Modal } from '../Components/Modal'
 
-const sampleOptions: Array<string> = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
+//SAMPLE OPTION LIST
+const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
 
 export function SolvingQuestion() {
   const navigate = useNavigate()
-  //SAMPLE OPTION LIST
-  // const [qInfo, setQInfo] = useState<Object>();
-  const [options, setOptions] = useState<Array<string>>(sampleOptions)
-  const [selectedOption, setSelectedOption] = useState<string>('')
-  const [isAnswered, setIsAnswered] = useState<boolean>(false)
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [options, setOptions] = useState(sampleOptions)
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [isAnswered, setIsAnswered] = useState(false)
+  const [answer, setAnswer] = useState<number | null>(null)
   const [inputMsg, setInputMsg] = useState<string>('')
-  const ansRef = useRef<string>('')
-
-  const qid = useParams().id
-  const cid = useParams().cid
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
   /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
+    const qid = useParams().id;
+	const cid = useParams().cid;
+    /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
 
     function shuffle(arr:Array<any>) {
         return [...arr].sort(() => 0.5 - Math.random())
@@ -52,26 +54,51 @@ export function SolvingQuestion() {
         setSelectedOption('');
     }
     */
+
+  useEffect(() => {
+    setAnswer(0)
+  }, [])
+
+  const clickOption = useCallback(
+    (i: number) => () => {
+      if (isAnswered == false) {
+        setSelectedOption(i)
+        console.log('sdf', i)
+      }
+    },
+    [selectedOption, isAnswered]
+  )
+
+  const shuffle = useCallback(() => {
+    setOptions([...options].sort(() => Math.random() - 0.5))
+    setSelectedOption(null)
+  }, [])
+
+  const submit = useCallback(() => {
+    console.log(answer, selectedOption)
+    //DEMO VALUE FOR SIMULATING
+    if (selectedOption == answer) {
+      alert('CORRECT!')
+      setIsAnswered(true)
+    } else console.log('WRONG')
+  }, [answer, selectedOption])
+
   function onClickToggleModal() {
     setIsOpenModal(!isOpenModal)
   }
 
-  function solvingSubmit() {
-    //DEMO VALUE FOR SIMULATING
-    ansRef.current = 'Answer'
-    if (selectedOption == ansRef.current) {
-      alert('CORRECT!')
-      setIsAnswered(true)
-    } else console.log('WRONG')
-  }
-
-  const submitReport = useCallback(() => {
+  const reportSubmit = useCallback(async () => {
     console.log('Submit', inputMsg)
     setInputMsg('')
     onClickToggleModal()
-  }, [onClickToggleModal])
+    // TODO: Needs to put actual uid and comments
+    await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
+      uid: 'FAKE_UID',
+      comment: inputMsg,
+    })
+  }, [inputMsg])
 
-  function cancleReport() {
+  const reportCancle = () => {
     setInputMsg('')
     onClickToggleModal()
   }
@@ -83,15 +110,9 @@ export function SolvingQuestion() {
       </ReturnBtn>
       <Label>Q. What is the question?</Label>
       <div>
-        {options.map((e, idx) => {
+        {options.map((e, i) => {
           return (
-            <Option
-              onClick={() => isAnswered == false && setSelectedOption(e)}
-              state={isAnswered}
-              selected={selectedOption}
-              val={e}
-              key={idx}
-            >
+            <Option onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i} key={i}>
               {e}
             </Option>
           )
@@ -100,15 +121,10 @@ export function SolvingQuestion() {
       <BtnDisplay>
         {isAnswered == false ? (
           <>
-            <FillBtn onClick={solvingSubmit}>Submit</FillBtn>
-            <StrokeBtn
-              onClick={() => {
-                setOptions([...options].sort(() => Math.random() - 0.5))
-                setSelectedOption('')
-              }}
-            >
-              Shuffle Answers
-            </StrokeBtn>
+            <FillBtn onClick={submit} disabled={selectedOption == null ? true : false}>
+              Submit
+            </FillBtn>
+            <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
             {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
           </>
         ) : (
@@ -121,10 +137,10 @@ export function SolvingQuestion() {
               <DialogContent>
                 <Input onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
                 <BtnDisplay>
-                  <FillBtn onClick={submitReport} disabled={inputMsg == '' ? true : false}>
+                  <FillBtn onClick={reportSubmit} disabled={inputMsg == '' ? true : false}>
                     Report
                   </FillBtn>
-                  <StrokeBtn onClick={cancleReport}>Cancel</StrokeBtn>
+                  <StrokeBtn onClick={reportCancle}>Cancel</StrokeBtn>
                 </BtnDisplay>
               </DialogContent>
             </Modal>
@@ -134,12 +150,6 @@ export function SolvingQuestion() {
       </BtnDisplay>
     </QuestionBox>
   )
-}
-
-interface OptionProps {
-  state: boolean
-  val: string
-  selected: string
 }
 
 const QuestionBox = styled.div`
@@ -175,31 +185,33 @@ const Label = styled.div`
   }
 `
 
-const Option = styled.div<OptionProps>`
-  background-color: #e9eef4;
-  padding: 16px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  border: 1.5px solid rgba(0, 0, 0, 0);
-  :hover {
-    ${props => {
-      return props.state == false
-        ? `background-color: #D4E4F3;
-                cursor: pointer;`
-        : null
-    }}
-  }
-  @media (max-width: 599px) {
-    font-size: 13px;
-  }
-  ${props => {
-    return props.val == props.selected
-      ? `border-color: #3d8add;
-            color: #3372B6;
-            font-weight: 500;
-            background-color: #D4E4F3`
-      : null
-  }}
+const Option = styled.div<{ state: boolean; selected: boolean }>`
+  ${({ state, selected }) => css`
+    background-color: #e9eef4;
+    padding: 16px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, 0);
+
+    ${!state &&
+    css`
+      :hover {
+        background-color: #d4e4f3;
+        cursor: pointer;
+      }
+    `}
+    @media (max-width: 599px) {
+      font-size: 13px;
+    }
+
+    ${selected &&
+    css`
+      border-color: #3d8add;
+      color: #3372b6;
+      font-weight: 500;
+      background-color: #d4e4f3;
+    `}
+  `}
 `
 
 //Modal Interface
@@ -207,7 +219,7 @@ const Option = styled.div<OptionProps>`
 const DialogContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 `
 
 const Input = styled.textarea`
@@ -216,6 +228,7 @@ const Input = styled.textarea`
   border: 1px solid #bdbdbd;
   width: 100%;
   height: 120px;
+  resize: vertical;
   box-sizing: border-box;
   font-size: 16px;
   &:placeholder {
