@@ -48,9 +48,9 @@ const Toggles = styled.div`
 `
 
 const SubmitBtn = styled.button`
-    margin-top: 20px;
+    margin-top: 20px;   
 `
-const ToggleBtn = styled.div`
+const ToggleBtn = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' | 'SubmitBtn' }>`
     display: inline-block;
     padding: 8px 12px 8px 12px;
     text-align: center;
