@@ -6,6 +6,7 @@ import { SubmitReportParams, SubmitReportResults } from '../api/question/submitR
 import { Post } from '../utils/apiRequest'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import { Modal } from '../Components/Modal'
 
 //SAMPLE OPTION LIST
 const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
@@ -16,6 +17,8 @@ export function SolvingQuestion() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [isAnswered, setIsAnswered] = useState(false)
   const [answer, setAnswer] = useState<number | null>(null)
+  const [inputMsg, setInputMsg] = useState<string>('')
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
   /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
     const qid = useParams().id;
@@ -56,35 +59,49 @@ export function SolvingQuestion() {
     setAnswer(0)
   }, [])
 
-  const submit = useCallback(() => {
-    //DEMO VALUE FOR SIMULATING
-    if (selectedOption == answer) {
-      alert('CORRECT!')
-      setIsAnswered(true)
-    } else console.log('WRONG')
-  }, [])
-
-  const report = useCallback(async () => {
-    // TODO: Needs to put actual uid and comments
-    await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
-      uid: 'FAKE_UID',
-      comment: 'FAKE_COMMENT',
-    })
-  }, [])
-
   const clickOption = useCallback(
     (i: number) => () => {
       if (isAnswered == false) {
         setSelectedOption(i)
+        console.log('sdf', i)
       }
     },
-    []
+    [selectedOption, isAnswered]
   )
 
   const shuffle = useCallback(() => {
     setOptions([...options].sort(() => Math.random() - 0.5))
     setSelectedOption(null)
   }, [])
+
+  const submit = useCallback(() => {
+    console.log(answer, selectedOption)
+    //DEMO VALUE FOR SIMULATING
+    if (selectedOption == answer) {
+      alert('CORRECT!')
+      setIsAnswered(true)
+    } else console.log('WRONG')
+  }, [answer, selectedOption])
+
+  function onClickToggleModal() {
+    setIsOpenModal(!isOpenModal)
+  }
+
+  const reportSubmit = useCallback(async () => {
+    console.log('Submit', inputMsg)
+    setInputMsg('')
+    onClickToggleModal()
+    // TODO: Needs to put actual uid and comments
+    await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
+      uid: 'FAKE_UID',
+      comment: inputMsg,
+    })
+  }, [inputMsg])
+
+  const reportCancle = () => {
+    setInputMsg('')
+    onClickToggleModal()
+  }
 
   return (
     <QuestionBox>
@@ -104,14 +121,32 @@ export function SolvingQuestion() {
       <BtnDisplay>
         {isAnswered == false ? (
           <>
-            <FillBtn onClick={submit}>Submit</FillBtn>
+            <FillBtn onClick={submit} disabled={selectedOption == null ? true : false}>
+              Submit
+            </FillBtn>
             <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
             {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
           </>
         ) : (
           <FillBtn>Add Option</FillBtn>
         )}
-        <StrokeBtn onClick={report}>Report Question Error</StrokeBtn>
+        {isOpenModal == true && (
+          <>
+            <Modal>
+              <Label>Report Error</Label>
+              <DialogContent>
+                <Input onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
+                <BtnDisplay>
+                  <FillBtn onClick={reportSubmit} disabled={inputMsg == '' ? true : false}>
+                    Report
+                  </FillBtn>
+                  <StrokeBtn onClick={reportCancle}>Cancel</StrokeBtn>
+                </BtnDisplay>
+              </DialogContent>
+            </Modal>
+          </>
+        )}
+        <StrokeBtn onClick={onClickToggleModal}>Report Error</StrokeBtn>
       </BtnDisplay>
     </QuestionBox>
   )
@@ -179,6 +214,35 @@ const Option = styled.div<{ state: boolean; selected: boolean }>`
   `}
 `
 
+//Modal Interface
+
+const DialogContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
+
+const Input = styled.textarea`
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #bdbdbd;
+  width: 100%;
+  height: 120px;
+  resize: vertical;
+  box-sizing: border-box;
+  font-size: 16px;
+  &:placeholder {
+    color: #b7bfc7;
+  }
+  &:focus {
+    outline: none;
+    border-color: #212121;
+  }
+  @media (max-width: 599px) {
+    font-size: 13px;
+  }
+`
+
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
@@ -193,7 +257,7 @@ const FillBtn = styled.button`
 const StrokeBtn = styled.button`
   color: #212121;
   background-color: #fff;
-  border: 1px solid #858585;
+  border: 1px solid #bdbdbd;
   :hover {
     background-color: #e9eef4;
   }
