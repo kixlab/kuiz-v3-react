@@ -6,7 +6,7 @@ import { SubmitReportParams, SubmitReportResults } from '../api/question/submitR
 import { Post } from '../utils/apiRequest'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { Modal } from '../Components/Modal'
+import { InputDialog } from '../Components/Dialogs/InputDialog'
 
 //SAMPLE OPTION LIST
 const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
@@ -17,7 +17,6 @@ export function SolvingQuestion() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [isAnswered, setIsAnswered] = useState(false)
   const [answer, setAnswer] = useState<number | null>(null)
-  const [inputMsg, setInputMsg] = useState<string>('')
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
   /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
@@ -83,25 +82,27 @@ export function SolvingQuestion() {
     } else console.log('WRONG')
   }, [answer, selectedOption])
 
-  function onClickToggleModal() {
+  //--------------->Modal Functions
+
+  function toggleModal() {
     setIsOpenModal(!isOpenModal)
+    return ''
   }
 
-  const reportSubmit = useCallback(async () => {
-    console.log('Submit', inputMsg)
-    setInputMsg('')
-    onClickToggleModal()
-    // TODO: Needs to put actual uid and comments
-    await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
-      uid: 'FAKE_UID',
-      comment: inputMsg,
-    })
-  }, [inputMsg])
+  const reportSubmit = useCallback(
+    async (msg: string) => {
+      console.log(msg)
+      toggleModal()
+      // TODO: Needs to put actual uid and comments
+      await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
+        uid: 'FAKE_UID',
+        comment: msg,
+      })
+    },
+    [isOpenModal]
+  )
 
-  const reportCancle = () => {
-    setInputMsg('')
-    onClickToggleModal()
-  }
+  //<---------------------
 
   return (
     <QuestionBox>
@@ -130,23 +131,8 @@ export function SolvingQuestion() {
         ) : (
           <FillBtn>Add Option</FillBtn>
         )}
-        {isOpenModal == true && (
-          <>
-            <Modal>
-              <Label>Report Error</Label>
-              <DialogContent>
-                <Input onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
-                <BtnDisplay>
-                  <FillBtn onClick={reportSubmit} disabled={inputMsg == '' ? true : false}>
-                    Report
-                  </FillBtn>
-                  <StrokeBtn onClick={reportCancle}>Cancel</StrokeBtn>
-                </BtnDisplay>
-              </DialogContent>
-            </Modal>
-          </>
-        )}
-        <StrokeBtn onClick={onClickToggleModal}>Report Error</StrokeBtn>
+        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
+        <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>
   )
