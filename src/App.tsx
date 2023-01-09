@@ -10,6 +10,9 @@ import { CreateQuestion } from './Pages/CreateQuestion';
 import { MyPage } from './Pages/MyPage';
 import { SolvingQuestion } from './Pages/SolvingQuestion';
 import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState } from './state/store'
+import { addError, removeError } from './state/error/errorSlice';
 
 function App() {
   return (
@@ -23,6 +26,13 @@ function RoutingFromLoginState() {
   const navigate = useNavigate();
   //TODO) USING GLOBAL STATE BY REDUX
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  //redux
+  const error = useSelector((state: RootState) => state.error.value)
+  const dispatch = useDispatch()
+  // to create error use () => dispatch(addError('//error message')) 
+  // to remove error use () => dispatch(removeError())
+  // use {error} to get the error message after error is added
 
   useEffect(() => {
       if (!isLoggedIn) navigate("/login");
