@@ -1,5 +1,5 @@
 export const errorState = (errorTitle:string,errorMessage:string)=>{
-    return (dispatch:Function)=>{
+    return (dispatch: any)=>{
         dispatch({
             Title:errorTitle,
             message:errorMessage
