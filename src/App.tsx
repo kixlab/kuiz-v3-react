@@ -25,12 +25,13 @@ function App() {
 function RoutingFromLoginState() {
   const navigate = useNavigate();
   //TODO) USING GLOBAL STATE BY REDUX
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
 
   //redux
-  const error = useSelector((state: RootState) => state.error.value)
+  const errorTitle = useSelector((state: RootState) => state.error.title)
+  const errorMessage= useSelector((state: RootState) => state.error.message)
   const dispatch = useDispatch()
-  // to create error use () => dispatch(addError('//error message')) 
+  // to create error use () => dispatch(addError(['title', 'message']))
   // to remove error use () => dispatch(removeError())
   // use {error} to get the error message after error is added
 

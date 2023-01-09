@@ -2,22 +2,26 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface ErrorState {
-  value: string
+  title: string;
+  message: string
 }
 
 const initialState: ErrorState = {
-  value: '',
+  title: '',
+  message: ''
 }
 
 export const errorSlice = createSlice({
   name: 'error',
   initialState,
   reducers: {
-    addError: (state, action: PayloadAction<string>) => {
-      state.value = action.payload
+    addError: (state, action: PayloadAction<[title:string,message:string]>) => {
+      state.title = action.payload[0]
+      state.message = action.payload[1]
     },
     removeError: (state) => {
-      state.value = ''
+      state.title = ''
+      state.message = ''
     },
   },
 })
