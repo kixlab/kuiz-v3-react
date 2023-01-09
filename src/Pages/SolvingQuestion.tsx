@@ -200,6 +200,35 @@ const Option = styled.div<{ state: boolean; selected: boolean }>`
   `}
 `
 
+//Modal Interface
+
+const DialogContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
+
+const Input = styled.textarea`
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #bdbdbd;
+  width: 100%;
+  height: 120px;
+  resize: vertical;
+  box-sizing: border-box;
+  font-size: 16px;
+  &:placeholder {
+    color: #b7bfc7;
+  }
+  &:focus {
+    outline: none;
+    border-color: #212121;
+  }
+  @media (max-width: 599px) {
+    font-size: 13px;
+  }
+`
+
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
