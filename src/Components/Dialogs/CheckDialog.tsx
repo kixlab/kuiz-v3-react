@@ -3,6 +3,7 @@ import { useState } from 'react'
 import styled from '@emotion/styled'
 
 interface CheckModal {
+  title: string
   modalState: boolean
   btnName: string
   toggleModal: () => void
@@ -12,7 +13,7 @@ export const CheckDialog = (props: CheckModal) => {
   if (props.modalState) {
     return (
       <Modal>
-        <Label>Report Error</Label>
+        <Label>{props.title}</Label>
         <div>{"Do you really want to delete it? You can't restore it."}</div>
         <BtnDisplay>
           <FillBtn onClick={props.toggleModal}>{props.btnName}</FillBtn>

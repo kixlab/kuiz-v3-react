@@ -20,7 +20,7 @@ export const MadeOption = (props: { optionType: string }) => {
       </RowFlex>
       <RowFlex id="EditBtns">
         <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
-        <CheckDialog btnName="Delete" modalState={isOpenModal} toggleModal={toggleModal} />
+        <CheckDialog title="Delete the option" btnName="Delete" modalState={isOpenModal} toggleModal={toggleModal} />
         <MoveBtn>View</MoveBtn>
       </RowFlex>
     </OptionBox>
