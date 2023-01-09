@@ -29,7 +29,7 @@ const DialogBox = styled.div`
   width: 500px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   justify-content: space-between;
   padding: 30px 40px;
   margin: auto;
