@@ -13,7 +13,6 @@ import { SolvingQuestion } from './Pages/SolvingQuestion'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
 import { addError, removeError } from './state/features/errorSlice'
-import { currentUser } from './state/features/userSlice'
 
 function App() {
   return (
@@ -25,20 +24,13 @@ function App() {
 
 function RoutesFromLoginState() {
   const navigate = useNavigate()
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  const userInfo = useSelector(currentUser)
-  //TODO) USING GLOBAL STATE BY REDUX
-
+  const dispatch = useDispatch()
+  const userInfo = useSelector((state: RootState) => state.userInfo)
   const errorTitle = useSelector((state: RootState) => state.error.title)
   const errorMessage = useSelector((state: RootState) => state.error.message)
-  const dispatch = useDispatch()
   // to create error use () => dispatch(addError(['title', 'message']))
   // to remove error use () => dispatch(removeError())
   // use {error} to get the error message after error is added
-
-  useEffect(() => {
-    console.log(userInfo)
-  })
 
   useEffect(() => {
     if (!userInfo.isLoggedIn) navigate('/login')
@@ -55,7 +47,7 @@ function RoutesFromLoginState() {
           <Route path="/enroll" element={<Enroll />} />
           <Route path="/createQuestion" element={<CreateQuestion />} />
           <Route path="/question/createOption" element={<DetailAndCreateOption />} />
-          {/* <Route path="/mypage" element={<MyPage logout={loginout} stemNum={3} optionNum={4} />} /> */}
+          <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4} />} />
         </Routes>
       </InnerBox>
     </Container>

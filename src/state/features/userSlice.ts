@@ -10,6 +10,7 @@ type userInfoType = {
 const initialState: userInfoType = {
   name: '',
   email: '',
+  img: '',
   isLoggedIn: false,
 }
 
@@ -18,9 +19,12 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state: userInfoType, action: PayloadAction<userInfoType>) => {
-      state = action.payload
+      state.name = action.payload.name
+      state.email = action.payload.email
+      state.img = action.payload.img
+      state.isLoggedIn = action.payload.isLoggedIn
     },
-    logout: (state: userInfoType) => {
+    logout: (state: userInfoType, action: PayloadAction) => {
       state.name = ''
       state.email = ''
       state.img = ''
@@ -30,5 +34,4 @@ export const userSlice = createSlice({
 })
 
 export const { login, logout } = userSlice.actions
-export const currentUser = (state: userInfoType) => state
 export const userReducer = userSlice.reducer

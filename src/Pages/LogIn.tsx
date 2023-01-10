@@ -5,18 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../state/features/userSlice'
 
-type userInfoType = {
-  name: string
-  email: string
-  img?: string
-  isLoggedIn: boolean
-}
-
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  function loginSuccess(res: CredentialResponse) {
+  function signIn(res: CredentialResponse) {
     if (res.credential) {
       const userData: any = jwtDecode(res.credential)
       dispatch(
@@ -107,7 +100,7 @@ export function LogIn() {
       </IntroBox>
       <GoogleBtnBox>
         <GoogleOAuthProvider clientId={`${process.env.REACT_APP_CLIENT_ID}`}>
-          <GoogleLogin onSuccess={res => loginSuccess(res)} onError={() => console.log('err')} />
+          <GoogleLogin onSuccess={res => signIn(res)} onError={() => console.log('err')} />
         </GoogleOAuthProvider>
       </GoogleBtnBox>
     </div>
