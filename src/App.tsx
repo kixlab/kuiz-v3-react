@@ -1,6 +1,5 @@
-import styled from '@emotion/styled'
 import './App.scss'
-import { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Route, Routes, BrowserRouter as Router, useNavigate, Navigate } from 'react-router-dom'
 import { Gnb } from './Components/Gnb'
 import { LogIn } from './Pages/LogIn'
@@ -10,10 +9,11 @@ import { DetailAndCreateOption } from './Pages/DetailAndCreateOption'
 import { CreateQuestion } from './Pages/CreateQuestion'
 import { MyPage } from './Pages/MyPage'
 import { SolvingQuestion } from './Pages/SolvingQuestion'
+import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
-import { addError, removeError } from './state/features/errorSlice'
-
+import { removeError } from './state/features/errorSlice'
+import { CheckDialog } from './Components/Dialogs/CheckDialog'
 function App() {
   return (
     <Router>
@@ -26,11 +26,11 @@ function RoutesFromLoginState() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userInfo = useSelector((state: RootState) => state.userInfo)
+
+  //redux
   const errorTitle = useSelector((state: RootState) => state.error.title)
   const errorMessage = useSelector((state: RootState) => state.error.message)
-  // to create error use () => dispatch(addError(['title', 'message']))
-  // to remove error use () => dispatch(removeError())
-  // use {error} to get the error message after error is added
+  const errorAvailable = useSelector((state: RootState) => state.error.error)
 
   useEffect(() => {
     if (!userInfo.isLoggedIn) navigate('/login')
@@ -39,6 +39,15 @@ function RoutesFromLoginState() {
   return (
     <Container>
       <Gnb loginState={userInfo.isLoggedIn} />
+      <CheckDialog
+        title={errorTitle}
+        message={errorMessage}
+        modalState={errorAvailable}
+        btnName="Ok"
+        toggleModal={() => {
+          dispatch(removeError())
+        }}
+      />
       <InnerBox>
         <Routes>
           <Route path="/" element={<MainPage />} />
