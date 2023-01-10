@@ -16,7 +16,7 @@ export const MadeStem = () => {
       </RowFlex>
       <RowFlex id="EditBtns">
         <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
-        <CheckDialog title="Delete the stem" btnName="Delete" modalState={isOpenModal} toggleModal={toggleModal} />
+        <CheckDialog title="Delete the stem" btnName="Delete" message="Do you really want to delete it? You can't restore it." modalState={isOpenModal} toggleModal={toggleModal} />
         <MoveBtn>View</MoveBtn>
       </RowFlex>
     </StemBox>

@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 interface CheckModal {
   title: string
+  message:string
   modalState: boolean
   btnName: string
   toggleModal: () => void
@@ -14,7 +15,7 @@ export const CheckDialog = (props: CheckModal) => {
     return (
       <Modal>
         <Label>{props.title}</Label>
-        <div>{"Do you really want to delete it? You can't restore it."}</div>
+        <div>{props.message}</div>
         <BtnDisplay>
           <FillBtn onClick={props.toggleModal}>{props.btnName}</FillBtn>
           <StrokeBtn onClick={props.toggleModal}>Cancel</StrokeBtn>

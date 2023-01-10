@@ -1,5 +1,5 @@
 import './App.scss';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router, useNavigate, Navigate } from 'react-router-dom';
 import { Gnb } from './Components/Gnb';
 import { LogIn } from './Pages/LogIn';
@@ -12,8 +12,8 @@ import { SolvingQuestion } from './Pages/SolvingQuestion';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
-import { addError, removeError } from './state/error/errorSlice';
-
+import { removeError } from './state/error/errorSlice';
+import { CheckDialog } from './Components/Dialogs/CheckDialog';
 function App() {
   return (
     <Router>
@@ -30,10 +30,9 @@ function RoutingFromLoginState() {
   //redux
   const errorTitle = useSelector((state: RootState) => state.error.title)
   const errorMessage= useSelector((state: RootState) => state.error.message)
+  const errorAvailable = useSelector((state: RootState) => state.error.error)
   const dispatch = useDispatch()
-  // to create error use () => dispatch(addError(['title', 'message']))
-  // to remove error use () => dispatch(removeError())
-  // use {error} to get the error message after error is added
+  
 
   useEffect(() => {
       if (!isLoggedIn) navigate("/login");
@@ -46,20 +45,21 @@ function RoutingFromLoginState() {
 
 
   return (
-    <Container>
-      <Gnb loginState={isLoggedIn}/>
-      <InnerBox>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/solve" element={<SolvingQuestion />} />
-        <Route path="/login" element={<LogIn login={loginout}/>} />
-        <Route path="/enroll" element={<Enroll />}/>
-        <Route path="/createQuestion" element={<CreateQuestion />}/>
-        <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
-        <Route path="/mypage" element={<MyPage logout={loginout} stemNum={3} optionNum={4}/>}/>
-      </Routes>
-      </InnerBox>
-    </Container>
+      <Container>
+        <Gnb loginState={isLoggedIn}/>
+        <CheckDialog title={errorTitle} message={errorMessage} modalState={errorAvailable} btnName='Ok' toggleModal={()=>{ dispatch(removeError())}}/>
+        <InnerBox>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/solve" element={<SolvingQuestion />} />
+          <Route path="/login" element={<LogIn login={loginout}/>} />
+          <Route path="/enroll" element={<Enroll />}/>
+          <Route path="/createQuestion" element={<CreateQuestion />}/>
+          <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
+          <Route path="/mypage" element={<MyPage logout={loginout} stemNum={3} optionNum={4}/>}/>
+        </Routes>
+        </InnerBox>
+      </Container>
   )
 }
 

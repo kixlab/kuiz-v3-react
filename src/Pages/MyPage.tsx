@@ -4,7 +4,6 @@ import { MadeStem } from '../Components/MadeStem'
 import { googleLogout } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
 import { useCallback } from 'react'
-
 export function MyPage(props: { stemNum: number; optionNum: number; logout: (state: boolean) => void }) {
   const navigate = useNavigate()
 
