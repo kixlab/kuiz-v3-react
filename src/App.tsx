@@ -77,6 +77,4 @@ const InnerBox = styled.div`
   }
 `
 
-
-
 export default App
