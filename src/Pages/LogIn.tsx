@@ -1,32 +1,27 @@
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import styled from '@emotion/styled'
 import jwtDecode from 'jwt-decode'
-import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { login } from '../state/features/userSlice'
 
-interface Profile {
-  email: string
-  name: string
-  img: string
-}
-
-export function LogIn(props: { login: (state: boolean) => void }) {
+export function LogIn() {
   const navigate = useNavigate()
-  const userProfileRef = useRef<Profile | null>()
+  const dispatch = useDispatch()
 
-  function loginSuccess(res: CredentialResponse) {
+  function signIn(res: CredentialResponse) {
     if (res.credential) {
-      const pfData: any = jwtDecode(res.credential)
-      userProfileRef.current = {
-        email: pfData.email,
-        name: pfData.name,
-        img: pfData.picture,
-      }
+      const userData: any = jwtDecode(res.credential)
+      dispatch(
+        login({
+          name: userData.name,
+          email: userData.email,
+          img: userData.picture,
+          isLoggedIn: true,
+        })
+      )
     }
-    console.log(userProfileRef.current)
-    props.login(true)
     navigate('/')
-    //MAKE GLOBAL VAL FROM REF
   }
 
   //TODO: 토큰 받기
@@ -105,7 +100,7 @@ export function LogIn(props: { login: (state: boolean) => void }) {
       </IntroBox>
       <GoogleBtnBox>
         <GoogleOAuthProvider clientId={`${process.env.REACT_APP_CLIENT_ID}`}>
-          <GoogleLogin onSuccess={res => loginSuccess(res)} onError={() => console.log('err')} />
+          <GoogleLogin onSuccess={res => signIn(res)} onError={() => console.log('err')} />
         </GoogleOAuthProvider>
       </GoogleBtnBox>
     </div>

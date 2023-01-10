@@ -4,12 +4,16 @@ import { MadeStem } from '../Components/MadeStem'
 import { googleLogout } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
 import { useCallback } from 'react'
-export function MyPage(props: { stemNum: number; optionNum: number; logout: (state: boolean) => void }) {
-  const navigate = useNavigate()
+import { useDispatch } from 'react-redux'
+import { logout } from '../state/features/userSlice'
 
-  const logout = useCallback(() => {
+export function MyPage(props: { stemNum: number; optionNum: number }) {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const signOut = useCallback(() => {
     googleLogout()
-    props.logout(false)
+    dispatch(logout())
     navigate('/login')
   }, [])
 
@@ -38,7 +42,7 @@ export function MyPage(props: { stemNum: number; optionNum: number; logout: (sta
           <MadeOption optionType="Distractor" />
         </MadeLists>
       </div>
-      <button onClick={logout}>Log Out</button>
+      <button onClick={signOut}>Log Out</button>
     </div>
   )
 }
