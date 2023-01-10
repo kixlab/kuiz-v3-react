@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 
-export const MadeOption = (props: { optionType: string }) => {
+export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -33,7 +33,7 @@ const OptionBox = styled.div`
   border-radius: 8px;
 `
 
-const RowFlex = styled.div`
+const RowFlex = styled.div<{id?:'EditBtns'}>`
   display: flex;
   flex-direction: row;
   gap: 12px;
@@ -45,7 +45,7 @@ const RowFlex = styled.div`
     `}
 `
 
-const Tag = styled.div`
+const Tag = styled.div<{id?:'Answer'|'Distractor'}>`
   color: white;
   font-size: 12px;
   padding: 4px 8px 4px 8px;

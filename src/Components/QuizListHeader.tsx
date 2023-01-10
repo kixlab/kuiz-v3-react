@@ -11,7 +11,7 @@ export const QuizListHeader = () => {
     )
 }
 
-const QuizList = styled.div`
+const QuizList = styled.div<{id:'Header'}>`
     display: grid;
     grid-template-columns: auto 100px 140px;
     background-color: white;

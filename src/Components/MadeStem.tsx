@@ -29,7 +29,7 @@ const StemBox = styled.div`
   border-radius: 8px;
 `
 
-const RowFlex = styled.div`
+const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   display: flex;
   flex-direction: row;
   gap: 12px;

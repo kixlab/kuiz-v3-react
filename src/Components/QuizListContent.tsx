@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
-export const QuizListContent = (props:{type:string}) => {
+export const QuizListContent = (props:{type:'Content'|'End'}) => {
     return (
         <QuizList id={props.type}>
                 <Item>What is the main question?</Item>
@@ -11,7 +11,7 @@ export const QuizListContent = (props:{type:string}) => {
     )
 }
 
-const QuizList = styled.div`
+const QuizList = styled.div<{id?:'Content'|'End'}>`
     display: grid;
     grid-template-columns: auto 100px 140px;
     background-color: white;
