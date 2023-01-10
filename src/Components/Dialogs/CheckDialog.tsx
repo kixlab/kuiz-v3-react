@@ -1,5 +1,4 @@
 import { Modal } from './Modal'
-import { useState } from 'react'
 import styled from '@emotion/styled'
 
 interface CheckModal {
