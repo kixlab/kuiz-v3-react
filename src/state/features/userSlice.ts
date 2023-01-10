@@ -11,6 +11,7 @@ const initialState: userInfoType = {
   name: '',
   email: '',
   img: '',
+  img: '',
   isLoggedIn: false,
 }
 
