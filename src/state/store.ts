@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from './reducers'
+import thunk from 'redux-thunk'
+import logger from 'redux-logger'
+import persistedReducer from './reducers/index'
+
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
+  middleware: [thunk, logger],
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
