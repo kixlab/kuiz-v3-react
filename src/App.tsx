@@ -23,9 +23,6 @@ function App() {
   const errorMessage = useSelector((state: RootState) => state.error.message)
   const errorAvailable = useSelector((state: RootState) => state.error.error)
 
-  useEffect(() => {
-    console.log(userInfo)
-  })
   return (
     <Container>
       <Router>
