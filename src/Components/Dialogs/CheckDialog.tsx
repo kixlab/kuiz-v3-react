@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 interface CheckModal {
   title: string
-  message:string
+  message: string
   modalState: boolean
   btnName: string
   toggleModal: () => void
@@ -26,7 +26,8 @@ export const CheckDialog = (props: CheckModal) => {
 
 const Label = styled.div`
   font-size: 20px;
-  font-weight: 700;
+  font-family: 'inter-sb';
+  color: #323232;
   line-height: 1.4;
   padding: 8px 0 0 0;
   @media (max-width: 599px) {
@@ -49,7 +50,7 @@ const FillBtn = styled.button`
 `
 
 const StrokeBtn = styled.button`
-  color: #212121;
+  color: #323232;
   background-color: #fff;
   border: 1px solid #bdbdbd;
   :hover {

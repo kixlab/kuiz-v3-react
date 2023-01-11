@@ -42,7 +42,7 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
           <MadeOption optionType="Distractor" />
         </MadeLists>
       </div>
-      <button onClick={signOut}>Log Out</button>
+      <StrokeBtn onClick={signOut}>Log Out</StrokeBtn>
     </div>
   )
 }
@@ -60,4 +60,18 @@ const DataLabel = styled.div`
   padding: 30px 0 16px;
   display: flex;
   gap: 10px;
+`
+
+const StrokeBtn = styled.button`
+  width: 200px;
+  color: #212121;
+  background-color: #fff;
+  border: 1px solid #bdbdbd;
+  margin-bottom: 30px;
+  :hover {
+    background-color: #e9eef4;
+  }
+  @media (max-width: 599px) {
+    font-size: 14px;
+  }
 `

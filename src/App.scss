@@ -1,6 +1,27 @@
+@font-face {
+  font-family: 'Raleway';
+  src: url(./Asset/Raleway-ExtraBold.ttf);
+}
+
+@font-face {
+  font-family: 'inter-r';
+  src: url(./Asset/Inter-Regular.ttf);
+}
+@font-face {
+  font-family: 'inter-m';
+  src: url(./Asset/Inter-Medium.ttf);
+}
+@font-face {
+  font-family: 'inter-sb';
+  src: url(./Asset/Inter-SemiBold.ttf);
+}
+@font-face {
+  font-family: 'inter-eb';
+  src: url(./Asset/Inter-ExtraBold.ttf);
+}
+
 html {
   background-color: #e6eaef;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .App {
@@ -25,7 +46,7 @@ button {
   background-color: #3d8add;
   color: white;
   font-size: 16px;
-  font-weight: 500;
+  font-family: 'inter-m';
 }
 button:hover {
   background-color: #205e9f;

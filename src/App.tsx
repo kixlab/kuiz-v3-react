@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
 import { removeError } from './state/features/errorSlice'
 import { CheckDialog } from './Components/Dialogs/CheckDialog'
-import { useEffect } from 'react'
+
 function App() {
   //redux
   const dispatch = useDispatch()
@@ -63,6 +63,7 @@ function App() {
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  font-family: 'inter-r';
   @media (max-width: 599px) {
     flex-direction: column;
   }
