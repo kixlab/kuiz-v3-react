@@ -11,7 +11,6 @@ const initialState: userInfoType = {
   name: '',
   email: '',
   img: '',
-  img: '',
   isLoggedIn: false,
 }
 
@@ -25,7 +24,7 @@ export const userSlice = createSlice({
       state.img = action.payload.img
       state.isLoggedIn = action.payload.isLoggedIn
     },
-    logout: (state: userInfoType, action: PayloadAction) => {
+    logout: (state: userInfoType) => {
       state.name = ''
       state.email = ''
       state.img = ''
