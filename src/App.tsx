@@ -32,11 +32,13 @@ function App() {
           <Routes>
             {/* routes logged in people can't access */}
             <Route element={<ProtectedUnauthenticatedRoutes />}>
-              <Route path="/login" element={<LogIn />} />
+              {/* all routes lead to login page */}
+              <Route path="*" element={<LogIn />} />
             </Route>
             {/* routes only logged in people can access */}
             <Route element={<ProtectedAuthenticatedRoutes />}>
-              <Route path="/" element={<MainPage />} />
+              {/* every route that is not specified will lead to MainPage */}
+              <Route path="*" element={<MainPage />} />
               <Route path="/solve" element={<SolvingQuestion />} />
               <Route path="/enroll" element={<Enroll />}/>
               <Route path="/createQuestion" element={<CreateQuestion />}/>
