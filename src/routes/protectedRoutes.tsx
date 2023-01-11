@@ -1,17 +1,21 @@
 import { Outlet } from 'react-router'
 import { LogIn } from '../Pages/LogIn';
 import { MainPage } from '../Pages/MainPage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/store';
 
 //routes logged in people can't access
-export const ProtectedUnauthenticatedRoutes = (props:{isAuthenticated:boolean}) => {
+export const ProtectedUnauthenticatedRoutes = () => {
+    const userInfo = useSelector((state: RootState) => state.userInfo)
     return (
-        !props.isAuthenticated ? <Outlet /> : <MainPage />
+        !userInfo.isLoggedIn ? <Outlet /> : <MainPage />
     )
 }
 
 //routes only logged in people can access
-export const ProtectedAuthenticatedRoutes = (props:{isAuthenticated:boolean,setIsAuthenticated:(value: boolean) => void}) => {
+export const ProtectedAuthenticatedRoutes = () => {
+    const userInfo = useSelector((state: RootState) => state.userInfo)
     return (
-        props.isAuthenticated ? <Outlet /> : <LogIn login={(state:boolean)=>props.setIsAuthenticated(state)} />
+        userInfo.isLoggedIn ? <Outlet /> : <LogIn />
     )
 }

@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import errorReducer from './error/errorSlice'
+import { rootReducer } from './reducers'
 export const store = configureStore({
-  reducer: {
-    error: errorReducer
-  },
+  reducer: rootReducer,
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
