@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import iconImg from '../Asset/logoIcon.png'
+import logoIcon from '../Asset/logo.svg'
 
 export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
@@ -8,7 +9,7 @@ export const Gnb = (props: { loginState: boolean }) => {
   return (
     <SideTab className="SideTab">
       <Logo onClick={() => props.loginState && navigate('/')}>
-        <LogoIcon src={iconImg} />
+        <LogoIcon src={logoIcon} />
         KUIZ
       </Logo>
       {props.loginState == true && (
@@ -51,8 +52,8 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: 'Raleway';
   font-size: 20px;
-  font-weight: 700;
   color: #3d8add;
   cursor: pointer;
   &:hover {
@@ -66,7 +67,6 @@ const Logo = styled.div`
 const LogoIcon = styled.img`
   width: 22px;
   height: 22px;
-  background-color: rgba(0, 0, 0, 0);
 `
 
 const ProfileImg = styled.div`
@@ -88,9 +88,9 @@ const Menu = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-  color: #212121;
+  color: #323232;
   font-size: 14px;
-  font-weight: 500;
+  font-family: 'inter-m';
   @media (max-width: 599px) {
     display: none;
     flex-direction: column;

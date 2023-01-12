@@ -16,11 +16,17 @@ export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
       </RowFlex>
       <RowFlex>
         <QSymbol>Q.</QSymbol>
-        <div>What is the question?</div>
+        <Stem>What is the question?</Stem>
       </RowFlex>
       <RowFlex id="EditBtns">
         <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
-        <CheckDialog title="Delete the option" message="Do you really want to delete it? You can't restore it." btnName="Delete" modalState={isOpenModal} toggleModal={toggleModal} />
+        <CheckDialog
+          title="Delete the option"
+          message="Do you really want to delete it? You can't restore it."
+          btnName="Delete"
+          modalState={isOpenModal}
+          toggleModal={toggleModal}
+        />
         <MoveBtn>View</MoveBtn>
       </RowFlex>
     </OptionBox>
@@ -33,11 +39,12 @@ const OptionBox = styled.div`
   border-radius: 8px;
 `
 
-const RowFlex = styled.div<{id?:'EditBtns'}>`
+const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   display: flex;
   flex-direction: row;
   gap: 12px;
   padding-bottom: 16px;
+  font-family: 'inter-m';
   ${props =>
     props.id === 'EditBtns' &&
     css`
@@ -45,7 +52,7 @@ const RowFlex = styled.div<{id?:'EditBtns'}>`
     `}
 `
 
-const Tag = styled.div<{id?:'Answer'|'Distractor'}>`
+const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
   color: white;
   font-size: 12px;
   padding: 4px 8px 4px 8px;
@@ -63,14 +70,17 @@ const Tag = styled.div<{id?:'Answer'|'Distractor'}>`
 `
 
 const QSymbol = styled.div`
+  font-family: 'inter-r';
   font-size: 18px;
-  font-weight: 600;
-  color: #919191;
+  color: #858585;
+`
+
+const Stem = styled.div`
+  color: #858585;
 `
 
 const DeleteBtn = styled.div`
-  font-weight: 500;
-  color: #858585;
+  color: #616161;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
@@ -78,7 +88,6 @@ const DeleteBtn = styled.div`
 `
 
 const MoveBtn = styled.div`
-  font-weight: 500;
   padding-left: 8px;
   color: #1c548f;
   border-radius: 8px;

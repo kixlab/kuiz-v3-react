@@ -1,20 +1,20 @@
-import { Gnb } from './Components/Gnb';
-import { LogIn } from './Pages/LogIn';
-import { Enroll } from './Pages/Enroll';
-import { MainPage } from './Pages/MainPage';
-import { DetailAndCreateOption } from './Pages/DetailAndCreateOption';
-import { CreateQuestion } from './Pages/CreateQuestion';
-import { MyPage } from './Pages/MyPage';
-import { SolvingQuestion } from './Pages/SolvingQuestion';
-import styled from '@emotion/styled';
-import { Global,css } from '@emotion/react';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import { ProtectedAuthenticatedRoutes,ProtectedUnauthenticatedRoutes } from './routes/protectedRoutes';
+import { Gnb } from './Components/Gnb'
+import { LogIn } from './Pages/LogIn'
+import { Enroll } from './Pages/Enroll'
+import { MainPage } from './Pages/MainPage'
+import { DetailAndCreateOption } from './Pages/DetailAndCreateOption'
+import { CreateQuestion } from './Pages/CreateQuestion'
+import { MyPage } from './Pages/MyPage'
+import { SolvingQuestion } from './Pages/SolvingQuestion'
+import styled from '@emotion/styled'
+import { Global, css } from '@emotion/react'
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
+import { ProtectedAuthenticatedRoutes, ProtectedUnauthenticatedRoutes } from './routes/protectedRoutes'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
 import { removeError } from './state/features/errorSlice'
 import { CheckDialog } from './Components/Dialogs/CheckDialog'
-import { useEffect } from 'react'
+
 function App() {
   //redux
   const dispatch = useDispatch()
@@ -26,10 +26,18 @@ function App() {
   return (
     <Container>
       <Router>
-        <Global styles={GlobalStyles}/>
-        <Gnb loginState={userInfo.isLoggedIn}/>
-          <CheckDialog title={errorTitle} message={errorMessage} modalState={errorAvailable} btnName='Ok' toggleModal={()=>{ dispatch(removeError())}}/>
-          <InnerBox>
+        <Global styles={GlobalStyles} />
+        <Gnb loginState={userInfo.isLoggedIn} />
+        <CheckDialog
+          title={errorTitle}
+          message={errorMessage}
+          modalState={errorAvailable}
+          btnName="Ok"
+          toggleModal={() => {
+            dispatch(removeError())
+          }}
+        />
+        <InnerBox>
           <Routes>
             {/* routes logged in people can't access */}
             <Route element={<ProtectedUnauthenticatedRoutes />}>
@@ -54,9 +62,31 @@ function App() {
 }
 
 const GlobalStyles = css`
+  @font-face {
+    font-family: 'Raleway';
+    src: url(./Asset/Raleway-ExtraBold.ttf);
+  }
+
+  @font-face {
+    font-family: 'inter-r';
+    src: url(./Asset/Inter-Regular.ttf);
+  }
+  @font-face {
+    font-family: 'inter-m';
+    src: url(./Asset/Inter-Medium.ttf);
+  }
+  @font-face {
+    font-family: 'inter-sb';
+    src: url(./Asset/Inter-SemiBold.ttf);
+  }
+  @font-face {
+    font-family: 'inter-eb';
+    src: url(./Asset/Inter-ExtraBold.ttf);
+  }
   html {
     background-color: #e6eaef;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
+      sans-serif;
   }
   .App {
     display: flex;
@@ -101,6 +131,7 @@ const GlobalStyles = css`
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  font-family: 'inter-r';
   @media (max-width: 599px) {
     flex-direction: column;
   }

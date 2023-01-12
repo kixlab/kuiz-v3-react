@@ -153,7 +153,8 @@ const QuestionBox = styled.div`
 
 const ReturnBtn = styled.div`
   cursor: pointer;
-  font-weight: 500;
+  font-size: 15px;
+  font-family: 'inter-m';
   color: #616161;
   :hover {
     color: #919191;
@@ -162,7 +163,7 @@ const ReturnBtn = styled.div`
 
 const Label = styled.div`
   font-size: 20px;
-  font-weight: 700;
+  font-family: 'inter-sb';
   line-height: 1.4;
   padding: 8px 0 0 0;
   @media (max-width: 599px) {
@@ -194,7 +195,7 @@ const Option = styled.div<{ state: boolean; selected: boolean }>`
     css`
       border-color: #3d8add;
       color: #3372b6;
-      font-weight: 500;
+      font-family: 'inter-m';
       background-color: #d4e4f3;
     `}
   `}
@@ -212,7 +213,7 @@ const FillBtn = styled.button`
 `
 
 const StrokeBtn = styled.button`
-  color: #212121;
+  color: #323232;
   background-color: #fff;
   border: 1px solid #bdbdbd;
   :hover {
