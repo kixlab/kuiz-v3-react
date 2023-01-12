@@ -11,7 +11,7 @@ const initialState: userInfoType = {
   name: '',
   email: '',
   img: '',
-  isLoggedIn: true,
+  isLoggedIn: false,
 }
 
 export const userSlice = createSlice({

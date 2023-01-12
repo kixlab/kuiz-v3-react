@@ -14,14 +14,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from './state/store'
 import { removeError } from './state/features/errorSlice'
 import { CheckDialog } from './Components/Dialogs/CheckDialog'
+import { useEffect } from 'react'
 function App() {
-
   //redux
+  const dispatch = useDispatch()
   const userInfo = useSelector((state: RootState) => state.userInfo)
   const errorTitle = useSelector((state: RootState) => state.error.title)
   const errorMessage = useSelector((state: RootState) => state.error.message)
   const errorAvailable = useSelector((state: RootState) => state.error.error)
-  const dispatch = useDispatch()
 
   return (
     <Container>
@@ -41,14 +41,14 @@ function App() {
               {/* every route that is not specified will lead to MainPage */}
               <Route path="*" element={<MainPage />} />
               <Route path="/solve" element={<SolvingQuestion />} />
-              <Route path="/enroll" element={<Enroll />}/>
-              <Route path="/createQuestion" element={<CreateQuestion />}/>
-              <Route path="/question/createOption" element={<DetailAndCreateOption />}/>
-              <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4}/>}/>
+              <Route path="/enroll" element={<Enroll />} />
+              <Route path="/createQuestion" element={<CreateQuestion />} />
+              <Route path="/question/createOption" element={<DetailAndCreateOption />} />
+              <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4} />} />
             </Route>
           </Routes>
-          </InnerBox>
-      </Router> 
+        </InnerBox>
+      </Router>
     </Container>
   )
 }
