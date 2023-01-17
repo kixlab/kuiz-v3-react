@@ -65,6 +65,7 @@ function App() {
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  font-family: 'inter-r';
   @media (max-width: 599px) {
     flex-direction: column;
   }

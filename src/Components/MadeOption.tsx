@@ -48,6 +48,7 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   gap: 12px;
   align-items: center;
   padding-bottom: 16px;
+  font-family: 'inter-m';
   ${props =>
     props.id === 'EditBtns' &&
     css`

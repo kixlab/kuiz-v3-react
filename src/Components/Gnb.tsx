@@ -88,7 +88,7 @@ const Logo = styled.div`
   gap: 8px;
   cursor: pointer;
   &:hover {
-    color: #346191;
+    color: ${theme.palette.primary.main};
   }
 `
 
