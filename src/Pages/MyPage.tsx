@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../state/features/userSlice'
+import { StrokeBtn } from '../Components/basic/button/Button'
+import { Label } from '../Components/basic/Label'
+import { theme } from '../styles/theme'
 
 export function MyPage(props: { stemNum: number; optionNum: number }) {
   const navigate = useNavigate()
@@ -21,7 +24,7 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
     <div>
       <div>
         <DataLabel>
-          <div style={{ color: '#212121' }}>Created Question Stems</div>
+          <Label text="Created Question Stems" color="black" size={0} />
           {props.stemNum}
         </DataLabel>
         <MadeLists>
@@ -32,8 +35,8 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
       </div>
       <div>
         <DataLabel>
-          <div style={{ color: '#212121' }}>Created Options</div>
-          {props.optionNum}
+          <Label text="Created Options" color="black" size={0} />
+          {props.stemNum}
         </DataLabel>
         <MadeLists>
           <MadeOption optionType="Distractor" />
@@ -42,7 +45,7 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
           <MadeOption optionType="Distractor" />
         </MadeLists>
       </div>
-      <StrokeBtn onClick={signOut}>Log Out</StrokeBtn>
+      <StrokeBtn onClick={signOut} text="Log Out" />
     </div>
   )
 }
@@ -55,23 +58,9 @@ const MadeLists = styled.div`
 `
 
 const DataLabel = styled.div`
-  color: #1f74ce;
-  font-weight: 700;
-  padding: 30px 0 16px;
+  ${theme.typography.hLabel};
+  color: ${theme.palette.primary.main};
+  padding: 30px 0 12px;
   display: flex;
   gap: 10px;
-`
-
-const StrokeBtn = styled.button`
-  width: 200px;
-  color: #212121;
-  background-color: #fff;
-  border: 1px solid #bdbdbd;
-  margin-bottom: 30px;
-  :hover {
-    background-color: #e9eef4;
-  }
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
 `

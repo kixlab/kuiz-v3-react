@@ -5,7 +5,6 @@ export const Modal = ({ children }: PropsWithChildren) => {
   return (
     <ModalContainer>
       <DialogBox>{children}</DialogBox>
-      {/* <dialog */}
       <Backdrop />
     </ModalContainer>
   )
@@ -39,8 +38,9 @@ const DialogBox = styled.div`
   z-index: 21;
   @media (max-width: 599px) {
     width: 100%;
-    height: 200px;
-    margin: 0 40px 0 40px;
+    height: auto;
+    gap: 12px;
+    margin: 0 20px 0 20px;
   }
 `
 

@@ -1,9 +1,13 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
-import { CheckDialog } from './Dialogs/CheckDialog'
+import { CheckDialog } from './dialogs/CheckDialog'
+import { theme } from '../styles/theme'
+import { TextBtn, TextBtnCta } from './basic/button/Button'
+import { useNavigate } from 'react-router-dom'
 
 export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
+  const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -12,22 +16,21 @@ export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
     <OptionBox>
       <RowFlex>
         <Tag id={props.optionType}>{props.optionType}</Tag>
-        <div>option</div>
+        <OptionLabel>option</OptionLabel>
       </RowFlex>
       <RowFlex>
-        <QSymbol>Q.</QSymbol>
-        <Stem>What is the question?</Stem>
+        <QuestionLabel>Q. what is the question?</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
+        <TextBtn onClick={toggleModal} text="Delete" />
         <CheckDialog
-          title="Delete the option"
-          message="Do you really want to delete it? You can't restore it."
+          title="Delete the stem"
           btnName="Delete"
+          message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
           toggleModal={toggleModal}
         />
-        <MoveBtn>View</MoveBtn>
+        <TextBtnCta onClick={() => navigate('/question/createOption')} text="View" />
       </RowFlex>
     </OptionBox>
   )
@@ -35,7 +38,7 @@ export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
 
 const OptionBox = styled.div`
   background-color: white;
-  padding: 16px 24px 0px 24px;
+  padding: 20px 20px 0px 20px;
   border-radius: 8px;
 `
 
@@ -43,8 +46,8 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   display: flex;
   flex-direction: row;
   gap: 12px;
+  align-items: center;
   padding-bottom: 16px;
-  font-family: 'inter-m';
   ${props =>
     props.id === 'EditBtns' &&
     css`
@@ -53,46 +56,29 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
 `
 
 const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
-  color: white;
-  font-size: 12px;
+  ${theme.typography.overline};
+  color: ${theme.palette.tags.contrastText};
   padding: 4px 8px 4px 8px;
   border-radius: 6px;
   ${props =>
     props.id === 'Answer' &&
     css`
-      background-color: rgb(30, 144, 30);
+      background-color: ${theme.palette.tags.answer};
     `}
   ${props =>
     props.id === 'Distractor' &&
     css`
-      background-color: rgb(220, 51, 51);
+      background-color: ${theme.palette.tags.distractor};
     `}
 `
 
-const QSymbol = styled.div`
-  font-family: 'inter-r';
-  font-size: 18px;
-  color: #858585;
+const OptionLabel = styled.div`
+  ${theme.typography.b02b};
 `
 
-const Stem = styled.div`
-  color: #858585;
-`
-
-const DeleteBtn = styled.div`
-  color: #616161;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const MoveBtn = styled.div`
-  padding-left: 8px;
-  color: #1c548f;
-  border-radius: 8px;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+const QuestionLabel = styled.div`
+  ${theme.typography.b02};
+  display: flex;
+  gap: 6px;
+  color: ${theme.palette.grey[400]};
 `

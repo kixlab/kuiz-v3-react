@@ -1,9 +1,13 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
-import { CheckDialog } from './Dialogs/CheckDialog'
+import { CheckDialog } from './dialogs/CheckDialog'
+import { TextBtn, TextBtnCta } from './basic/button/Button'
+import { theme } from '../styles/theme'
+import { useNavigate } from 'react-router-dom'
 
 export const MadeStem = () => {
+  const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -11,13 +15,20 @@ export const MadeStem = () => {
   return (
     <StemBox>
       <RowFlex>
-        <QSymbol>Q.</QSymbol>
-        <div>What is the question?</div>
+        <QuestionLabel>
+          <div style={{ color: `${theme.palette.grey[400]}` }}>Q.</div>The question you made
+        </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
-        <CheckDialog title="Delete the stem" btnName="Delete" message="Do you really want to delete it? You can't restore it." modalState={isOpenModal} toggleModal={toggleModal} />
-        <MoveBtn>View</MoveBtn>
+        <TextBtn onClick={toggleModal} text="Delete" />
+        <CheckDialog
+          title="Delete the stem"
+          btnName="Delete"
+          message="Do you really want to delete it? You can't restore it."
+          modalState={isOpenModal}
+          toggleModal={toggleModal}
+        />
+        <TextBtnCta onClick={() => navigate('/question/createOption')} text="View" />
       </RowFlex>
     </StemBox>
   )
@@ -25,7 +36,7 @@ export const MadeStem = () => {
 
 const StemBox = styled.div`
   background-color: white;
-  padding: 16px 24px 0px 24px;
+  padding: 20px 20px 0px 20px;
   border-radius: 8px;
 `
 
@@ -40,28 +51,9 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
       justify-content: right;
     `}
 `
-const QSymbol = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  color: #919191;
-`
-
-const DeleteBtn = styled.div`
-  font-weight: 500;
-  color: #858585;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const MoveBtn = styled.div`
-  font-weight: 500;
-  padding-left: 8px;
-  color: #1c548f;
-  border-radius: 8px;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+const QuestionLabel = styled.div`
+  ${theme.typography.b01};
+  color: ${theme.palette.grey[200]};
+  display: flex;
+  gap: 6px;
 `

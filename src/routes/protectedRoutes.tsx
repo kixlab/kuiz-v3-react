@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router'
-import { LogIn } from '../Pages/LogIn'
-import { MainPage } from '../Pages/MainPage'
+import { LogIn } from '../pages/LogIn'
+import { MainPage } from '../pages/MainPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
 

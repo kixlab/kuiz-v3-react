@@ -1,43 +1,48 @@
-import styled from '@emotion/styled';
-import { CreateNewOption } from '../Components/CreateNewOption';
-import { QExplain } from '../Components/QExplain';
+import styled from '@emotion/styled'
+import { OptionBtn } from '../Components/basic/button/OptionButton'
+import { Label } from '../Components/basic/Label'
+import { CreateNewOption } from '../Components/CreateNewOption'
 
 export function DetailAndCreateOption() {
-    return (
-        <QuestionBox>
-            <QExplain type="Objective"/>
-            <QExplain type="Explanation"/>
-            <DividerLine/>
-            <div className='Label'>Q. abcd</div>
-            <div>
-                <Option>✅Option1</Option>
-                <Option>❌Option1</Option>
-                <Option>❌Option1</Option>
-            </div>
-            <DividerLine/>
-            <CreateNewOption/>
-        </QuestionBox>
-    )
+  return (
+    <QuestionBox>
+      <Section>
+        <Label text="Learning Objective" color="blue" size={0} />
+        <div>abcd</div>
+      </Section>
+      <Section>
+        <Label text="Explanation" color="blue" size={0} />
+        <div>abcd</div>
+      </Section>
+      <DividerLine />
+      <Label text="Q. abcd" color="black" size={1} />
+      <div>
+        <OptionBtn state={true} text="Option01" selected={false} />
+        <OptionBtn state={true} text="Option02" selected={false} />
+        <OptionBtn state={true} text="Option03" selected={false} />
+      </div>
+      <DividerLine />
+      <CreateNewOption />
+    </QuestionBox>
+  )
 }
 
-//QuestionBox is here!
 const QuestionBox = styled.div`
-    border-radius: 8px;
-    background-color: white;
-    margin: 40px 0 40px 0;
-    padding: 0 30px 30px 30px;
+  border-radius: 8px;
+  background-color: white;
+  margin: 40px 0 40px 0;
+  padding: 10px 30px 30px 30px;
+`
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 `
 
 const DividerLine = styled.hr`
-    border:0;
-    height:1px;
-    background-color: #dbdbdb;
-    margin-top: 30px;
-`
-
-const Option = styled.div`
-    background-color: #f1f1f1;
-    padding: 16px;
-    margin-bottom: 6px;
-    border-radius: 6px;
+  border: 0;
+  height: 1px;
+  background-color: #dbdbdb;
+  margin: 30px 0 20px 0;
 `

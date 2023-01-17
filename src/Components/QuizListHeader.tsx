@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import { theme } from '../styles/theme'
 
 export const QuizListHeader = () => {
   return (
@@ -12,20 +13,22 @@ export const QuizListHeader = () => {
 }
 
 const QuizList = styled.div<{ id: 'Header' }>`
+  ${theme.typography.b02b};
   display: grid;
   grid-template-columns: auto 110px 130px;
   background-color: white;
   place-items: left;
   padding: 20px;
-  font-size: 15px;
-  font-family: 'inter-m';
   ${props =>
     props.id === 'Header' &&
     css`
       height: auto;
-      background-color: #3d8add;
-      color: white;
+      background-color: ${theme.palette.primary.dark};
+      color: ${theme.palette.common.white};
       border-radius: 8px 8px 0 0;
       margin-top: 40px;
     `}
+  @media(max-width: 599px) {
+    grid-template-columns: auto 60px 90px;
+  }
 `

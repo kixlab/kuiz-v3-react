@@ -78,7 +78,6 @@ const CatBox = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #e1e5eb;
-  margin-top: 12px;
   padding: 4px 16px 4px 16px;
   border-radius: 6px;
   font-size: 16px;

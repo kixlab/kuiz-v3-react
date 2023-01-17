@@ -1,10 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import iconImg from '../Asset/logoIcon.png'
-import logoIcon from '../Asset/logo.svg'
+import logoIcon from '../asset/logo.svg'
+import { theme } from '../styles/theme'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../state/store'
 
 export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
+  const userImg = useSelector((state: RootState) => state.userInfo).img
+  const [isDisplay, setIsDisplay] = useState(false)
 
   return (
     <SideTab className="SideTab">
@@ -14,13 +19,41 @@ export const Gnb = (props: { loginState: boolean }) => {
       </Logo>
       {props.loginState == true && (
         <>
-          <Menu>
-            <MenuBtn onClick={() => navigate('/solve')}>Solve Problem</MenuBtn>
-            <MenuBtn onClick={() => navigate('/createQuestion')}>Create Question</MenuBtn>
-            <MenuBtn onClick={() => navigate('/question/createOption')}>Create Options</MenuBtn>
-            <MenuBtn onClick={() => navigate('/mypage')}>My Page</MenuBtn>
+          <Menu isDisplay={isDisplay}>
+            <MenuBtn
+              onClick={() => {
+                navigate('/solve')
+                setIsDisplay(!isDisplay)
+              }}
+            >
+              Solve Problem
+            </MenuBtn>
+            <MenuBtn
+              onClick={() => {
+                navigate('/createQuestion')
+                setIsDisplay(!isDisplay)
+              }}
+            >
+              Create Question
+            </MenuBtn>
+            <MenuBtn
+              onClick={() => {
+                navigate('/question/createOption')
+                setIsDisplay(!isDisplay)
+              }}
+            >
+              Create Options
+            </MenuBtn>
+            <MenuBtn
+              onClick={() => {
+                navigate('/mypage')
+                setIsDisplay(!isDisplay)
+              }}
+            >
+              My Page
+            </MenuBtn>
           </Menu>
-          <ProfileImg onClick={() => navigate('/login')}></ProfileImg>
+          <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
         </>
       )}
     </SideTab>
@@ -37,7 +70,7 @@ const SideTab = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 30px 0px 30px;
-  background-color: #f7fafd;
+  background-color: ${theme.palette.background.light};
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
   z-index: 5;
@@ -49,18 +82,13 @@ const SideTab = styled.div`
 `
 
 const Logo = styled.div`
+  ${theme.typography.logo};
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Raleway';
-  font-size: 20px;
-  color: #3d8add;
   cursor: pointer;
   &:hover {
     color: #346191;
-  }
-  @media (max-width: 599px) {
-    font-size: 16px;
   }
 `
 
@@ -69,32 +97,31 @@ const LogoIcon = styled.img`
   height: 22px;
 `
 
-const ProfileImg = styled.div`
+const ProfileImg = styled.img`
   display: none;
-  background-image: '';
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  background-color: #346191;
   cursor: pointer;
   @media (max-width: 599px) {
+    display: flex;
     width: 28px;
     height: 28px;
-    display: flex;
   }
 `
 
-const Menu = styled.div`
+const Menu = styled.div<{ isDisplay: boolean }>`
+  ${theme.typography.b03b};
   display: flex;
   flex-direction: row;
   gap: 16px;
-  color: #323232;
-  font-size: 14px;
-  font-family: 'inter-m';
+  color: ${theme.palette.grey[200]};
   @media (max-width: 599px) {
-    display: none;
+    ${props =>
+      props.isDisplay
+        ? `
+      display: flex;
+    `
+        : `display: none;`}
     flex-direction: column;
-    font-size: 14px;
     padding-top: 48px;
     padding-bottom: 20px;
   }
@@ -105,8 +132,8 @@ const MenuBtn = styled.div`
   vertical-align: middle;
   border-bottom: 2px solid rgba(0, 0, 0, 0);
   &:hover {
-    color: #3d8add;
-    border-color: #3d8add;
+    color: ${theme.palette.primary.main};
+    border-color: ${theme.palette.primary.main};
     cursor: pointer;
   }
   @media (max-width: 599px) {
