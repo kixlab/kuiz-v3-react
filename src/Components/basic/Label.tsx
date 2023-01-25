@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { theme } from '../../styles/theme'
+import { palette, typography } from '../../styles/theme'
 
 export const Label = (props: { text: string; color: string; size: number }) => {
   return (
