@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
+import { palette, typography } from '../styles/theme'
+import { TextBtnCta } from './basic/button/Button'
 
 interface Props {
   getCategory: (cats: string[]) => void
@@ -11,11 +13,12 @@ interface Props {
 export const CategoryInput = ({ getCategory }: Props) => {
   const inputRef = useRef<string>('')
   //Should get category data from db
-  const [catList, setCatList] = useState<string[]>(['Common misconception', 'Form similar to answer'])
+  const [categories, setCategories] = useState<string[]>(['Common misconception', 'Form similar to answer'])
   const [selections, setSelections] = useState<string[]>([])
 
   function addElement() {
-    if (!catList.includes(inputRef.current) && inputRef.current != '') setCatList([inputRef.current, ...catList])
+    if (!categories.includes(inputRef.current) && inputRef.current != '')
+      setCategories([inputRef.current, ...categories])
     else if (inputRef.current == '') alert('Please enter the category') //no input case
     else alert('You have the same category') //duplicates case
   }
@@ -34,15 +37,15 @@ export const CategoryInput = ({ getCategory }: Props) => {
       <CatBox>
         +
         <CatInput
+          type="text"
           style={{ border: 'none' }}
           onChange={e => (inputRef.current = e.target.value)}
-          type="text"
           placeholder="Select categories for your option or add your own"
         />
-        <AddBtn onClick={addElement}>Add</AddBtn>
+        <TextBtnCta onClick={addElement}>Add</TextBtnCta>
       </CatBox>
       <Categories>
-        {catList.map((e, idx) => {
+        {categories.map((e, idx) => {
           return (
             <Category key={idx} selected={selections.includes(e)}>
               <div
@@ -58,7 +61,7 @@ export const CategoryInput = ({ getCategory }: Props) => {
 
               <DeleteCat
                 onClick={() => {
-                  setCatList(removeElement(catList, e))
+                  setCategories(removeElement(categories, e))
                   setSelections(removeElement(selections, e))
                 }}
               >
@@ -78,7 +81,6 @@ const CatBox = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #e1e5eb;
-  margin-top: 12px;
   padding: 4px 16px 4px 16px;
   border-radius: 6px;
   font-size: 16px;
@@ -86,27 +88,17 @@ const CatBox = styled.div`
 `
 
 const CatInput = styled.input`
+  ${typography.b02};
   padding: 16px;
   border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
-  font-size: 16px;
   outline: none;
   background: none;
   margin: 0;
   &:focus {
     border: none;
     outline: none;
-  }
-`
-
-const AddBtn = styled.div`
-  color: #3d8add;
-  border-bottom: 1px solid rgba(0, 0, 0, 0);
-  cursor: pointer;
-  &:hover {
-    color: #2062aa;
-    border-color: #2062aa;
   }
 `
 
@@ -126,7 +118,7 @@ const Category = styled.div<{ selected: boolean }>`
   padding: 0px 16px 0px 16px;
   border-radius: 20px;
   background-color: #e1e5eb;
-  color: #212121;
+  color: ${palette.grey[200]};
   cursor: pointer;
   &:hover {
     background-color: #b6c7db;

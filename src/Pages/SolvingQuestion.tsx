@@ -7,6 +7,9 @@ import { Post } from '../utils/apiRequest'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { InputDialog } from '../Components/Dialogs/InputDialog'
+import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
+import { OptionBtn } from '../Components/basic/button/OptionButton'
+import { typography } from '../styles/theme'
 
 //SAMPLE OPTION LIST
 const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
@@ -113,25 +116,25 @@ export function SolvingQuestion() {
       <div>
         {options.map((e, i) => {
           return (
-            <Option onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i} key={i}>
+            <OptionBtn key={i} onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i}>
               {e}
-            </Option>
+            </OptionBtn>
           )
         })}
       </div>
       <BtnDisplay>
         {isAnswered == false ? (
           <>
-            <FillBtn onClick={submit} disabled={selectedOption == null ? true : false}>
+            <FillBtn onClick={submit} disabled={selectedOption == null}>
               Submit
             </FillBtn>
             <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
             {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
           </>
         ) : (
-          <FillBtn>Add Option</FillBtn>
+          <FillBtn>Add Options</FillBtn>
         )}
-        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
+        <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>
@@ -162,64 +165,15 @@ const ReturnBtn = styled.div`
 `
 
 const Label = styled.div`
-  font-size: 20px;
-  font-family: 'inter-sb';
-  line-height: 1.4;
+  ${typography.hStem};
   padding: 8px 0 0 0;
   @media (max-width: 599px) {
-    font-size: 16px;
     padding: 0px;
   }
-`
-
-const Option = styled.div<{ state: boolean; selected: boolean }>`
-  ${({ state, selected }) => css`
-    background-color: #e9eef4;
-    padding: 16px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    border: 1.5px solid rgba(0, 0, 0, 0);
-
-    ${!state &&
-    css`
-      :hover {
-        background-color: #d4e4f3;
-        cursor: pointer;
-      }
-    `}
-    @media (max-width: 599px) {
-      font-size: 13px;
-    }
-
-    ${selected &&
-    css`
-      border-color: #3d8add;
-      color: #3372b6;
-      font-family: 'inter-m';
-      background-color: #d4e4f3;
-    `}
-  `}
 `
 
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
-`
-const FillBtn = styled.button`
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
-`
-
-const StrokeBtn = styled.button`
-  color: #323232;
-  background-color: #fff;
-  border: 1px solid #bdbdbd;
-  :hover {
-    background-color: #e9eef4;
-  }
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
 `
