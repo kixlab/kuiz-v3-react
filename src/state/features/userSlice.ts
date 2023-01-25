@@ -7,7 +7,7 @@ type userInfoType = {
   isLoggedIn: boolean
 }
 
-const initialState: userInfoType = {
+const initialState = {
   name: '',
   email: '',
   img: '',
@@ -18,11 +18,11 @@ export const userSlice = createSlice({
   name: 'userInfo',
   initialState,
   reducers: {
-    login: (state: userInfoType, action: PayloadAction<userInfoType>) => {
+    login: (state: userInfoType, action: PayloadAction<any>) => {
       state.name = action.payload.name
       state.email = action.payload.email
-      state.img = action.payload.img
-      state.isLoggedIn = action.payload.isLoggedIn
+      state.img = action.payload.imageUrl
+      state.isLoggedIn = true
     },
     logout: (state: userInfoType) => {
       state.name = ''

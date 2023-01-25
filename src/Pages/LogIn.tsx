@@ -4,27 +4,29 @@ import jwtDecode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../state/features/userSlice'
+import axios from 'axios'
 
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  function signIn(res: CredentialResponse) {
-    if (res.credential) {
-      const userData: any = jwtDecode(res.credential)
-      dispatch(
-        login({
+  const signIn = (googleRes: CredentialResponse) => {
+    if (googleRes.credential) {
+      const userData: any = jwtDecode(googleRes.credential)
+      axios
+        .post(`${process.env.REACT_APP_BACK_END}/auth/register`, {
           name: userData.name,
           email: userData.email,
           img: userData.picture,
-          isLoggedIn: true,
         })
-      )
+        .then(res => {
+          dispatch(login(res.data.user))
+        })
     }
     navigate('/')
   }
 
-  //TODO: 토큰 받기
+  //TODO: check the class list and navigate to each page
 
   return (
     <div>
@@ -100,7 +102,7 @@ export function LogIn() {
       </IntroBox>
       <GoogleBtnBox>
         <GoogleOAuthProvider clientId={`${process.env.REACT_APP_CLIENT_ID}`}>
-          <GoogleLogin onSuccess={res => signIn(res)} onError={() => console.log('err')} />
+          <GoogleLogin onSuccess={res => signIn(res)} onError={() => console.log('Failed to login')} />
         </GoogleOAuthProvider>
       </GoogleBtnBox>
     </div>
