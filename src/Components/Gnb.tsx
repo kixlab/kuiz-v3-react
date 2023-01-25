@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import logoIcon from '../asset/logo.svg'
+import logoIcon from '../Asset/logo.svg'
 import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -16,7 +16,7 @@ export const Gnb = (props: { loginState: boolean }) => {
       navigate(`/${path}`)
       setIsDisplay(!isDisplay)
     },
-    []
+    [isDisplay]
   )
 
   return (
