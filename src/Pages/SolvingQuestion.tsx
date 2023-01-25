@@ -6,7 +6,7 @@ import { SubmitReportParams, SubmitReportResults } from '../api/question/submitR
 import { Post } from '../utils/apiRequest'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { InputDialog } from '../Components/dialogs/InputDialog'
+import { InputDialog } from '../Components/Dialogs/InputDialog'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
 import { theme } from '../styles/theme'

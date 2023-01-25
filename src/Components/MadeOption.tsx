@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
-import { CheckDialog } from './dialogs/CheckDialog'
+import { CheckDialog } from './Dialogs/CheckDialog'
 import { theme } from '../styles/theme'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate } from 'react-router-dom'
