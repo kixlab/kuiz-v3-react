@@ -21,10 +21,8 @@ export const GlobalStyles = css`
     font-family: 'inter-sb';
     src: url(${interSb});
   }
-  html {
+  body {
     background-color: #e6eaef;
-  }
-  .App {
     display: flex;
     justify-content: center;
   }
@@ -36,7 +34,7 @@ export const GlobalStyles = css`
     box-sizing: border-box;
   }
   @media (max-width: 599px) {
-    .App {
+    body {
       flex-direction: column;
     }
     .Box {
