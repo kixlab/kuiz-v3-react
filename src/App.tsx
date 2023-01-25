@@ -16,6 +16,9 @@ import { removeError } from './state/features/errorSlice'
 import { CheckDialog } from './Components/Dialogs/CheckDialog'
 
 function App() {
+
+  console.log('here')
+  console.log(`${process.env.REACT_APP_CLIENT_ID}`)
   //redux
   const dispatch = useDispatch()
   const userInfo = useSelector((state: RootState) => state.userInfo)

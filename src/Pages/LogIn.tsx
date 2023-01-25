@@ -1,30 +1,46 @@
+import axios from 'axios'
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import styled from '@emotion/styled'
 import jwtDecode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../state/features/userSlice'
+import { useCallback } from 'react'
 
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  function signIn(res: CredentialResponse) {
+  const signIn = useCallback((res: CredentialResponse)=> {
     if (res.credential) {
       const userData: any = jwtDecode(res.credential)
-      dispatch(
-        login({
+      axios
+        .post(`${process.env.REACT_APP_BACK_END}/auth/register`,{
           name: userData.name,
           email: userData.email,
-          img: userData.picture,
-          isLoggedIn: true,
+          image: userData?.picture
         })
-      )
+        .then((res)=>{
+          dispatch(login({
+            _id:res.data.user._id,
+            name: userData.name,
+            email: userData.email,
+            img: userData.picture,
+            isLoggedIn: true,
+            isAdmin:res.data.user.isAdmin,
+            classes: res.data.user.classes,
+            made: res.data.user.made,
+            madeOptions: res.data.user.madeOptions,
+            solved: res.data.user.solved
+          }))
+          if(res.data.user.classes.length>0){
+            //TODO: login to that enrolled class
+          }else{
+            navigate('/enroll')
+          }
+        })
     }
-    navigate('/')
-  }
-
-  //TODO: 토큰 받기
+  },[navigate,dispatch])
 
   return (
     <div>
