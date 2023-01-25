@@ -4,25 +4,25 @@ import { theme } from '../../../styles/theme'
 
 interface tagProps {
   onClick: () => void
-  type: string
-  id: string
+  id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct'
+  children: React.ReactNode
 }
 
 export const TagBtn = (props: tagProps) => {
   return (
     <TagBtnComponent onClick={props.onClick} id={props.id}>
-      {props.type}
+      {props.children}
     </TagBtnComponent>
   )
 }
 
-const TagBtnComponent = styled.div<{ id: string }>`
+const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }>`
   ${theme.typography.b02b};
   display: inline-block;
   padding: 8px 12px 8px 12px;
   text-align: center;
   border-radius: 20px;
-  border: 2px solid rgba(0, 0, 0, 0);
+  border: 2px solid ${theme.palette.common.transparent};
   cursor: pointer;
   ${props =>
     props.id === 'Ans' &&

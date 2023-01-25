@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { theme } from '../../../styles/theme'
 
 interface buttonProps {
-  text: string
+  children: React.ReactNode
   onClick?: () => void
   disabled?: boolean
 }
@@ -10,19 +10,19 @@ interface buttonProps {
 export const FillBtn = (props: buttonProps) => {
   return (
     <Fill onClick={props.onClick} disabled={props.disabled}>
-      {props.text}
+      {props.children}
     </Fill>
   )
 }
 
 export const StrokeBtn = (props: buttonProps) => {
-  return <Stroke onClick={props.onClick}>{props.text}</Stroke>
+  return <Stroke onClick={props.onClick}>{props.children}</Stroke>
 }
 
 export const TextBtn = (props: buttonProps) => {
   return (
     <Text onClick={props.onClick} style={{ color: `${theme.palette.grey[400]}` }}>
-      {props.text}
+      {props.children}
     </Text>
   )
 }
@@ -30,7 +30,7 @@ export const TextBtn = (props: buttonProps) => {
 export const TextBtnCta = (props: buttonProps) => {
   return (
     <Text onClick={props.onClick} style={{ color: `${theme.palette.primary.dark}` }}>
-      {props.text}
+      {props.children}
     </Text>
   )
 }

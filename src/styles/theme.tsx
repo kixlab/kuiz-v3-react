@@ -7,6 +7,7 @@ const palette = {
   common: {
     black,
     white,
+    transparent: 'rgba(0,0,0,0)',
   },
   primary: {
     main: '#3d8add',

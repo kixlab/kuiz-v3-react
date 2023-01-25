@@ -18,8 +18,8 @@ export const CheckDialog = (props: CheckModal) => {
         <Label text={props.title} color="black" size={1} />
         <div>{props.message}</div>
         <BtnRow>
-          <FillBtn onClick={props.toggleModal} text={props.btnName} />
-          <StrokeBtn onClick={props.toggleModal} text="Cancel" />
+          <FillBtn onClick={props.toggleModal}>{props.btnName}</FillBtn>
+          <StrokeBtn onClick={props.toggleModal}>Cancel</StrokeBtn>
         </BtnRow>
       </Modal>
     )

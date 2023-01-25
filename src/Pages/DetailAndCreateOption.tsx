@@ -17,9 +17,15 @@ export function DetailAndCreateOption() {
       <DividerLine />
       <Label text="Q. abcd" color="black" size={1} />
       <div>
-        <OptionBtn state={true} text="Option01" selected={false} />
-        <OptionBtn state={true} text="Option02" selected={false} />
-        <OptionBtn state={true} text="Option03" selected={false} />
+        <OptionBtn state={true} selected={false}>
+          Option 1
+        </OptionBtn>
+        <OptionBtn state={true} selected={false}>
+          Option 2
+        </OptionBtn>
+        <OptionBtn state={true} selected={false}>
+          Option 3
+        </OptionBtn>
       </div>
       <DividerLine />
       <CreateNewOption />

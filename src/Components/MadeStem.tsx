@@ -20,7 +20,7 @@ export const MadeStem = () => {
         </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextBtn onClick={toggleModal} text="Delete" />
+        <TextBtn onClick={toggleModal}>Delete</TextBtn>
         <CheckDialog
           title="Delete the stem"
           btnName="Delete"
@@ -28,7 +28,7 @@ export const MadeStem = () => {
           modalState={isOpenModal}
           toggleModal={toggleModal}
         />
-        <TextBtnCta onClick={() => navigate('/question/createOption')} text="View" />
+        <TextBtnCta onClick={() => navigate('/question/createOption')}>View</TextBtnCta>
       </RowFlex>
     </StemBox>
   )

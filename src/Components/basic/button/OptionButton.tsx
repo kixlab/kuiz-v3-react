@@ -6,13 +6,13 @@ interface OptionProps {
   state: boolean
   selected: boolean
   onClick?: () => void
-  text: string
+  children: React.ReactNode
 }
 
 export const OptionBtn = (props: OptionProps) => {
   return (
     <OptionBtnComponent onClick={props.onClick} state={props.state} selected={props.selected}>
-      {props.text}
+      {props.children}
     </OptionBtnComponent>
   )
 }

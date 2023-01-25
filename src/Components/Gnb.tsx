@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import logoIcon from '../asset/logo.svg'
 import { theme } from '../styles/theme'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../state/store'
 
@@ -10,6 +10,14 @@ export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
+
+  const onClickNemu = useCallback(
+    (path: string) => () => {
+      navigate(`/${path}`)
+      setIsDisplay(!isDisplay)
+    },
+    []
+  )
 
   return (
     <SideTab className="SideTab">
@@ -20,38 +28,10 @@ export const Gnb = (props: { loginState: boolean }) => {
       {props.loginState == true && (
         <>
           <Menu isDisplay={isDisplay}>
-            <MenuBtn
-              onClick={() => {
-                navigate('/solve')
-                setIsDisplay(!isDisplay)
-              }}
-            >
-              Solve Problem
-            </MenuBtn>
-            <MenuBtn
-              onClick={() => {
-                navigate('/createQuestion')
-                setIsDisplay(!isDisplay)
-              }}
-            >
-              Create Question
-            </MenuBtn>
-            <MenuBtn
-              onClick={() => {
-                navigate('/question/createOption')
-                setIsDisplay(!isDisplay)
-              }}
-            >
-              Create Options
-            </MenuBtn>
-            <MenuBtn
-              onClick={() => {
-                navigate('/mypage')
-                setIsDisplay(!isDisplay)
-              }}
-            >
-              My Page
-            </MenuBtn>
+            <MenuBtn onClick={onClickNemu('solve')}>Solve Problem</MenuBtn>
+            <MenuBtn onClick={onClickNemu('createQuestion')}>Create Question</MenuBtn>
+            <MenuBtn onClick={onClickNemu('question/createOption')}>Create Options</MenuBtn>
+            <MenuBtn onClick={onClickNemu('mypage')}>My Page</MenuBtn>
           </Menu>
           <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
         </>

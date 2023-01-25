@@ -116,21 +116,25 @@ export function SolvingQuestion() {
       <div>
         {options.map((e, i) => {
           return (
-            <OptionBtn key={i} onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i} text={e} />
+            <OptionBtn key={i} onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i}>
+              {e}
+            </OptionBtn>
           )
         })}
       </div>
       <BtnDisplay>
         {isAnswered == false ? (
           <>
-            <FillBtn onClick={submit} disabled={selectedOption == null ? true : false} text="Submit" />
-            <StrokeBtn onClick={shuffle} text="Shuffle Answers" />
+            <FillBtn onClick={submit} disabled={selectedOption == null}>
+              Submit
+            </FillBtn>
+            <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
             {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
           </>
         ) : (
-          <FillBtn text="Add Option" />
+          <FillBtn>Add Options</FillBtn>
         )}
-        <StrokeBtn onClick={toggleModal} text="Report Error" />
+        <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>

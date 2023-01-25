@@ -19,8 +19,10 @@ export const InputDialog = (props: InputModal) => {
         <Label text="Report Error" color="black" size={1} />
         <TextAreaInput onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
         <BtnRow>
-          <FillBtn onClick={() => props.submit(inputMsg)} disabled={inputMsg == '' ? true : false} text="Report" />
-          <StrokeBtn onClick={() => setInputMsg(props.toggleModal)} text="Cancel" />
+          <FillBtn onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
+            Report
+          </FillBtn>
+          <StrokeBtn onClick={() => setInputMsg(props.toggleModal)}>Cancel</StrokeBtn>
         </BtnRow>
       </Modal>
     )

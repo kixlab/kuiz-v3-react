@@ -1,40 +1,23 @@
-import styled from '@emotion/styled';
+import styled from '@emotion/styled'
+import { FillBtn } from '../Components/basic/button/Button'
+import { TextInput } from '../Components/basic/InputBox'
 
 export function Enroll() {
-    return (
-        <CodeInputBox>
-            <strong>Class code</strong>
-            <ClassCodeInput type="text" placeholder='Enter code' />
-            <EnrollBtn>Enter</EnrollBtn>
-        </CodeInputBox>
-    )
+  return (
+    <CodeInputBox>
+      <strong>Class code</strong>
+      <TextInput placeholder="Enter code" />
+      <FillBtn>Enter</FillBtn>
+    </CodeInputBox>
+  )
 }
 
 const CodeInputBox = styled.div`
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 100px 60px 30px 60px;
-    box-sizing: border-box;
-    font-size: 18px;
-`
-
-const ClassCodeInput = styled.input`
-    width: 234px;
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid #cdcdcd;
-    font-size: 16px;
-    &:placeholder{
-        color: #bdbdbd;
-    }
-    &:focus{
-        outline: none;
-        border: 1px solid #212121;
-    }
-`
-
-const EnrollBtn = styled.button`
-    width: 234px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 100px 60px 30px 60px;
+  box-sizing: border-box;
+  font-size: 18px;
 `

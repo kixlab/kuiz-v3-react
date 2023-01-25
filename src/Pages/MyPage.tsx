@@ -45,7 +45,7 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
           <MadeOption optionType="Distractor" />
         </MadeLists>
       </div>
-      <StrokeBtn onClick={signOut} text="Log Out" />
+      <StrokeBtn onClick={signOut}>Log out</StrokeBtn>
     </div>
   )
 }

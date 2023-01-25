@@ -18,14 +18,18 @@ export const CreateNewOption = () => {
       <Container>
         <div>
           <Label text="Create New Option" color="blue" size={0} />
-          <TagBtn onClick={() => setTag('Ans')} id={tag == 'Ans' ? 'AnsAct' : 'Ans'} type="Answer" />
-          <TagBtn onClick={() => setTag('Dist')} id={tag == 'Dist' ? 'DistAct' : 'Dist'} type="Distractor" />
+          <TagBtn onClick={() => setTag('Ans')} id={tag == 'Ans' ? 'AnsAct' : 'Ans'}>
+            Answer
+          </TagBtn>
+          <TagBtn onClick={() => setTag('Dist')} id={tag == 'Dist' ? 'DistAct' : 'Dist'}>
+            Distractor
+          </TagBtn>
         </div>
         <Block>
           <TextInput placeholder="Suggest an answer or distractor for this question" />
           <CategoryInput getCategory={getCategory} />
         </Block>
-        <FillBtn text="Submit" />
+        <FillBtn>Submit</FillBtn>
       </Container>
     </div>
   )

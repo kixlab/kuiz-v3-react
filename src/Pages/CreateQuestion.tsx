@@ -29,7 +29,7 @@ export function CreateQuestion() {
         <Label text="Answer" color="blue" size={0} />
         <TextInput placeholder="Suggest an answer" />
       </div>
-      <FillBtn text="Submit" />
+      <FillBtn>Submit</FillBtn>
     </CreateQBox>
   )
 }

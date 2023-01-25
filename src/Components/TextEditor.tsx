@@ -1,5 +1,5 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { useState } from 'react'
+import { CSSProperties, useState } from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
@@ -30,7 +30,7 @@ export const TextEditor = () => {
   )
 }
 
-const editorStyle = {
+const editorStyle: CSSProperties = {
   border: `1px solid ${theme.palette.grey[500]}`,
   padding: '16px',
   borderRadius: '6px',
