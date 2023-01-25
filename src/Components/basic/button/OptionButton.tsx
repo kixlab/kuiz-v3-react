@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { theme } from '../../../styles/theme'
+import { palette, typography } from '../../../styles/theme'
 
 interface OptionProps {
   state: boolean
@@ -19,8 +19,8 @@ export const OptionBtn = (props: OptionProps) => {
 
 const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean }>`
   ${({ state, selected }) => css`
-    ${theme.typography.b02};
-    background-color: ${theme.palette.background.light};
+    ${typography.b02};
+    background-color: ${palette.background.light};
     padding: 16px;
     margin-bottom: 8px;
     border-radius: 6px;
@@ -29,17 +29,17 @@ const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean }>`
     ${!state &&
     css`
       :hover {
-        background-color: ${theme.palette.primary.light};
+        background-color: ${palette.primary.light};
         cursor: pointer;
       }
     `}
 
     ${selected &&
     css`
-      ${theme.typography.b02b};
-      color: ${theme.palette.primary.dark};
-      background-color: ${theme.palette.primary.light};
-      border-color: ${theme.palette.primary.main};
+      ${typography.b02b};
+      color: ${palette.primary.dark};
+      background-color: ${palette.primary.light};
+      border-color: ${palette.primary.main};
     `}
   `}
 `

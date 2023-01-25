@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../state/features/userSlice'
 import { StrokeBtn } from '../Components/basic/button/Button'
 import { Label } from '../Components/basic/Label'
-import { theme } from '../styles/theme'
+import { palette, typography } from '../styles/theme'
 
 export function MyPage(props: { stemNum: number; optionNum: number }) {
   const navigate = useNavigate()
@@ -58,8 +58,8 @@ const MadeLists = styled.div`
 `
 
 const DataLabel = styled.div`
-  ${theme.typography.hLabel};
-  color: ${theme.palette.primary.main};
+  ${typography.hLabel};
+  color: ${palette.primary.main};
   padding: 30px 0 12px;
   display: flex;
   gap: 10px;

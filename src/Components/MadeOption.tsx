@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
-import { theme } from '../styles/theme'
+import { palette, typography } from '../styles/theme'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate } from 'react-router-dom'
 
@@ -57,29 +57,29 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
 `
 
 const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
-  ${theme.typography.overline};
-  color: ${theme.palette.tags.contrastText};
+  ${typography.overline};
+  color: ${palette.tags.contrastText};
   padding: 4px 8px 4px 8px;
   border-radius: 6px;
   ${props =>
     props.id === 'Answer' &&
     css`
-      background-color: ${theme.palette.tags.answer};
+      background-color: ${palette.tags.answer};
     `}
   ${props =>
     props.id === 'Distractor' &&
     css`
-      background-color: ${theme.palette.tags.distractor};
+      background-color: ${palette.tags.distractor};
     `}
 `
 
 const OptionLabel = styled.div`
-  ${theme.typography.b02b};
+  ${typography.b02b};
 `
 
 const QuestionLabel = styled.div`
-  ${theme.typography.b02};
+  ${typography.b02};
   display: flex;
   gap: 6px;
-  color: ${theme.palette.grey[400]};
+  color: ${palette.grey[400]};
 `

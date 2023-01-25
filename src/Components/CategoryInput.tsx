@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
-import { theme } from '../styles/theme'
-import { TextBtn, TextBtnCta } from './basic/button/Button'
+import { palette, typography } from '../styles/theme'
+import { TextBtnCta } from './basic/button/Button'
 
 interface Props {
   getCategory: (cats: string[]) => void
@@ -88,7 +88,7 @@ const CatBox = styled.div`
 `
 
 const CatInput = styled.input`
-  ${theme.typography.b02};
+  ${typography.b02};
   padding: 16px;
   border-radius: 6px;
   width: 100%;
@@ -118,7 +118,7 @@ const Category = styled.div<{ selected: boolean }>`
   padding: 0px 16px 0px 16px;
   border-radius: 20px;
   background-color: #e1e5eb;
-  color: #212121;
+  color: ${palette.grey[200]};
   cursor: pointer;
   &:hover {
     background-color: #b6c7db;

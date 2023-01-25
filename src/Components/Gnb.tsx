@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import logoIcon from '../asset/logo.svg'
-import { theme } from '../styles/theme'
+import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../state/store'
@@ -50,7 +50,7 @@ const SideTab = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 30px 0px 30px;
-  background-color: ${theme.palette.background.light};
+  background-color: ${palette.background.light};
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
   z-index: 5;
@@ -62,13 +62,13 @@ const SideTab = styled.div`
 `
 
 const Logo = styled.div`
-  ${theme.typography.logo};
+  ${typography.logo};
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   &:hover {
-    color: ${theme.palette.primary.main};
+    color: ${palette.primary.main};
   }
 `
 
@@ -89,11 +89,11 @@ const ProfileImg = styled.img`
 `
 
 const Menu = styled.div<{ isDisplay: boolean }>`
-  ${theme.typography.b03b};
+  ${typography.b03b};
   display: flex;
   flex-direction: row;
   gap: 16px;
-  color: ${theme.palette.grey[200]};
+  color: ${palette.grey[200]};
   @media (max-width: 599px) {
     ${props =>
       props.isDisplay
@@ -112,8 +112,8 @@ const MenuBtn = styled.div`
   vertical-align: middle;
   border-bottom: 2px solid rgba(0, 0, 0, 0);
   &:hover {
-    color: ${theme.palette.primary.main};
-    border-color: ${theme.palette.primary.main};
+    color: ${palette.primary.main};
+    border-color: ${palette.primary.main};
     cursor: pointer;
   }
   @media (max-width: 599px) {

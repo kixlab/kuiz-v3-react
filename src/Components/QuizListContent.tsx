@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { theme } from '../styles/theme'
+import { typography } from '../styles/theme'
 
 export const QuizListContent = (props: { type: 'Content' | 'End' }) => {
   return (
@@ -38,7 +38,7 @@ const QuizList = styled.div<{ id?: 'Content' | 'End' }>`
 `
 
 const Item = styled.div`
-  ${theme.typography.b02};
+  ${typography.b02};
   padding-right: 20px;
   overflow: hidden;
   white-space: normal;

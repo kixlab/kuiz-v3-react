@@ -3,7 +3,7 @@ import { css } from '@emotion/react'
 const white = '#fff'
 const black = '#000'
 
-const palette = {
+export const palette = {
   common: {
     black,
     white,
@@ -34,7 +34,7 @@ const palette = {
   },
 }
 
-const typography = {
+export const typography = {
   logo: css`
     font-family: 'raleway';
     font-size: 20px;
@@ -107,9 +107,4 @@ const typography = {
       font-size: 11px;
     }
   `,
-}
-
-export const theme = {
-  palette,
-  typography,
 }

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
-import { theme } from '../styles/theme'
+import { palette, typography } from '../styles/theme'
 import { useNavigate } from 'react-router-dom'
 
 export const MadeStem = () => {
@@ -16,7 +16,7 @@ export const MadeStem = () => {
     <StemBox>
       <RowFlex>
         <QuestionLabel>
-          <div style={{ color: `${theme.palette.grey[400]}` }}>Q.</div>The question you made
+          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>The question you made
         </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
@@ -52,8 +52,8 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
     `}
 `
 const QuestionLabel = styled.div`
-  ${theme.typography.b01};
-  color: ${theme.palette.grey[200]};
+  ${typography.b01};
+  color: ${palette.grey[200]};
   display: flex;
   gap: 6px;
 `

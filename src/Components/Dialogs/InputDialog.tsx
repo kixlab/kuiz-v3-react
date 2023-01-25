@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
-import { theme } from '../../styles/theme'
+import { palette, typography } from '../../styles/theme'
 import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
@@ -32,21 +32,21 @@ export const InputDialog = (props: InputModal) => {
 }
 
 const TextAreaInput = styled.textarea`
-  ${theme.typography.b02};
+  ${typography.b02};
   width: 100%;
   height: 120px;
   padding: 16px;
   margin-top: 20px;
   border-radius: 6px;
   box-sizing: border-box;
-  border: 1px solid ${theme.palette.grey[500]};
+  border: 1px solid ${palette.grey[500]};
   resize: vertical;
   &::placeholder {
-    color: ${theme.palette.grey[500]};
+    color: ${palette.grey[500]};
   }
   &:focus {
     outline: none;
-    border-color: ${theme.palette.grey[200]};
+    border-color: ${palette.grey[200]};
   }
 `
 

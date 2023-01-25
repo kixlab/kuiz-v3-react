@@ -9,7 +9,7 @@ import { css } from '@emotion/react'
 import { InputDialog } from '../Components/Dialogs/InputDialog'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
-import { theme } from '../styles/theme'
+import { typography } from '../styles/theme'
 
 //SAMPLE OPTION LIST
 const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
@@ -165,7 +165,7 @@ const ReturnBtn = styled.div`
 `
 
 const Label = styled.div`
-  ${theme.typography.hStem};
+  ${typography.hStem};
   padding: 8px 0 0 0;
   @media (max-width: 599px) {
     padding: 0px;

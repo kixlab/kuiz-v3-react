@@ -4,7 +4,7 @@ import { TextInput } from '../Components/basic/InputBox'
 import { Label } from '../Components/basic/Label'
 import { CategoryInput } from '../Components/CategoryInput'
 import { TextEditor } from '../Components/TextEditor'
-import { theme } from '../styles/theme'
+import { palette } from '../styles/theme'
 
 export function CreateQuestion() {
   function getCategory(cats: string[]) {
@@ -35,7 +35,7 @@ export function CreateQuestion() {
 }
 
 const CreateQBox = styled.div`
-  background-color: ${theme.palette.common.white};
+  background-color: ${palette.common.white};
   padding: 30px;
   border-radius: 8px;
   display: flex;

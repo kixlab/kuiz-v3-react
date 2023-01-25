@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { theme } from '../../../styles/theme'
+import { palette, typography } from '../../../styles/theme'
 
 interface buttonProps {
   children: React.ReactNode
@@ -21,7 +21,7 @@ export const StrokeBtn = (props: buttonProps) => {
 
 export const TextBtn = (props: buttonProps) => {
   return (
-    <Text onClick={props.onClick} style={{ color: `${theme.palette.grey[400]}` }}>
+    <Text onClick={props.onClick} style={{ color: `${palette.grey[400]}` }}>
       {props.children}
     </Text>
   )
@@ -29,26 +29,26 @@ export const TextBtn = (props: buttonProps) => {
 
 export const TextBtnCta = (props: buttonProps) => {
   return (
-    <Text onClick={props.onClick} style={{ color: `${theme.palette.primary.dark}` }}>
+    <Text onClick={props.onClick} style={{ color: `${palette.primary.dark}` }}>
       {props.children}
     </Text>
   )
 }
 
 const Fill = styled.button`
-  ${theme.typography.button};
+  ${typography.button};
   width: 100%;
   padding: 16px;
   border-radius: 6px;
   border: none;
-  color: ${theme.palette.common.white};
-  background-color: ${theme.palette.primary.main};
+  color: ${palette.common.white};
+  background-color: ${palette.primary.main};
   cursor: pointer;
   &:hover {
-    background-color: ${theme.palette.primary.dark};
+    background-color: ${palette.primary.dark};
   }
   &:disabled {
-    background-color: ${theme.palette.grey[500]};
+    background-color: ${palette.grey[500]};
   }
   @media (max-width: 599px) {
     padding: 12px;
@@ -56,23 +56,23 @@ const Fill = styled.button`
 `
 
 const Stroke = styled.button`
-  ${theme.typography.button};
+  ${typography.button};
   width: 100%;
   padding: 16px;
   border-radius: 6px;
-  border: 1px solid ${theme.palette.grey[500]};
-  color: ${theme.palette.grey[200]};
-  background-color: ${theme.palette.common.white};
+  border: 1px solid ${palette.grey[500]};
+  color: ${palette.grey[200]};
+  background-color: ${palette.common.white};
   cursor: pointer;
   &:hover {
-    background-color: ${theme.palette.background.light};
+    background-color: ${palette.background.light};
   }
   @media (max-width: 599px) {
     padding: 12px;
   }
 `
 const Text = styled.button`
-  ${theme.typography.button};
+  ${typography.button};
   padding: 8px;
   background: none;
   border: none;

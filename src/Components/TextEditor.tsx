@@ -3,7 +3,7 @@ import { CSSProperties, useState } from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
-import { theme } from '../styles/theme'
+import { palette } from '../styles/theme'
 
 export const TextEditor = () => {
   const [editorState, setEditorState] = useState<EditorState>(() => EditorState.createEmpty())
@@ -31,7 +31,7 @@ export const TextEditor = () => {
 }
 
 const editorStyle: CSSProperties = {
-  border: `1px solid ${theme.palette.grey[500]}`,
+  border: `1px solid ${palette.grey[500]}`,
   padding: '16px',
   borderRadius: '6px',
   height: '200px',

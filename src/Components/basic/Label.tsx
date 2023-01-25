@@ -15,17 +15,17 @@ const LabelComponent = styled.div<{ color: string; size: number }>`
     margin-bottom: 12px;
     ${size === 0
       ? css`
-          ${theme.typography.hLabel}
+          ${typography.hLabel}
         `
       : css`
-          ${theme.typography.hStem}
+          ${typography.hStem}
         `}
     ${color === 'blue'
       ? css`
-          color: ${theme.palette.primary.main};
+          color: ${palette.primary.main};
         `
       : css`
-          color: ${theme.palette.grey[200]};
+          color: ${palette.grey[200]};
         `}
   `}
 `

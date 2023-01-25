@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { theme } from '../../../styles/theme'
+import { palette, typography } from '../../../styles/theme'
 
 interface tagProps {
   onClick: () => void
@@ -17,25 +17,25 @@ export const TagBtn = (props: tagProps) => {
 }
 
 const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }>`
-  ${theme.typography.b02b};
+  ${typography.b02b};
   display: inline-block;
   padding: 8px 12px 8px 12px;
   text-align: center;
   border-radius: 20px;
-  border: 2px solid ${theme.palette.common.transparent};
+  border: 2px solid ${palette.common.transparent};
   cursor: pointer;
   ${props =>
     props.id === 'Ans' &&
     css`
-      border-color: ${theme.palette.tags.answer};
-      color: ${theme.palette.tags.answer};
+      border-color: ${palette.tags.answer};
+      color: ${palette.tags.answer};
       margin-right: 8px;
     `}
 
   ${props =>
     props.id === 'AnsAct' &&
     css`
-      background-color: ${theme.palette.tags.answer};
+      background-color: ${palette.tags.answer};
       color: white;
       margin-right: 8px;
     `}
@@ -43,14 +43,14 @@ const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }
     ${props =>
     props.id === 'Dist' &&
     css`
-      border-color: ${theme.palette.tags.distractor};
-      color: ${theme.palette.tags.distractor};
+      border-color: ${palette.tags.distractor};
+      color: ${palette.tags.distractor};
     `}
 
     ${props =>
     props.id === 'DistAct' &&
     css`
-      background-color: ${theme.palette.tags.distractor};
+      background-color: ${palette.tags.distractor};
       color: white;
     `}
 `
