@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import jwtDecode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { login } from '../state/features/userSlice'
+import { enroll, login } from '../state/features/userSlice'
 import { useCallback } from 'react'
 
 export function LogIn() {
@@ -34,7 +34,11 @@ export function LogIn() {
             solved: res.data.user.solved
           }))
           if(res.data.user.classes.length>0){
-            //TODO: login to that enrolled class
+            dispatch(enroll({
+              cid: res.data.user.classes[0],
+              cType: res.data.cType
+          }))
+            navigate("/" + res.data.user.classes[0])
           }else{
             navigate('/enroll')
           }

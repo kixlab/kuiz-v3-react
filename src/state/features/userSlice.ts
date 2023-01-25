@@ -1,16 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type userInfoType = {
+interface classesType{
+  cid: string
+  cType: string
+}
+
+interface userInfoType{
   _id: string
   name: string
   email: string
   img?: string
   isLoggedIn: boolean
   isAdmin:boolean
-  classes: string[]
+  classes: classesType[]
   made: string[]
   madeOptions: string[]
   solved: string[]
+}
+
+interface userEnrollType{
+  cid: string
+  cType: string
 }
 
 const initialState: userInfoType = {
@@ -54,8 +64,16 @@ export const userSlice = createSlice({
       state.madeOptions= [],
       state.solved= []
     },
+    enroll: (state: userInfoType, action:PayloadAction<userEnrollType>)=>{
+      if(state.isLoggedIn){
+        state.classes.push({
+          cid: action.payload.cid,
+          cType: action.payload.cType,
+        })
+      }
+    }
   },
 })
 
-export const { login, logout } = userSlice.actions
+export const { login, logout, enroll } = userSlice.actions
 export const userReducer = userSlice.reducer
