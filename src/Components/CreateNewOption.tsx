@@ -7,7 +7,7 @@ import { TagBtn } from './basic/button/TagButton'
 import { Label } from './basic/Label'
 
 export const CreateNewOption = () => {
-  const [tag, setTag] = useState<string>('Ans')
+  const [isAns, setIsAns] = useState<boolean>(true)
 
   function getCategory(cats: string[]) {
     console.log(cats)
@@ -18,10 +18,10 @@ export const CreateNewOption = () => {
       <Container>
         <div>
           <Label text="Create New Option" color="blue" size={0} />
-          <TagBtn onClick={() => setTag('Ans')} id={tag == 'Ans' ? 'AnsAct' : 'Ans'}>
+          <TagBtn onClick={() => setIsAns(true)} id={isAns ? 'AnsAct' : 'Ans'}>
             Answer
           </TagBtn>
-          <TagBtn onClick={() => setTag('Dist')} id={tag == 'Dist' ? 'DistAct' : 'Dist'}>
+          <TagBtn onClick={() => setIsAns(false)} id={!isAns ? 'DistAct' : 'Dist'}>
             Distractor
           </TagBtn>
         </div>
