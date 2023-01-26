@@ -1,12 +1,29 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 
-export const QuizListContent = (props: { type: 'Content' | 'End' }) => {
+interface questionProps{
+  index:number;
+  title: string;
+  options: string;
+  date: string;
+  type: 'Content' | 'End'
+}
+
+export const QuizListContent = (props: questionProps) => {
+  const changeDate = (date:string)=>{
+    const givenDate = new Date(date)
+    const year = givenDate.getFullYear()
+    const month = givenDate.getMonth()+1
+    const day = givenDate.getDate()
+    return (
+      `${year}/${month}/${day}`
+    )
+  }
   return (
     <QuizList id={props.type}>
-      <Item>What is the main question?</Item>
-      <Item>3</Item>
-      <Item>1 day ago</Item>
+      <Item>{props.title}</Item>
+      <Item>{props.options}</Item>
+      <Item>{changeDate(props.date)}</Item>
     </QuizList>
   )
 }

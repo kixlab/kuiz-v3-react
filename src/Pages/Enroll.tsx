@@ -1,11 +1,41 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import axios from 'axios';
+import { enroll, login } from '../state/features/userSlice';
+import { RootState } from '../state/store';
 
 export function Enroll() {
+    const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const [code, setCode] = useState<string>();
+	const uid = useSelector((state:RootState) => state.userInfo?._id);
+	const email = useSelector((state:RootState) => state.userInfo?.email);
+	const detectChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+		setCode(e.target.value);
+	};
+	const userInfo = useSelector((state:RootState) => state.userInfo);
+	const onSubmit = () => {
+		axios
+			.post(`${process.env.REACT_APP_BACK_END}/auth/class/join`, {
+				code: code,
+				_id: uid,
+				userEmail: email,
+			})
+			.then((res) => {
+				dispatch(enroll({ cid: res.data.cid, cType: res.data.cType }));
+				const newInfo = { ...userInfo };
+				newInfo["classes"] = [res.data.cid];
+				dispatch(login(newInfo));
+				navigate("/" + res.data.cid);
+			});
+	};
     return (
         <CodeInputBox>
             <strong>Class code</strong>
-            <ClassCodeInput type="text" placeholder='Enter code' />
-            <EnrollBtn>Enter</EnrollBtn>
+            <ClassCodeInput type="text" placeholder='Enter code' onChange={detectChange}/>
+            <EnrollBtn onClick={onSubmit}>Enter</EnrollBtn>
         </CodeInputBox>
     )
 }
