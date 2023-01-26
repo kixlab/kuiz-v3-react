@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,27 +11,37 @@ interface Props {
 }
 
 export const CategoryInput = ({ getCategory }: Props) => {
-  const [inputCat, setInputCat] = useState<string>('')
+  const inputRef = useRef<string>('')
   const [categories, setCategories] = useState<string[]>(['Common misconception', 'Form similar to answer'])
   const [selections, setSelections] = useState<string[]>([])
 
-  function addElement() {
-    if (!categories.includes(inputCat) && inputCat != '') setCategories([inputCat, ...categories])
-    else if (inputCat == '') alert('Please enter the category') //no input case
+  const addElement = useCallback(() => {
+    if (!categories.includes(inputRef.current) && inputRef.current != '')
+      setCategories([inputRef.current, ...categories])
+    else if (inputRef.current == '') alert('Please enter the category') //no input case
     else alert('You have the same category') //duplicates case
-  }
+  }, [categories, inputRef])
 
-  function selectElement(item: string) {
-    if (selections.includes(item)) {
+  const selectElement = useCallback(
+    (item: string) => () => {
+      if (selections.includes(item)) {
+        setSelections(selections.filter(s => s != item))
+      } else {
+        setSelections([...selections, item])
+      }
+      getCategory(selections)
+    },
+    [selections]
+  )
+
+  const deleteElement = useCallback(
+    (item: string) => () => {
+      console.log('gg')
+      setCategories(categories.filter(c => c != item))
       setSelections(selections.filter(s => s != item))
-    } else setSelections([...selections, item])
-    getCategory(selections)
-  }
-
-  function deleteElement(item: string) {
-    setCategories(categories.filter(c => c != item))
-    setSelections(selections.filter(s => s != item))
-  }
+    },
+    [categories, selections]
+  )
 
   useEffect(() => {
     //if the category list is updated, selected category will be changed
@@ -45,7 +55,7 @@ export const CategoryInput = ({ getCategory }: Props) => {
         <CatInput
           type="text"
           style={{ border: 'none' }}
-          onChange={e => setInputCat(e.target.value)}
+          onChange={e => (inputRef.current = e.target.value)}
           placeholder="Select categories for your option or add your own"
         />
         <TextBtnCta onClick={addElement}>Add</TextBtnCta>
@@ -54,9 +64,9 @@ export const CategoryInput = ({ getCategory }: Props) => {
         {categories.map((e, idx) => {
           return (
             <Category key={idx} selected={selections.includes(e)}>
-              <CategoryLabel onClick={() => selectElement(e)}>{e}</CategoryLabel>
+              <CategoryLabel onClick={selectElement(e)}>{e}</CategoryLabel>
               {idx < categories.length - 2 && (
-                <DeleteIcon onClick={() => deleteElement(e)}>
+                <DeleteIcon onClick={deleteElement(e)}>
                   <FontAwesomeIcon icon={faX} />
                 </DeleteIcon>
               )}
