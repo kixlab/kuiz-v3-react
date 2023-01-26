@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import logoIcon from '../asset/logo.svg'
+import logoIcon from '../Asset/logo.svg'
 import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -16,7 +16,7 @@ export const Gnb = (props: { loginState: boolean }) => {
       navigate(`/${path}`)
       setIsDisplay(!isDisplay)
     },
-    []
+    [isDisplay]
   )
 
   return (
@@ -53,7 +53,7 @@ const SideTab = styled.div`
   background-color: ${palette.background.light};
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
-  z-index: 5;
+  z-index: 100;
   @media (max-width: 599px) {
     padding: 12px;
     height: auto;

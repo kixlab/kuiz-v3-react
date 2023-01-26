@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
-import raleway from '../asset/Raleway-ExtraBold.ttf'
-import interR from '../asset/Inter-Regular.ttf'
-import interM from '../asset/Inter-Medium.ttf'
-import interSb from '../asset/Inter-SemiBold.ttf'
+import raleway from '../Asset/Raleway-ExtraBold.ttf'
+import interR from '../Asset/Inter-Regular.ttf'
+import interM from '../Asset/Inter-Medium.ttf'
+import interSb from '../Asset/Inter-SemiBold.ttf'
 
 export const GlobalStyles = css`
   @font-face {
