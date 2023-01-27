@@ -2,20 +2,21 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import iconImg from '../Asset/logoIcon.png'
 import logoIcon from '../Asset/logo.svg'
-
+import { useSelector } from 'react-redux'
+import { RootState } from '../state/store'
 export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
-
+  const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   return (
     <SideTab className="SideTab">
-      <Logo onClick={() => props.loginState && navigate('/')}>
+      <Logo onClick={() => props.loginState && navigate('/' + cid)}>
         <LogoIcon src={logoIcon} />
         KUIZ
       </Logo>
       {props.loginState == true && (
         <>
           <Menu>
-            <MenuBtn onClick={() => navigate('/solve')}>Solve Problem</MenuBtn>
+            <MenuBtn onClick={() => navigate('/' + cid)}>Solve Problem</MenuBtn>
             <MenuBtn onClick={() => navigate('/createQuestion')}>Create Question</MenuBtn>
             <MenuBtn onClick={() => navigate('/question/createOption')}>Create Options</MenuBtn>
             <MenuBtn onClick={() => navigate('/mypage')}>My Page</MenuBtn>

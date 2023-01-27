@@ -52,9 +52,10 @@ function App() {
             <Route element={<ProtectedAuthenticatedRoutes />}>
               {/* every route that is not specified will lead to MainPage */}
               <Route path="*" element={<PageNotFound />} />
-              <Route path="/" element={<MainPage />} />
-              <Route path="/solve" element={<SolvingQuestion />} />
               <Route path="/enroll" element={<Enroll />} />
+              <Route path="/:cid" element={<MainPage />} />
+              <Route path="/:cid/solve/:id" element={<SolvingQuestion />} />
+              
               <Route path="/createQuestion" element={<CreateQuestion />} />
               <Route path="/question/createOption" element={<DetailAndCreateOption />} />
               <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4} />} />
