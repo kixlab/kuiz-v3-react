@@ -6,6 +6,7 @@ import { DetailAndCreateOption } from './Pages/DetailAndCreateOption'
 import { CreateQuestion } from './Pages/CreateQuestion'
 import { MyPage } from './Pages/MyPage'
 import { SolvingQuestion } from './Pages/SolvingQuestion'
+import { PageNotFound } from './Pages/PageNotFound'
 import styled from '@emotion/styled'
 import { Global, css } from '@emotion/react'
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
@@ -50,7 +51,8 @@ function App() {
             {/* routes only logged in people can access */}
             <Route element={<ProtectedAuthenticatedRoutes />}>
               {/* every route that is not specified will lead to MainPage */}
-              <Route path="*" element={<MainPage />} />
+              <Route path="*" element={<PageNotFound />} />
+              <Route path="/" element={<MainPage />} />
               <Route path="/solve" element={<SolvingQuestion />} />
               <Route path="/enroll" element={<Enroll />} />
               <Route path="/createQuestion" element={<CreateQuestion />} />
