@@ -1,10 +1,11 @@
-import styled from '@emotion/styled';
+import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { enroll, login } from '../state/features/userSlice';
 import { RootState } from '../state/store';
+import { FillBtn } from '../Components/basic/button/Button';
 
 export function Enroll() {
     const navigate = useNavigate();
@@ -43,21 +44,20 @@ export function Enroll() {
         <CodeInputBox>
             <strong>Class code</strong>
             <ClassCodeInput type="text" placeholder='Enter code' onChange={detectChange}/>
-            <EnrollBtn onClick={onSubmit}>Enter</EnrollBtn>
+            <FillBtn onClick={onSubmit}>Enter</FillBtn>
         </CodeInputBox>
     )
 }
 
 const CodeInputBox = styled.div`
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 100px 60px 30px 60px;
-    box-sizing: border-box;
-    font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 100px 60px 30px 60px;
+  box-sizing: border-box;
+  font-size: 18px;
 `
-
 const ClassCodeInput = styled.input`
     width: 234px;
     padding: 16px;
@@ -71,8 +71,4 @@ const ClassCodeInput = styled.input`
         outline: none;
         border: 1px solid #212121;
     }
-`
-
-const EnrollBtn = styled.button`
-    width: 234px;
 `

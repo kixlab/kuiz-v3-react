@@ -91,21 +91,19 @@ export function DetailAndCreateOption() {
     )
 }
 
-//QuestionBox is here!
 const QuestionBox = styled.div`
-    border-radius: 8px;
-    background-color: white;
-    margin: 40px 0 40px 0;
-    padding: 0 30px 30px 30px;
+  border-radius: 8px;
+  background-color: white;
+  margin: 40px 0 40px 0;
+  padding: 10px 30px 30px 30px;
 `
 
 const DividerLine = styled.hr`
-    border:0;
-    height:1px;
-    background-color: #dbdbdb;
-    margin-top: 30px;
+  border: 0;
+  height: 1px;
+  background-color: #dbdbdb;
+  margin: 30px 0 20px 0;
 `
-
 const Option = styled.div`
     background-color: #f1f1f1;
     padding: 16px;

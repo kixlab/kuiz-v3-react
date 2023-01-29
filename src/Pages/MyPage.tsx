@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { MadeOption } from '../Components/MadeOption'
 import { MadeStem } from '../Components/MadeStem'
 import { googleLogout } from '@react-oauth/google'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useCallback,useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../state/features/userSlice'
@@ -15,6 +15,9 @@ import { qinfoType } from '../apiTypes/qinfo'
 interface optionWithQinfo extends optionType{
   qinfo: qinfoType
 }
+import { StrokeBtn } from '../Components/basic/button/Button'
+import { Label } from '../Components/basic/Label'
+import { palette, typography } from '../styles/theme'
 
 export function MyPage(props: { stemNum: number; optionNum: number }) {
   const navigate = useNavigate()
@@ -64,13 +67,14 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
     <div>
       <div>
         <DataLabel>
-          <div style={{ color: '#212121' }}>Created Question Stems</div>
+          <Label text="Created Question Stems" color="black" size={0} />
           {props.stemNum}
         </DataLabel>
         <MadeLists>
           {madeStem.map((stem:qinfoType)=>{
             return(
               <MadeStem key={stem._id}
+                qid={stem._id}
                 question={stem.raw_string}/>
             )
           })}
@@ -78,18 +82,18 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
       </div>
       <div>
         <DataLabel>
-          <div style={{ color: '#212121' }}>Created Options</div>
-          {props.optionNum}
+          <Label text="Created Options" color="black" size={0} />
+          {props.stemNum}
         </DataLabel>
         <MadeLists>
           {madeOption.map((option:optionWithQinfo)=>{
             return(
-              <MadeOption key={option._id} optionType={option.is_answer ? "Answer" : "Distractor"} question={option.qinfo.raw_string} option={option.option_text}/>
+              <MadeOption key={option._id} optionType={option.is_answer ? "Answer" : "Distractor"} qid={option.qinfo._id} question={option.qinfo.raw_string} option={option.option_text}/>
             )
           })}
         </MadeLists>
       </div>
-      <StrokeBtn onClick={signOut}>Log Out</StrokeBtn>
+      <StrokeBtn onClick={signOut}>Log out</StrokeBtn>
     </div>
   )
 }
@@ -102,23 +106,9 @@ const MadeLists = styled.div`
 `
 
 const DataLabel = styled.div`
-  color: #1f74ce;
-  font-weight: 700;
-  padding: 30px 0 16px;
+  ${typography.hLabel};
+  color: ${palette.primary.main};
+  padding: 30px 0 12px;
   display: flex;
   gap: 10px;
-`
-
-const StrokeBtn = styled.button`
-  width: 200px;
-  color: #212121;
-  background-color: #fff;
-  border: 1px solid #bdbdbd;
-  margin-bottom: 30px;
-  :hover {
-    background-color: #e9eef4;
-  }
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
 `

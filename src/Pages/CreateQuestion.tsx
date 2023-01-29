@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { FillBtn } from '../Components/basic/button/Button'
 import { TextEditor } from '../Components/TextEditor'
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { EditorState, convertToRaw } from 'draft-js';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import axios from 'axios';
+import { palette } from '../styles/theme'
 
 const ObjectID = require("bson-objectid");
 
@@ -90,13 +92,13 @@ export function CreateQuestion() {
         <QuestionLabel>Answer</QuestionLabel>
         <Input type="text" placeholder="Suggest an answer" onChange={updateAnswer}/>
       </div>
-      <button onClick={submitStem} >Submit</button>
+      <FillBtn onClick={submitStem} >Submit</FillBtn>
     </CreateQBox>
   )
 }
 
 const CreateQBox = styled.div`
-  background-color: white;
+  background-color: ${palette.common.white};
   padding: 30px;
   border-radius: 8px;
   display: flex;
@@ -126,4 +128,4 @@ const Input = styled.input`
     outline: none;
     border-color: #212121;
   }
-`
+  `

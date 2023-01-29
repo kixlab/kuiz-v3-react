@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import { typography } from '../styles/theme'
 
 interface propsType{
   index:number;
@@ -48,9 +49,13 @@ const QuizList = styled.div<{ id?: 'Content' | 'End' }>`
     css`
       border-radius: 0 0 8px 8px;
     `}
+    @media(max-width: 599px) {
+    grid-template-columns: auto 60px 90px;
+  }
 `
 
 const Item = styled.div`
+  ${typography.b02};
   padding-right: 20px;
   overflow: hidden;
   white-space: normal;

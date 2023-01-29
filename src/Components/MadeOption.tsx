@@ -2,14 +2,19 @@ import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
+import { TextBtn, TextBtnCta } from './basic/button/Button'
+import { useNavigate, useParams } from 'react-router-dom'
 
 interface propsType{
+  qid:string
   option: string
   question: string
   optionType: 'Answer' | 'Distractor'
 }
 
 export const MadeOption = (props: propsType) => {
+  const navigate = useNavigate()
+  const cid = useParams().cid
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -25,15 +30,15 @@ export const MadeOption = (props: propsType) => {
         <Stem>{props.question}</Stem>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
+        <TextBtn onClick={toggleModal}>Delete</TextBtn>
         <CheckDialog
-          title="Delete the option"
-          message="Do you really want to delete it? You can't restore it."
+          title="Delete the stem"
           btnName="Delete"
+          message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
           toggleModal={toggleModal}
         />
-        <MoveBtn>View</MoveBtn>
+        <TextBtnCta onClick={() => navigate('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
       </RowFlex>
     </OptionBox>
   )
@@ -83,22 +88,4 @@ const QSymbol = styled.div`
 
 const Stem = styled.div`
   color: #858585;
-`
-
-const DeleteBtn = styled.div`
-  color: #616161;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const MoveBtn = styled.div`
-  padding-left: 8px;
-  color: #1c548f;
-  border-radius: 8px;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `

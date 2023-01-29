@@ -1,6 +1,7 @@
 import { CategoryInput } from './CategoryInput'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import { FillBtn } from './basic/button/Button'
 
 interface propsType{
   isAnswer: boolean
@@ -30,7 +31,7 @@ export const CreateNewOption = (props:propsType) => {
       <div>
         <Input type="text" placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested}/>
         <CategoryInput getCategory={props.setKeywords} />
-        <SubmitBtn onClick={props.onSubmit}>Submit</SubmitBtn>
+        <FillBtn onClick={props.onSubmit}>Submit</FillBtn>
       </div>
     </div>
   )
@@ -56,9 +57,6 @@ const Toggles = styled.div`
   margin-bottom: 20px;
 `
 
-const SubmitBtn = styled.button`
-  margin-top: 20px;
-`
 const ToggleBtn = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' | 'SubmitBtn' }>`
   display: inline-block;
   padding: 8px 12px 8px 12px;
@@ -73,7 +71,6 @@ const ToggleBtn = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' | 'Subm
       color: rgb(10, 80, 10);
       margin-right: 8px;
     `}
-
   ${props =>
     props.id === 'AnsAct' &&
     css`
@@ -81,21 +78,18 @@ const ToggleBtn = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' | 'Subm
       color: white;
       margin-right: 8px;
     `}
-
     ${props =>
     props.id === 'Dist' &&
     css`
       border-color: rgb(220, 51, 51);
       color: rgb(205, 0, 0);
     `}
-
     ${props =>
     props.id === 'DistAct' &&
     css`
       background-color: rgb(220, 51, 51);
       color: white;
     `}
-
     ${props =>
     props.id === 'SubmitBtn' &&
     css`

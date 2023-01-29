@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import { CSSProperties } from 'react'
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { palette } from '../styles/theme'
 
 interface propsType{
   title: string
@@ -26,12 +28,12 @@ export const TextEditor = (props:propsType) => {
     );
   }
 
-const editorStyle = {
-  border: '1px solid #dbdbdb',
+const editorStyle: CSSProperties = {
+  border: `1px solid ${palette.grey[500]}`,
   padding: '16px',
-  borderRadius: '2px',
+  borderRadius: '6px',
   height: '200px',
-};
+}
 
 const QuestionLabel = styled.div`
   color: #3d8add;

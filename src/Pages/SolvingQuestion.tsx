@@ -11,6 +11,8 @@ import axios from 'axios'
 import { qinfoType } from '../apiTypes/qinfo'
 import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
+import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
+import { typography } from '../styles/theme'
 
 const ObjectID = require("bson-objectid");
 
@@ -141,9 +143,6 @@ export function SolvingQuestion() {
               Submit
             </FillBtn>
             <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
-          {/* <FillBtn>Add Option</FillBtn> */}
-        {/* <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
-        <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} /> */}
       </BtnDisplay>
     </QuestionBox>
   )
@@ -173,12 +172,9 @@ const ReturnBtn = styled.div`
 `
 
 const Label = styled.div`
-  font-size: 20px;
-  font-family: 'inter-sb';
-  line-height: 1.4;
+  ${typography.hStem};
   padding: 8px 0 0 0;
   @media (max-width: 599px) {
-    font-size: 16px;
     padding: 0px;
   }
 `
@@ -222,21 +218,4 @@ const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
-`
-const FillBtn = styled.button`
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
-`
-
-const StrokeBtn = styled.button`
-  color: #323232;
-  background-color: #fff;
-  border: 1px solid #bdbdbd;
-  :hover {
-    background-color: #e9eef4;
-  }
-  @media (max-width: 599px) {
-    font-size: 14px;
-  }
 `
