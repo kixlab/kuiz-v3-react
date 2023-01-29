@@ -6,6 +6,7 @@ import { CheckDialog } from './Dialogs/CheckDialog'
 interface propsType{
   question:string
 }
+
 export const MadeStem = (props:propsType) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {

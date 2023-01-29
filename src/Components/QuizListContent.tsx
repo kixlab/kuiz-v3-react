@@ -1,19 +1,19 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 
-interface questionProps{
+interface propsType{
   index:number;
   title: string;
-  options: string;
+  options: number;
   date: string;
   type: 'Content' | 'End'
 }
 
-export const QuizListContent = (props: questionProps) => {
+export const QuizListContent = (props: propsType) => {
   const changeDate = (date:string)=>{
     const givenDate = new Date(date)
     const year = givenDate.getFullYear()
-    const month = givenDate.getMonth()+1
+    const month = givenDate.getMonth() + 1
     const day = givenDate.getDate()
     return (
       `${year}/${month}/${day}`

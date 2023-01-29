@@ -8,66 +8,18 @@ import { RootState } from '../state/store'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-//SAMPLE OPTION LIST
+import { qinfoType } from '../apiTypes/qinfo'
+import { optionType } from '../apiTypes/option'
+import { clusterType } from '../apiTypes/cluster'
+
 const ObjectID = require("bson-objectid");
-
-interface qinfoType {
-  action_verb: string[];
-  author: string;
-  class:string;
-  contributor: string[]
-  createdAt: string
-  explanation: string
-  keyword: string[]
-  learning_objective: string
-  optionSets: string[]
-  options: string[]
-  raw_string: string
-  report: string[]
-  stem_text: string
-  updatedAt: string
-  __v:number
-  _id: string
-}
-
-interface optionListType{
-  author:string;
-  class:string;
-  dependency: {
-    same: string[]
-    contradictory: string[]
-    _id: string
-  }
-  disjointSet: string
-  disliked: string[]
-  explanation: string
-  includedSet: string[]
-  is_answer: boolean
-  keyWords: string[]
-  liked: string[]
-  option_text: string
-  plausible:{
-    similar: string[]
-    difference: string[]
-    _id: string
-  }
-  qstem: string
-  suggesetions: string[]
-  __v: number 
-  _id: string
-}
-
-interface clusterType{
-  options: optionListType[]
-  representative: optionListType
-}
 
 export function SolvingQuestion() {
   const navigate = useNavigate()
   const qid = useParams().id;
 	const cid = useParams().cid;
 	const uid = useSelector((state:RootState) => state.userInfo._id);
-	const [optionSet, setOptionSet] = useState<optionListType[]>();
+	const [optionSet, setOptionSet] = useState<optionType[]>();
 	const [options, setOptions] = useState([]);
 	const [qinfo, setQinfo] = useState<qinfoType>();
 	const [ansVisible, setAnsVisible] = useState(true);
@@ -79,12 +31,12 @@ export function SolvingQuestion() {
 	const [ans, setAns] = useState([]);
 	const [dis, setDis] = useState([]);
 
-	function getMultipleRandom(arr:optionListType[], num:number) {
+	function getMultipleRandom(arr:optionType[], num:number) {
 		const shuffled = [...arr].sort(() => 0.5 - Math.random());
 		return shuffled.slice(0, num);
 	}
 
-	function shuffle(array:optionListType[]) {
+	function shuffle(array:optionType[]) {
 		array.sort(() => Math.random() - 0.5);
 		return array;
 	}
@@ -101,17 +53,16 @@ export function SolvingQuestion() {
 					const ansList = getMultipleRandom(ans, 1);
 					const disList = getMultipleRandom(dis, 3);
           
-
 					optionList = shuffle(
 						ansList.map((a:any) => a.representative).concat(disList.map((d:any) => d.representative))
 					);
 
-					setAns(ans);
+          setAns(ans);
 					setDis(dis);
           
 					setOptionSet(optionList);
 
-					optionList.forEach((o:any, i:number) => {
+					optionList.forEach((o:optionType, i:number) => {
 						if (o.is_answer) {
 							setAnswer(i);
 						}
@@ -131,7 +82,7 @@ export function SolvingQuestion() {
 					uid: uid,
 					initAns: optionSet && selected && optionSet[selected]._id,
 					isCorrect: selected === answer,
-					optionSet: options.map((o:any) => ObjectID(o._id)),
+					optionSet: options.map((o:optionType) => ObjectID(o._id)),
 				})
 				.then((res) => {
 					console.log("success:", res.data.success);
@@ -161,6 +112,7 @@ export function SolvingQuestion() {
 		setIsSolved(false);
 		setSelected(-1);
 		setAnsVisible(false);
+    setShowAnswer(false);
 	};
 
   return (
@@ -170,7 +122,7 @@ export function SolvingQuestion() {
       </ReturnBtn>
       <Label>{qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
       <div>
-        {optionSet?.map((e:any, i:number) => {
+        {optionSet?.map((e:optionType, i:number) => {
           return (
             <Option onClick={()=>{
               setSelected(i)
@@ -260,8 +212,8 @@ const Option = styled.div<{ state: boolean; selected: boolean; id:string}>`
 
     ${id==='answer' &&
     css`
-      border-color: green;
-      background-color: green;
+      border-color: #3EB489;
+      background-color: #66CDAA;
     `}
   `}
 `

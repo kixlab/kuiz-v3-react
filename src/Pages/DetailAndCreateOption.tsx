@@ -6,8 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import draftToHtml from 'draftjs-to-html';
-
 import axios from 'axios';
+import { qinfoType } from '../apiTypes/qinfo';
+import { optionType } from '../apiTypes/option';
 
 const ObjectID = require("bson-objectid");
 
@@ -16,31 +17,26 @@ export function DetailAndCreateOption() {
 	const qid = useParams().id;
 	const cid = useParams().cid;
 	const uid = useSelector((state:RootState) => state.userInfo._id);
-    const [ansList, setAnsList] = useState([]);
-	const [disList, setDistList] = useState([]);
-	const [qinfo, setQinfo] = useState<any>();
+    const [ansList, setAnsList] = useState<optionType[]>([]);
+	const [disList, setDistList] = useState<optionType[]>([]);
+	const [qinfo, setQinfo] = useState<qinfoType>();
 	const [similarOptions, setSimilarOptions] = useState<string[]>([]);
-	const [keywordSet, setKeywordSet] = useState<string[]>([]);
 
     // My option values
 	const [option, setOption] = useState("");
 	const [isAnswer, setIsAnswer] = useState(false);
 	const [keywords, setKeywords] = useState<string[]>([]);
 
-
-
 	useEffect(() => {
 		axios.get(`${process.env.REACT_APP_BACK_END}/question/option/load?qid=` + qid).then((res) => {
-            console.log(res)
-			const ans = res.data.options.filter((op:any) => op.is_answer === true);
-			const dis = res.data.options.filter((op:any) => op.is_answer === false);
+			const ans = res.data.options.filter((op:optionType) => op.is_answer === true);
+			const dis = res.data.options.filter((op:optionType) => op.is_answer === false);
 
 			setAnsList(ans);
 			setDistList(dis);
 			setQinfo(res.data.qinfo);
-			setKeywordSet(res.data.qinfo.keyword);
 		});
-	}, [navigate, qid]);
+	}, [navigate, qid, setAnsList, setDistList, setQinfo ]);
 
 	const submit = useCallback(async () => {
 		const optionData = {
@@ -53,10 +49,9 @@ export function DetailAndCreateOption() {
 		};
 
         if(keywords.length>0 && option.length>0){
-            console.log(keywords)
             if(keywords.includes('Form similar to answer')){
-                ansList.map((item:any)=>{
-                    if(!similarOptions.includes(item.id)){
+                ansList.map((item:optionType)=>{
+                    if(!similarOptions.includes(item._id)){
                         setSimilarOptions([item._id, ...similarOptions])
                     }
                 })
@@ -72,10 +67,16 @@ export function DetailAndCreateOption() {
 
     return (
         <QuestionBox>
-            <QExplain title="Objective" information={qinfo.learning_objective}/>
-            <QExplain title="Explanation" information={qinfo.explanation}/>
-            <DividerLine/>
-            <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(qinfo.stem_text))}}/>
+            {
+                qinfo &&
+                <>
+                    <QExplain title="Objective" information={qinfo.learning_objective}/>
+                    <QExplain title="Explanation" information={qinfo.explanation}/>
+                    <DividerLine />
+                    <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(qinfo.stem_text))}}/> 
+                </>
+            }
+            
             <div>
                 {ansList.map((item:any) => (
                     <Option key={item._id}>✅{item?.option_text}</Option>

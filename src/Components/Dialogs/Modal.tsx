@@ -5,7 +5,6 @@ export const Modal = ({ children }: PropsWithChildren) => {
   return (
     <ModalContainer>
       <DialogBox>{children}</DialogBox>
-      {/* <dialog */}
       <Backdrop />
     </ModalContainer>
   )

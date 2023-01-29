@@ -10,7 +10,6 @@ interface Props {
 
 export const CategoryInput = ({ getCategory }: Props) => {
   const inputRef = useRef<string>('')
-  //Should get category data from db
   const [catList, setCatList] = useState<string[]>(['Common misconception', 'Form similar to answer'])
   const [selections, setSelections] = useState<string[]>([])
 

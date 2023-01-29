@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { CategoryInput } from '../Components/CategoryInput'
 import { TextEditor } from '../Components/TextEditor'
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,13 +14,14 @@ export function CreateQuestion() {
   const cid = useParams().cid;
   const uid = useSelector((state:RootState)=>state.userInfo._id)
   const [answer, setAnswer] = useState("");
-  const [category,setCategory] = useState<string[]>([])
+  const [objective,setObjective] = useState("")
   const [explanation, setExplanation] = useState<EditorState>(() => EditorState.createEmpty());
   const [question, setQuestion] = useState<EditorState>(() => EditorState.createEmpty());
 
-  function getCategory(category: string[]) {
-    setCategory(category)
+  function updateObjective(e:React.ChangeEvent<HTMLInputElement>){
+    setObjective(e.target.value)
   }
+
   function updateAnswer(e:React.ChangeEvent<HTMLInputElement>){
     setAnswer(e.target.value)
   }
@@ -37,27 +37,21 @@ export function CreateQuestion() {
 			cid: ObjectID(cid),
 			options: [],
 			optionSets: [],
-			learning_objective: category[0],
+			learning_objective: objective,
 		};
-
-    console.log({
-      qstemObj: qstemObj,
-      cid: cid,
-      answer_text: answer,
-    })
 
 		const rawString = qstemObj.raw_string;
 		const wordcount = rawString.split(" ").filter((word) => word !== "").length;
 		if (rawString === null || wordcount < 1) {
-			alert("문제 내용을 입력해 주세요.");
+			alert("Please enter a question.");
 			return;
 		}
 		if (answer === null || answer.match(/^\s*$/) !== null) {
-			alert("정답을 입력해 주세요.");
+			alert("Please enter an answer.");
 			return;
 		}
 		if (qstemObj.learning_objective === null) {
-			alert("학습 목표를 입력해 주세요.");
+			alert("Please enter learning objective.");
 			return;
 		}
 		axios
@@ -73,7 +67,6 @@ export function CreateQuestion() {
 							author: ObjectID(uid),
 							option_text: answer,
 							is_answer: true,
-							// explanation: explanation,
 							class: ObjectID(cid),
 							qstem: ObjectID(res.data.data),
 						},
@@ -89,8 +82,7 @@ export function CreateQuestion() {
     <CreateQBox>
       <div>
         <QuestionLabel>Learning Objective</QuestionLabel>
-        {/* <input type='text' placeholder='Write down the objective'/> */}
-        <CategoryInput getCategory={getCategory} />
+        <Input type="text" placeholder="Objective" onChange={updateObjective}/>
       </div>
       <TextEditor title="Question Stem" editorState={question} onChange={setQuestion}/>
       <TextEditor title="Explanation" editorState={explanation} onChange={setExplanation}/>

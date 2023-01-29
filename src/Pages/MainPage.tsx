@@ -8,16 +8,20 @@ import { useCallback } from 'react';
 import { RootState } from '../state/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { qinfoType } from '../apiTypes/qinfo';
+import { clusterType } from '../apiTypes/cluster';
 
 interface propsType{
 	createOptions: boolean
 }
+
 export function MainPage(props:propsType) {
     const navigate = useNavigate();
 	const cid = useParams().cid;
-	const [questionList, setQuestionList] = useState([]);
-	const [validList, setValidList] = useState([false]);
 	const uid = useSelector((state:RootState) => state.userInfo._id);
+	const [questionList, setQuestionList] = useState<qinfoType[]>([]);
+	const [validList, setValidList] = useState([false]);
+
 	const getQuestionList = useCallback((cid:string) => {
 			axios
 				.get(`${process.env.REACT_APP_BACK_END}/question/list/load?cid=` + cid)
@@ -25,15 +29,14 @@ export function MainPage(props:propsType) {
 					const valid = [false];
 
 					await Promise.all(
-						res.data.problemList.map(async (q:any, i:number) => {
+						res.data.problemList.map(async (q:qinfoType, i:number) => {
 							await axios
-
 								.get(`${process.env.REACT_APP_BACK_END}/question/load/cluster?qid=` + q._id)
 								.then(async (res2) => {
 									const clusters = await res2.data.cluster;
 
-									const ans = clusters.filter((c:any) => c.representative.is_answer).length;
-									const dis = clusters.filter((c:any) => !c.representative.is_answer).length;
+									const ans = clusters.filter((c:clusterType) => c.representative.is_answer).length;
+									const dis = clusters.filter((c:clusterType) => !c.representative.is_answer).length;
 
 									if (ans + dis >= 4) {
 										valid[i] = true;
@@ -65,7 +68,7 @@ export function MainPage(props:propsType) {
 					getQuestionList(res.data.cid);
 				} else {
 					if (!res.data.enrolled) {
-						navigate("/enroll");
+						navigate("/");
 					} else {
 						axios
 							.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.data.cid)
@@ -85,9 +88,10 @@ export function MainPage(props:propsType) {
         <BoxShadow>
             <QuizListHeader/>
 			{questionList
-						.filter((q:any, j:number) => validList[j])
-						.map((question:any, index:number) => (
+						.filter((q:qinfoType, j:number) => validList[j])
+						.map((question:qinfoType, index:number) => (
 							<Link
+								style={{ color: 'inherit', textDecoration: 'none' }}
 								key={question._id}
 								to={props.createOptions ? "/" + cid + "/question/" + question._id + "/createOption" : "/" + cid + "/solve/" + question._id}>
 									<QuizListContent 

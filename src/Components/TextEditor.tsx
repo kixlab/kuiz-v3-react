@@ -1,23 +1,15 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-interface props{
+interface propsType{
   title: string
   editorState: EditorState
   onChange: (state:EditorState)=>void
 }
 
-export const TextEditor = (props:props) => {
-    // const [editorState, setEditorState] = useState<EditorState>(() => EditorState.createEmpty());
-    // const onEditorStateChange = (editorState:EditorState) => {
-    //   setEditorState(editorState);
-    //   console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
-    // }
-
+export const TextEditor = (props:propsType) => {
     return (
       <div>
         <QuestionLabel>{props.title}</QuestionLabel>

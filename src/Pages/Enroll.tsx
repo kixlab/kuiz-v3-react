@@ -10,8 +10,8 @@ export function Enroll() {
     const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [code, setCode] = useState<string>();
-	const uid = useSelector((state:RootState) => state.userInfo?._id);
-	const email = useSelector((state:RootState) => state.userInfo?.email);
+	const uid = useSelector((state:RootState) => state.userInfo._id);
+	const email = useSelector((state:RootState) => state.userInfo.email);
 	const detectChange = (e:React.ChangeEvent<HTMLInputElement>) => {
 		setCode(e.target.value);
 	};

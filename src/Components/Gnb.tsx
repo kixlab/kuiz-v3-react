@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import logoIcon from '../Asset/logo.svg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
+
 export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
   const cid = useSelector((state: RootState) => state.userInfo.classes[0])
@@ -15,12 +16,12 @@ export const Gnb = (props: { loginState: boolean }) => {
       {props.loginState == true && (
         <>
           <Menu>
-            <MenuBtn onClick={() => navigate('/' + cid)}>Solve Problem</MenuBtn>
+            <MenuBtn onClick={() => navigate("/" + cid)}>Solve Problem</MenuBtn>
             <MenuBtn onClick={() => navigate("/" + cid + "/createQuestion")}>Create Question</MenuBtn>
             <MenuBtn onClick={() => navigate("/" + cid + "/qlist")}>Create Options</MenuBtn>
-            <MenuBtn onClick={() => navigate('/'+cid+'/mypage')}>My Page</MenuBtn>
+            <MenuBtn onClick={() => navigate("/" + cid +"/mypage")}>My Page</MenuBtn>
           </Menu>
-          <ProfileImg onClick={() => navigate('/login')}></ProfileImg>
+          <ProfileImg onClick={() => navigate("/login")}></ProfileImg>
         </>
       )}
     </SideTab>
