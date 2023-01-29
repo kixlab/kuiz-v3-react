@@ -1,20 +1,32 @@
 import styled from '@emotion/styled';
+import draftToHtml from 'draftjs-to-html';
+interface props{
+    title: string
+    information: any
+}
 
-export const QExplain = (props:{type:string}) => {
+export const QExplain = (props:props) => {
     let label='';
 
-    if (props.type=="Objective"){
+    if (props.title=="Objective"){
         label = 'Learning Objective';
-    }
-    else label = 'Explanation';
-    
-    return (
+        return (
             <div className='LabelBox'>
                 <Label>{label}</Label>
-                <div>abcd</div>
+                <div>{props.information}</div>
             </div>
-
-    )
+        )
+    }else{
+        label = 'Explanation';
+        return (
+            <div className='LabelBox'>
+                <Label>{label}</Label>
+                <div dangerouslySetInnerHTML={{
+					__html: draftToHtml(JSON.parse(props.information)),
+				}}/>
+            </div>
+        )
+    } 
 }
 
 const Label = styled.div`

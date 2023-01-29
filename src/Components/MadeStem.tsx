@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 
-export const MadeStem = () => {
+interface propsType{
+  question:string
+}
+export const MadeStem = (props:propsType) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -12,7 +15,7 @@ export const MadeStem = () => {
     <StemBox>
       <RowFlex>
         <QSymbol>Q.</QSymbol>
-        <div>What is the question?</div>
+        <div>{props.question}</div>
       </RowFlex>
       <RowFlex id="EditBtns">
         <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>

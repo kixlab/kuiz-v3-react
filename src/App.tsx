@@ -17,9 +17,6 @@ import { removeError } from './state/features/errorSlice'
 import { CheckDialog } from './Components/Dialogs/CheckDialog'
 
 function App() {
-
-  console.log('here')
-  console.log(`${process.env.REACT_APP_CLIENT_ID}`)
   //redux
   const dispatch = useDispatch()
   const userInfo = useSelector((state: RootState) => state.userInfo)
@@ -51,14 +48,14 @@ function App() {
             {/* routes only logged in people can access */}
             <Route element={<ProtectedAuthenticatedRoutes />}>
               {/* every route that is not specified will lead to MainPage */}
-              <Route path="*" element={<PageNotFound />} />
-              <Route path="/enroll" element={<Enroll />} />
-              <Route path="/:cid" element={<MainPage />} />
+              <Route path="/" element={<Enroll />} />
+              <Route path="/:cid" element={<MainPage createOptions={false}/>} />
+              <Route path="/:cid/qlist" element={<MainPage createOptions={true}/>} />
               <Route path="/:cid/solve/:id" element={<SolvingQuestion />} />
-              
-              <Route path="/createQuestion" element={<CreateQuestion />} />
-              <Route path="/question/createOption" element={<DetailAndCreateOption />} />
-              <Route path="/mypage" element={<MyPage stemNum={3} optionNum={4} />} />
+              <Route path="/:cid/createQuestion" element={<CreateQuestion />} />
+              <Route path="/:cid/question/:id/createOption" element={<DetailAndCreateOption />} />
+              <Route path="/:cid/mypage" element={<MyPage stemNum={3} optionNum={4} />} />
+              <Route path="*" element={<PageNotFound />} />
             </Route>
           </Routes>
         </InnerBox>

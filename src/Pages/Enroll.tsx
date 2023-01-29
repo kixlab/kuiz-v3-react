@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { enroll, login } from '../state/features/userSlice';
 import { RootState } from '../state/store';
@@ -16,6 +16,14 @@ export function Enroll() {
 		setCode(e.target.value);
 	};
 	const userInfo = useSelector((state:RootState) => state.userInfo);
+
+    useEffect(()=>{
+        if(userInfo.classes.length>0){
+            const cid = userInfo.classes[0]
+            navigate("/"+cid)
+        }
+    },[])
+
 	const onSubmit = () => {
 		axios
 			.post(`${process.env.REACT_APP_BACK_END}/auth/class/join`, {

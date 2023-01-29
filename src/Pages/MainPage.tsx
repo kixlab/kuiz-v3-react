@@ -9,7 +9,10 @@ import { RootState } from '../state/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export function MainPage() {
+interface propsType{
+	createOptions: boolean
+}
+export function MainPage(props:propsType) {
     const navigate = useNavigate();
 	const cid = useParams().cid;
 	const [questionList, setQuestionList] = useState([]);
@@ -86,7 +89,7 @@ export function MainPage() {
 						.map((question:any, index:number) => (
 							<Link
 								key={question._id}
-								to={"/" + cid + "/solve/" + question._id}>
+								to={props.createOptions ? "/" + cid + "/question/" + question._id + "/createOption" : "/" + cid + "/solve/" + question._id}>
 									<QuizListContent 
 										key={index}
 										index={index+1}

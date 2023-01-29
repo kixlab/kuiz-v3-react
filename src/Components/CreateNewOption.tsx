@@ -1,30 +1,36 @@
-import { useState } from 'react'
 import { CategoryInput } from './CategoryInput'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 
-export const CreateNewOption = () => {
-  const [tag, setTag] = useState<string>('Ans')
+interface propsType{
+  isAnswer: boolean
+  setIsAnswer: (item:boolean)=>void
+  setOption: (item:string)=>void
+  setKeywords: (item:string[])=>void
+  onSubmit: ()=>void
+}
 
-  function getCategory(cats: string[]) {
-    console.log(cats)
+export const CreateNewOption = (props:propsType) => {
+
+  function updateSuggested(e:React.ChangeEvent<HTMLInputElement>) {
+    props.setOption(e.target.value)
   }
 
   return (
     <div>
       <h3>Create New Option</h3>
       <Toggles>
-        <ToggleBtn onClick={() => setTag('Ans')} id={tag == 'Ans' ? 'AnsAct' : 'Ans'}>
+        <ToggleBtn onClick={() => props.setIsAnswer(true)} id={props.isAnswer ? 'AnsAct' : 'Ans'}>
           <strong>Answer</strong>
         </ToggleBtn>
-        <ToggleBtn onClick={() => setTag('Dist')} id={tag == 'Dist' ? 'DistAct' : 'Dist'}>
+        <ToggleBtn onClick={() => props.setIsAnswer(false)} id={!props.isAnswer ? 'DistAct' : 'Dist'}>
           <strong>Distractor</strong>
         </ToggleBtn>
       </Toggles>
       <div>
-        <Input type="text" placeholder="Suggest an answer or distractor for this question" />
-        <CategoryInput getCategory={getCategory} />
-        <SubmitBtn disabled>Submit</SubmitBtn>
+        <Input type="text" placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested}/>
+        <CategoryInput getCategory={props.setKeywords} />
+        <SubmitBtn onClick={props.onSubmit}>Submit</SubmitBtn>
       </div>
     </div>
   )

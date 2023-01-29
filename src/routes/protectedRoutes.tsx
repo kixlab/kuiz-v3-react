@@ -7,7 +7,7 @@ import { RootState } from '../state/store'
 //routes logged in people can't access
 export const ProtectedUnauthenticatedRoutes = () => {
   const userInfo = useSelector((state: RootState) => state.userInfo)
-  return !userInfo.isLoggedIn ? <Outlet /> : <MainPage />
+  return !userInfo.isLoggedIn ? <Outlet /> : <MainPage createOptions={false}/>
 }
 
 //routes only logged in people can access

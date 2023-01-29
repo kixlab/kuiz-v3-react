@@ -1,21 +1,91 @@
 import styled from '@emotion/styled';
 import { CreateNewOption } from '../Components/CreateNewOption';
 import { QExplain } from '../Components/QExplain';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/store';
+import draftToHtml from 'draftjs-to-html';
+
+import axios from 'axios';
+
+const ObjectID = require("bson-objectid");
 
 export function DetailAndCreateOption() {
+	const navigate = useNavigate();
+	const qid = useParams().id;
+	const cid = useParams().cid;
+	const uid = useSelector((state:RootState) => state.userInfo._id);
+    const [ansList, setAnsList] = useState([]);
+	const [disList, setDistList] = useState([]);
+	const [qinfo, setQinfo] = useState<any>();
+	const [similarOptions, setSimilarOptions] = useState<string[]>([]);
+	const [keywordSet, setKeywordSet] = useState<string[]>([]);
+
+    // My option values
+	const [option, setOption] = useState("");
+	const [isAnswer, setIsAnswer] = useState(false);
+	const [keywords, setKeywords] = useState<string[]>([]);
+
+
+
+	useEffect(() => {
+		axios.get(`${process.env.REACT_APP_BACK_END}/question/option/load?qid=` + qid).then((res) => {
+            console.log(res)
+			const ans = res.data.options.filter((op:any) => op.is_answer === true);
+			const dis = res.data.options.filter((op:any) => op.is_answer === false);
+
+			setAnsList(ans);
+			setDistList(dis);
+			setQinfo(res.data.qinfo);
+			setKeywordSet(res.data.qinfo.keyword);
+		});
+	}, [navigate, qid]);
+
+	const submit = useCallback(async () => {
+		const optionData = {
+			author: ObjectID(uid),
+			option_text: option,
+			is_answer: isAnswer,
+			class: ObjectID(cid),
+			qstem: ObjectID(qid),
+			keywords: keywords,
+		};
+
+        if(keywords.length>0 && option.length>0){
+            console.log(keywords)
+            if(keywords.includes('Form similar to answer')){
+                ansList.map((item:any)=>{
+                    if(!similarOptions.includes(item.id)){
+                        setSimilarOptions([item._id, ...similarOptions])
+                    }
+                })
+            }
+        }
+
+        await axios
+            .post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
+                optionData: optionData,
+                similarOptions: similarOptions,
+            }).then(()=>{navigate("/"+cid)})
+	},[cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])
+
     return (
         <QuestionBox>
-            <QExplain type="Objective"/>
-            <QExplain type="Explanation"/>
+            <QExplain title="Objective" information={qinfo.learning_objective}/>
+            <QExplain title="Explanation" information={qinfo.explanation}/>
             <DividerLine/>
-            <div className='Label'>Q. abcd</div>
+            <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(qinfo.stem_text))}}/>
             <div>
-                <Option>✅Option1</Option>
-                <Option>❌Option1</Option>
-                <Option>❌Option1</Option>
+                {ansList.map((item:any) => (
+                    <Option key={item._id}>✅{item?.option_text}</Option>
+                ))}
+                {disList.map((item:any) => (
+                    <Option key={item._id}>❌{item?.option_text}</Option>
+                ))}
             </div>
             <DividerLine/>
-            <CreateNewOption/>
+            <CreateNewOption isAnswer={isAnswer} setIsAnswer={setIsAnswer} setOption={setOption} setKeywords={setKeywords} onSubmit={submit}/>
         </QuestionBox>
     )
 }

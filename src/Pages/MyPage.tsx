@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { MadeOption } from '../Components/MadeOption'
 import { MadeStem } from '../Components/MadeStem'
 import { googleLogout } from '@react-oauth/google'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useCallback,useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../state/features/userSlice'
@@ -13,9 +13,12 @@ import { RootState } from '../state/store'
 export function MyPage(props: { stemNum: number; optionNum: number }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo?._id)
   const [madeStem, setMadeStem]=useState([])
   const [madeOption, setMadeOption]=useState([])
+  const [stemVisible, setStemVisible] = useState(false);
+	const [optionsVisible, setOptionsVisible] = useState(false);
 
   const getMadeStem = useCallback(() => {
 		axios.post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res) => {
@@ -64,9 +67,12 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
           {props.stemNum}
         </DataLabel>
         <MadeLists>
-          <MadeStem />
-          <MadeStem />
-          <MadeStem />
+          {madeStem.map((stem:any)=>{
+            return(
+              <MadeStem key={stem._id}
+                question={stem.raw_string}/>
+            )
+          })}
         </MadeLists>
       </div>
       <div>
@@ -75,10 +81,11 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
           {props.optionNum}
         </DataLabel>
         <MadeLists>
-          <MadeOption optionType="Distractor" />
-          <MadeOption optionType="Answer" />
-          <MadeOption optionType="Distractor" />
-          <MadeOption optionType="Distractor" />
+          {madeOption.map((option:any)=>{
+            return(
+              <MadeOption key={option._id} optionType={option.is_answer ? "Answer" : "Distractor"} question={option.qinfo.raw_string} option={option.option_text}/>
+            )
+          })}
         </MadeLists>
       </div>
       <StrokeBtn onClick={signOut}>Log Out</StrokeBtn>

@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import iconImg from '../Asset/logoIcon.png'
 import logoIcon from '../Asset/logo.svg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
@@ -17,9 +16,9 @@ export const Gnb = (props: { loginState: boolean }) => {
         <>
           <Menu>
             <MenuBtn onClick={() => navigate('/' + cid)}>Solve Problem</MenuBtn>
-            <MenuBtn onClick={() => navigate('/createQuestion')}>Create Question</MenuBtn>
-            <MenuBtn onClick={() => navigate('/question/createOption')}>Create Options</MenuBtn>
-            <MenuBtn onClick={() => navigate('/mypage')}>My Page</MenuBtn>
+            <MenuBtn onClick={() => navigate("/" + cid + "/createQuestion")}>Create Question</MenuBtn>
+            <MenuBtn onClick={() => navigate("/" + cid + "/qlist")}>Create Options</MenuBtn>
+            <MenuBtn onClick={() => navigate('/'+cid+'/mypage')}>My Page</MenuBtn>
           </Menu>
           <ProfileImg onClick={() => navigate('/login')}></ProfileImg>
         </>

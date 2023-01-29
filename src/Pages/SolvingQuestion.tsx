@@ -74,6 +74,7 @@ export function SolvingQuestion() {
 	const [selected, setSelected] = useState<number>();
 	const [answer, setAnswer] = useState(0);
 	const [isSolved, setIsSolved] = useState(false);
+  const [showAnswer,setShowAnswer] = useState(false);
 
 	const [ans, setAns] = useState([]);
 	const [dis, setDis] = useState([]);
@@ -140,7 +141,7 @@ export function SolvingQuestion() {
 	};
 
 	const background = (index:number) => {
-    if(!isSolved){
+    if(!showAnswer){
       return "wrong-selected";
     }else{
 			if (index === answer) {
@@ -181,7 +182,10 @@ export function SolvingQuestion() {
         })}
       </div>
       <BtnDisplay>
-            <FillBtn onClick={checkAnswer} disabled={isSolved == false ? true : false}>
+            <FillBtn onClick={()=>{
+              checkAnswer();
+              setShowAnswer(true)}} 
+              disabled={isSolved == false ? true : false}>
               Submit
             </FillBtn>
             <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>

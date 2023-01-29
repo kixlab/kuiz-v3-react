@@ -3,7 +3,13 @@ import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 
-export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
+interface propsType{
+  option: string
+  question: string
+  optionType: 'Answer' | 'Distractor'
+}
+
+export const MadeOption = (props: propsType) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal)
@@ -12,11 +18,11 @@ export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
     <OptionBox>
       <RowFlex>
         <Tag id={props.optionType}>{props.optionType}</Tag>
-        <div>option</div>
+        <div>{props.option}</div>
       </RowFlex>
       <RowFlex>
         <QSymbol>Q.</QSymbol>
-        <Stem>What is the question?</Stem>
+        <Stem>{props.question}</Stem>
       </RowFlex>
       <RowFlex id="EditBtns">
         <DeleteBtn onClick={toggleModal}>Delete</DeleteBtn>
