@@ -8,8 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import axios from 'axios';
 import { palette } from '../styles/theme'
-
-const ObjectID = require("bson-objectid");
+import ObjectID from 'bson-objectid';
 
 export function CreateQuestion() {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export function CreateQuestion() {
 			explanation: JSON.stringify(convertToRaw(explanation.getCurrentContent())),
 			action_verb: [],
 			keyword: [],
-			cid: ObjectID(cid),
+			cid: cid && ObjectID(cid),
 			options: [],
 			optionSets: [],
 			learning_objective: objective,
@@ -69,7 +68,7 @@ export function CreateQuestion() {
 							author: ObjectID(uid),
 							option_text: answer,
 							is_answer: true,
-							class: ObjectID(cid),
+							class: cid && ObjectID(cid),
 							qstem: ObjectID(res.data.data),
 						},
 						similarOptions: [],

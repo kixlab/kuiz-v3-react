@@ -13,8 +13,7 @@ import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
 import { typography } from '../styles/theme'
-
-const ObjectID = require("bson-objectid");
+import ObjectID from 'bson-objectid';
 
 export function SolvingQuestion() {
   const navigate = useNavigate()
@@ -29,9 +28,6 @@ export function SolvingQuestion() {
 	const [answer, setAnswer] = useState(0);
 	const [isSolved, setIsSolved] = useState(false);
   const [showAnswer,setShowAnswer] = useState(false);
-
-	const [ans, setAns] = useState([]);
-	const [dis, setDis] = useState([]);
 
 	function getMultipleRandom(arr:optionType[], num:number) {
 		const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -59,9 +55,6 @@ export function SolvingQuestion() {
 						ansList.map((a:any) => a.representative).concat(disList.map((d:any) => d.representative))
 					);
 
-          setAns(ans);
-					setDis(dis);
-          
 					setOptionSet(optionList);
 
 					optionList.forEach((o:optionType, i:number) => {

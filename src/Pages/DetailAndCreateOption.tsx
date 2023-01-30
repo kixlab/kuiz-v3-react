@@ -9,8 +9,7 @@ import draftToHtml from 'draftjs-to-html';
 import axios from 'axios';
 import { qinfoType } from '../apiTypes/qinfo';
 import { optionType } from '../apiTypes/option';
-
-const ObjectID = require("bson-objectid");
+import ObjectID from 'bson-objectid';
 
 export function DetailAndCreateOption() {
 	const navigate = useNavigate();
@@ -43,8 +42,8 @@ export function DetailAndCreateOption() {
 			author: ObjectID(uid),
 			option_text: option,
 			is_answer: isAnswer,
-			class: ObjectID(cid),
-			qstem: ObjectID(qid),
+			class: cid && ObjectID(cid),
+			qstem: qid && ObjectID(qid),
 			keywords: keywords,
 		};
 
@@ -78,10 +77,10 @@ export function DetailAndCreateOption() {
             }
             
             <div>
-                {ansList.map((item:any) => (
+                {ansList.map((item:optionType) => (
                     <Option key={item._id}>✅{item?.option_text}</Option>
                 ))}
-                {disList.map((item:any) => (
+                {disList.map((item:optionType) => (
                     <Option key={item._id}>❌{item?.option_text}</Option>
                 ))}
             </div>
