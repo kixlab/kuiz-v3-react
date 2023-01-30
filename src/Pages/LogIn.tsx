@@ -40,7 +40,7 @@ export function LogIn() {
           }))
             navigate("/" + res.data.user.classes[0])
           }else{
-            navigate('/enroll')
+            navigate('/')
           }
         })
     }

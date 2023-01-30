@@ -18,7 +18,7 @@ export const PageNotFound = () => {
 		})
 		.then((res) => {
 			if(!res.data.enrolled){
-                navigate('/enroll')
+                navigate('/')
             } else {
                 axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=`+res.data.cid)
                     .then((res2) => {
