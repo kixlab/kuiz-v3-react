@@ -31,3 +31,6 @@ jobs:
 
       - name: lint
         run: yarn lint
+
+      - name: style check
+        run: yarn style-check
