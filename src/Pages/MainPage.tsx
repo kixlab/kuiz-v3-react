@@ -106,7 +106,7 @@ export function MainPage(props:propsType) {
 										index={index+1}
 										title={question.raw_string}
 										options={question.options.length}
-										date={question.updatedAt ? question.updatedAt : question.createdAt}
+										date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
 										type={index+1===questionList.length? 'End' : 'Content'}/></Link>
 										))
 										.reverse()}

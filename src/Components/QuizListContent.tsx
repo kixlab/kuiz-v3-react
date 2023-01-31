@@ -7,22 +7,21 @@ interface propsType{
   index:number;
   title: string;
   options: number;
-  date: string;
+  date: Date;
   type: 'Content' | 'End'
 }
 
 export const QuizListContent = (props: propsType) => {
 
-  const changeDate = useCallback((date:string)=>{
-    const givenDate = new Date(date)
-    const year = givenDate.getFullYear()
-    const month = givenDate.getMonth() + 1
-    const day = givenDate.getDate()
+  const changeDate = useCallback((date:Date)=>{
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
     return (
       `${year}/${month}/${day}`
     )
   },[])
-  
+
   return (
     <QuizList id={props.type}>
       <Item>{props.title}</Item>
