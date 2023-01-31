@@ -5,6 +5,7 @@ import { CheckDialog } from './Dialogs/CheckDialog'
 import { palette, typography } from '../styles/theme'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useCallback } from 'react'
 
 interface propsType{
   qid:string
@@ -17,9 +18,11 @@ export const MadeOption = (props: propsType) => {
   const navigate = useNavigate()
   const cid = useParams().cid
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const toggleModal = () => {
+
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  }
+  },[setIsOpenModal,isOpenModal])
+  
   return (
     <OptionBox>
       <RowFlex>

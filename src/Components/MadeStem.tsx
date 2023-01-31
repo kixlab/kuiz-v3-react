@@ -5,6 +5,7 @@ import { CheckDialog } from './Dialogs/CheckDialog'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { palette, typography } from '../styles/theme'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useCallback } from 'react'
 
 interface propsType{
   question:string
@@ -15,9 +16,11 @@ export const MadeStem = (props:propsType) => {
   const cid = useParams().cid
   const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const toggleModal = () => {
+
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  }
+  },[setIsOpenModal,isOpenModal])
+  
   return (
     <StemBox>
       <RowFlex>

@@ -4,6 +4,7 @@ import { FillBtn } from './basic/button/Button'
 import { TextInput } from './basic/InputBox'
 import { TagBtn } from './basic/button/TagButton'
 import { Label } from './basic/Label'
+import { useCallback } from 'react'
 
 interface propsType{
   isAnswer: boolean
@@ -15,9 +16,9 @@ interface propsType{
 
 export const CreateNewOption = (props:propsType) => {
 
-  function updateSuggested(e:React.ChangeEvent<HTMLInputElement>) {
+  const updateSuggested = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
     props.setOption(e.target.value)
-  }
+  },[props.setOption])
 
   return (
     <div>

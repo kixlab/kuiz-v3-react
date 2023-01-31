@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { typography } from '../styles/theme'
+import { useCallback } from 'react'
 
 interface propsType{
   index:number;
@@ -11,7 +12,8 @@ interface propsType{
 }
 
 export const QuizListContent = (props: propsType) => {
-  const changeDate = (date:string)=>{
+
+  const changeDate = useCallback((date:string)=>{
     const givenDate = new Date(date)
     const year = givenDate.getFullYear()
     const month = givenDate.getMonth() + 1
@@ -19,7 +21,8 @@ export const QuizListContent = (props: propsType) => {
     return (
       `${year}/${month}/${day}`
     )
-  }
+  },[])
+  
   return (
     <QuizList id={props.type}>
       <Item>{props.title}</Item>
