@@ -124,11 +124,7 @@ export function SolvingQuestion() {
     async (msg: string) => {
       console.log(msg)
       toggleModal()
-      // TODO: Needs to put actual uid and comments
-      // await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
-      //   uid: 'FAKE_UID',
-      //   comment: msg,
-      // })
+      // TODO: Link to the backend
     },
     [isOpenModal]
   )
