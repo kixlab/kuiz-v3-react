@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
 import { RootState } from '../state/store'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -13,9 +12,14 @@ import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
 import { typography } from '../styles/theme'
+import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
+import { InputDialog } from '../Components/Dialogs/InputDialog'
+import { OptionBtn } from '../Components/basic/button/OptionButton'
 import ObjectID from 'bson-objectid';
+import { useDispatch } from 'react-redux'
 
 export function SolvingQuestion() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id;
 	const cid = useParams().cid;
@@ -28,6 +32,7 @@ export function SolvingQuestion() {
 	const [answer, setAnswer] = useState(0);
 	const [isSolved, setIsSolved] = useState(false);
   const [showAnswer,setShowAnswer] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
 	function getMultipleRandom(arr:optionType[], num:number) {
 		const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -110,21 +115,39 @@ export function SolvingQuestion() {
     setShowAnswer(false);
 	};
 
+  function toggleModal() {
+    setIsOpenModal(!isOpenModal)
+    return ''
+  }
+
+  const reportSubmit = useCallback(
+    async (msg: string) => {
+      console.log(msg)
+      toggleModal()
+      // TODO: Needs to put actual uid and comments
+      // await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
+      //   uid: 'FAKE_UID',
+      //   comment: msg,
+      // })
+    },
+    [isOpenModal]
+  )
+
   return (
     <QuestionBox>
       <ReturnBtn onClick={() => navigate('/' + cid)}>
         <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
       </ReturnBtn>
-      <Label>{qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
+      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
       <div>
         {optionSet?.map((e:optionType, i:number) => {
           return (
-            <Option onClick={()=>{
+            <OptionBtn onClick={()=>{
               setSelected(i)
               setIsSolved(true)}} 
-              state={isSolved} selected={selected === i} key={i} id={background(i)}>
+              state={isSolved} selected={selected === i} key={i}>
               {e.option_text}
-            </Option>
+            </OptionBtn>
           )
         })}
       </div>
@@ -132,10 +155,12 @@ export function SolvingQuestion() {
             <FillBtn onClick={()=>{
               checkAnswer();
               setShowAnswer(true)}} 
-              disabled={isSolved == false ? true : false}>
+              disabled={selected == null}>
               Submit
             </FillBtn>
             <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
+            <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
+            <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>
   )
@@ -170,41 +195,6 @@ const Label = styled.div`
   @media (max-width: 599px) {
     padding: 0px;
   }
-`
-
-const Option = styled.div<{ state: boolean; selected: boolean; id:string}>`
-  ${({ state, selected, id }) => css`
-    background-color: #e9eef4;
-    padding: 16px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    border: 1.5px solid rgba(0, 0, 0, 0);
-
-    ${!state &&
-    css`
-      :hover {
-        background-color: #d4e4f3;
-        cursor: pointer;
-      }
-    `}
-    @media (max-width: 599px) {
-      font-size: 13px;
-    }
-
-    ${selected &&
-    css`
-      border-color: #3d8add;
-      color: #3372b6;
-      font-family: 'inter-m';
-      background-color: #d4e4f3;
-    `}
-
-    ${id==='answer' &&
-    css`
-      border-color: #3EB489;
-      background-color: #66CDAA;
-    `}
-  `}
 `
 
 const BtnDisplay = styled.div`

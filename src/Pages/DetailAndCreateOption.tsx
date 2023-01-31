@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { OptionBtn } from '../Components/basic/button/OptionButton'
+import { Label } from '../Components/basic/Label'
 import { CreateNewOption } from '../Components/CreateNewOption';
 import { QExplain } from '../Components/QExplain';
 import { useState, useEffect, useCallback } from 'react';
@@ -10,6 +12,7 @@ import axios from 'axios';
 import { qinfoType } from '../apiTypes/qinfo';
 import { optionType } from '../apiTypes/option';
 import ObjectID from 'bson-objectid';
+import { Post } from '../utils/apiRequest';
 
 export function DetailAndCreateOption() {
 	const navigate = useNavigate();
@@ -56,12 +59,10 @@ export function DetailAndCreateOption() {
                 })
             }
         }
-
-        await axios
-            .post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
-                optionData: optionData,
-                similarOptions: similarOptions,
-            }).then(()=>{navigate("/"+cid)})
+        Post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
+            optionData: optionData,
+            similarOptions: similarOptions,
+        }).then(()=>{navigate("/"+cid)})
 	},[cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])
 
     return (
@@ -69,8 +70,14 @@ export function DetailAndCreateOption() {
             {
                 qinfo &&
                 <>
-                    <QExplain title="Objective" information={qinfo.learning_objective}/>
-                    <QExplain title="Explanation" information={qinfo.explanation}/>
+                    <Section>
+                        <Label text="Learning Objective" color="blue" size={0} />
+                        <div>{qinfo.learning_objective}</div>
+                    </Section>
+                    <Section>
+                        <Label text="Explanation" color="blue" size={0} />
+                        <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(qinfo.explanation))}}/> 
+                    </Section>
                     <DividerLine />
                     <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(qinfo.stem_text))}}/> 
                 </>
@@ -78,10 +85,10 @@ export function DetailAndCreateOption() {
             
             <div>
                 {ansList.map((item:optionType) => (
-                    <Option key={item._id}>✅{item?.option_text}</Option>
+                    <OptionBtn key={item._id} state={true} selected={false}>✅{item?.option_text}</OptionBtn>
                 ))}
                 {disList.map((item:optionType) => (
-                    <Option key={item._id}>❌{item?.option_text}</Option>
+                    <OptionBtn key={item._id} state={true} selected={false}>❌{item?.option_text}</OptionBtn>
                 ))}
             </div>
             <DividerLine/>
@@ -97,15 +104,15 @@ const QuestionBox = styled.div`
   padding: 10px 30px 30px 30px;
 `
 
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`
+
 const DividerLine = styled.hr`
   border: 0;
   height: 1px;
   background-color: #dbdbdb;
   margin: 30px 0 20px 0;
-`
-const Option = styled.div`
-    background-color: #f1f1f1;
-    padding: 16px;
-    margin-bottom: 6px;
-    border-radius: 6px;
 `

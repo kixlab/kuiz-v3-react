@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
+import { palette, typography } from '../styles/theme'
 import { useNavigate, useParams } from 'react-router-dom'
 
 interface propsType{
@@ -20,8 +21,9 @@ export const MadeStem = (props:propsType) => {
   return (
     <StemBox>
       <RowFlex>
-        <QSymbol>Q.</QSymbol>
-        <div>{props.question}</div>
+        <QuestionLabel>
+          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>{props.question}
+        </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
         <TextBtn onClick={toggleModal}>Delete</TextBtn>
@@ -38,10 +40,9 @@ export const MadeStem = (props:propsType) => {
   )
 }
 
-
 const StemBox = styled.div`
   background-color: white;
-  padding: 16px 24px 0px 24px;
+  padding: 20px 20px 0px 20px;
   border-radius: 8px;
 `
 
@@ -56,8 +57,9 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
       justify-content: right;
     `}
 `
-const QSymbol = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  color: #919191;
+const QuestionLabel = styled.div`
+  ${typography.b01};
+  color: ${palette.grey[200]};
+  display: flex;
+  gap: 6px;
 `

@@ -11,13 +11,13 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
 import { optionType } from '../apiTypes/option'
 import { qinfoType } from '../apiTypes/qinfo'
+import { StrokeBtn } from '../Components/basic/button/Button'
+import { Label } from '../Components/basic/Label'
+import { palette, typography } from '../styles/theme'
 
 interface optionWithQinfo extends optionType{
   qinfo: qinfoType
 }
-import { StrokeBtn } from '../Components/basic/button/Button'
-import { Label } from '../Components/basic/Label'
-import { palette, typography } from '../styles/theme'
 
 export function MyPage(props: { stemNum: number; optionNum: number }) {
   const navigate = useNavigate()

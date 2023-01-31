@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '../../styles/theme'
 
-export const TextInput = (props: { placeholder: string }) => {
+export const TextInput = (props: { placeholder: string, onChange:((e:React.ChangeEvent<HTMLInputElement>)=>void) }) => {
   return <TextInputComponent type="text" placeholder={props.placeholder} />
 }
 

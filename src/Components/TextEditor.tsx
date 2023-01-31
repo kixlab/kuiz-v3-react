@@ -1,20 +1,16 @@
-import styled from '@emotion/styled';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { CSSProperties } from 'react'
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { palette } from '../styles/theme'
 
 interface propsType{
-  title: string
   editorState: EditorState
   onChange: (state:EditorState)=>void
 }
 
 export const TextEditor = (props:propsType) => {
     return (
-      <div>
-        <QuestionLabel>{props.title}</QuestionLabel>
         <Editor
           editorState={props.editorState}
           editorStyle={editorStyle}
@@ -23,8 +19,13 @@ export const TextEditor = (props:propsType) => {
           wrapperClassName="wrapper-class"
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
+          toolbar={{
+            inline: { inDropdown: true },
+            list: { inDropdown: true },
+            textAlign: { inDropdown: true },
+            link: { inDropdown: true },
+          }}
         />
-      </div>
     );
   }
 
@@ -34,10 +35,3 @@ const editorStyle: CSSProperties = {
   borderRadius: '6px',
   height: '200px',
 }
-
-const QuestionLabel = styled.div`
-  color: #3d8add;
-  font-size: 18px;
-  font-weight: 700;
-  padding-bottom: 12px;
-`

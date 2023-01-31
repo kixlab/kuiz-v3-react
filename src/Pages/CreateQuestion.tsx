@@ -1,14 +1,16 @@
 import styled from '@emotion/styled'
 import { FillBtn } from '../Components/basic/button/Button'
 import { TextEditor } from '../Components/TextEditor'
+import { Label } from '../Components/basic/Label'
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditorState, convertToRaw } from 'draft-js';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
-import axios from 'axios';
 import { palette } from '../styles/theme'
 import ObjectID from 'bson-objectid';
+import { Post } from '../utils/apiRequest';
+import { TextInput } from '../Components/basic/InputBox'
 
 export function CreateQuestion() {
   const navigate = useNavigate();
@@ -55,41 +57,42 @@ export function CreateQuestion() {
 			alert("Please enter learning objective.");
 			return;
 		}
-		axios
-			.post(`${process.env.REACT_APP_BACK_END}/question/qstem/create`, {
-				qstemObj: qstemObj,
-				cid: cid,
-				answer_text: answer,
-			})
-			.then((res) => {
-				axios
-					.post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
-						optionData: {
-							author: ObjectID(uid),
-							option_text: answer,
-							is_answer: true,
-							class: cid && ObjectID(cid),
-							qstem: ObjectID(res.data.data),
-						},
-						similarOptions: [],
-					})
-					.then(() => {
-						navigate("/" + cid + "/question/" + res.data.data + "/createOption");
-					});
-			});
+
+    Post(`${process.env.REACT_APP_BACK_END}/question/qstem/create`,{
+      qstemObj: qstemObj,
+      cid: cid,
+      answer_text: answer,
+    }).then((res:any) => {Post(`${process.env.REACT_APP_BACK_END}/question/option/create`,{
+      optionData: {
+        author: ObjectID(uid),
+        option_text: answer,
+        is_answer: true,
+        class: cid && ObjectID(cid),
+        qstem: ObjectID(res.data.data),
+      },
+      similarOptions: [],
+    }).then(() => {
+      navigate("/" + cid + "/question/" + res.data.data + "/createOption");
+    })})
 	}
 
   return (
     <CreateQBox>
       <div>
-        <QuestionLabel>Learning Objective</QuestionLabel>
-        <Input type="text" placeholder="Objective" onChange={updateObjective}/>
+        <Label text="Learning Objective" color="blue" size={0} />
+        <TextInput placeholder="Objective" onChange={updateObjective}/>
       </div>
-      <TextEditor title="Question Stem" editorState={question} onChange={setQuestion}/>
-      <TextEditor title="Explanation" editorState={explanation} onChange={setExplanation}/>
       <div>
-        <QuestionLabel>Answer</QuestionLabel>
-        <Input type="text" placeholder="Suggest an answer" onChange={updateAnswer}/>
+        <Label text="Question Stem" color="blue" size={0} />
+        <TextEditor editorState={question} onChange={setQuestion}/>
+      </div>
+      <div>
+        <Label text="Explanation" color="blue" size={0} />
+        <TextEditor editorState={explanation} onChange={setExplanation}/>
+      </div>
+      <div>
+        <Label text="Answer" color="blue" size={0} />
+        <TextInput placeholder="Suggest an answer" onChange={updateAnswer}/>
       </div>
       <FillBtn onClick={submitStem} >Submit</FillBtn>
     </CreateQBox>
@@ -105,26 +108,3 @@ const CreateQBox = styled.div`
   gap: 30px;
   margin: 30px 0 30px 0;
 `
-
-const QuestionLabel = styled.div`
-  color: #3d8add;
-  font-size: 18px;
-  font-weight: 700;
-  padding-bottom: 12px;
-`
-
-const Input = styled.input`
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #bdbdbd;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 16px;
-  &:placeholder {
-    color: #b7bfc7;
-  }
-  &:focus {
-    outline: none;
-    border-color: #212121;
-  }
-  `

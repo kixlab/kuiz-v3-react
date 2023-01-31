@@ -6,6 +6,7 @@ import axios from 'axios';
 import { enroll, login } from '../state/features/userSlice';
 import { RootState } from '../state/store';
 import { FillBtn } from '../Components/basic/button/Button';
+import { TextInput } from '../Components/basic/InputBox'
 
 export function Enroll() {
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ export function Enroll() {
     return (
         <CodeInputBox>
             <strong>Class code</strong>
-            <ClassCodeInput type="text" placeholder='Enter code' onChange={detectChange}/>
+            <TextInput placeholder="Enter code" onChange={detectChange}/>
             <FillBtn onClick={onSubmit}>Enter</FillBtn>
         </CodeInputBox>
     )
@@ -57,18 +58,4 @@ const CodeInputBox = styled.div`
   padding: 100px 60px 30px 60px;
   box-sizing: border-box;
   font-size: 18px;
-`
-const ClassCodeInput = styled.input`
-    width: 234px;
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid #cdcdcd;
-    font-size: 16px;
-    &:placeholder{
-        color: #bdbdbd;
-    }
-    &:focus{
-        outline: none;
-        border: 1px solid #212121;
-    }
 `

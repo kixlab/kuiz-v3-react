@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
+import { palette, typography } from '../styles/theme'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -23,11 +24,10 @@ export const MadeOption = (props: propsType) => {
     <OptionBox>
       <RowFlex>
         <Tag id={props.optionType}>{props.optionType}</Tag>
-        <div>{props.option}</div>
+        <OptionLabel>{props.option}</OptionLabel>
       </RowFlex>
       <RowFlex>
-        <QSymbol>Q.</QSymbol>
-        <Stem>{props.question}</Stem>
+        <QuestionLabel>Q. {props.question}</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
         <TextBtn onClick={toggleModal}>Delete</TextBtn>
@@ -46,7 +46,7 @@ export const MadeOption = (props: propsType) => {
 
 const OptionBox = styled.div`
   background-color: white;
-  padding: 16px 24px 0px 24px;
+  padding: 20px 20px 0px 20px;
   border-radius: 8px;
 `
 
@@ -54,6 +54,7 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   display: flex;
   flex-direction: row;
   gap: 12px;
+  align-items: center;
   padding-bottom: 16px;
   font-family: 'inter-m';
   ${props =>
@@ -64,28 +65,29 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
 `
 
 const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
-  color: white;
-  font-size: 12px;
+  ${typography.overline};
+  color: ${palette.tags.contrastText};
   padding: 4px 8px 4px 8px;
   border-radius: 6px;
   ${props =>
     props.id === 'Answer' &&
     css`
-      background-color: rgb(30, 144, 30);
+      background-color: ${palette.tags.answer};
     `}
   ${props =>
     props.id === 'Distractor' &&
     css`
-      background-color: rgb(220, 51, 51);
+      background-color: ${palette.tags.distractor};
     `}
 `
 
-const QSymbol = styled.div`
-  font-family: 'inter-r';
-  font-size: 18px;
-  color: #858585;
+const OptionLabel = styled.div`
+  ${typography.b02b};
 `
 
-const Stem = styled.div`
-  color: #858585;
+const QuestionLabel = styled.div`
+  ${typography.b02};
+  display: flex;
+  gap: 6px;
+  color: ${palette.grey[400]};
 `

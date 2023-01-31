@@ -4,7 +4,7 @@ import logoIcon from '../Asset/logo.svg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
 import { palette, typography } from '../styles/theme'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export const Gnb = (props: { loginState: boolean }) => {
   const navigate = useNavigate()
@@ -12,10 +12,10 @@ export const Gnb = (props: { loginState: boolean }) => {
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
 
-  const onClickMenu = (path: string) => () => {
+  const onClickMenu = useCallback((path: string) => () => {
       navigate(`${path}`)
       setIsDisplay(!isDisplay)
-  }
+  },[isDisplay])
 
   return (
     <SideTab className="SideTab">
