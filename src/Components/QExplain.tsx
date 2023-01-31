@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import draftToHtml from 'draftjs-to-html';
 
-interface propsType{
+interface Props{
     title: string
     information: string
 }
 
-export const QExplain = (props:propsType) => {
+export const QExplain = (props:Props) => {
     let label='';
 
     if (props.title=="Objective"){

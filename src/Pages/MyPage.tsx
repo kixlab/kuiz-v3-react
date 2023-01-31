@@ -19,7 +19,12 @@ interface optionWithQinfo extends optionType{
   qinfo: qinfoType
 }
 
-export function MyPage(props: { stemNum: number; optionNum: number }) {
+interface Props{
+  stemNum: number; 
+  optionNum: number
+}
+
+export function MyPage(props: Props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const uid = useSelector((state: RootState) => state.userInfo?._id)

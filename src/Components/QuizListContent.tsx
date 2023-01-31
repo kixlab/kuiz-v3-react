@@ -3,7 +3,7 @@ import { css } from '@emotion/react'
 import { typography } from '../styles/theme'
 import { useCallback } from 'react'
 
-interface propsType{
+interface Props{
   index:number;
   title: string;
   options: number;
@@ -11,7 +11,7 @@ interface propsType{
   type: 'Content' | 'End'
 }
 
-export const QuizListContent = (props: propsType) => {
+export const QuizListContent = (props: Props) => {
 
   const changeDate = useCallback((date:Date)=>{
     const year = date.getFullYear()

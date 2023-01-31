@@ -4,12 +4,12 @@ import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { palette } from '../styles/theme'
 
-interface propsType{
+interface Props{
   editorState: EditorState
   onChange: (state:EditorState)=>void
 }
 
-export const TextEditor = (props:propsType) => {
+export const TextEditor = (props:Props) => {
     return (
         <Editor
           editorState={props.editorState}

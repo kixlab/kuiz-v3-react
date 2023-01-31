@@ -5,13 +5,13 @@ import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
 
-interface InputModal {
+interface Props {
   modalState: boolean
   submit: (msg: string) => void
   toggleModal: () => string //Empty message return
 }
 
-export const InputDialog = (props: InputModal) => {
+export const InputDialog = (props: Props) => {
   const [inputMsg, setInputMsg] = useState('')
   if (props.modalState) {
     return (

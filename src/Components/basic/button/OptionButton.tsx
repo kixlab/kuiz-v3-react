@@ -2,14 +2,14 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { palette, typography } from '../../../styles/theme'
 
-interface OptionProps {
+interface Props {
   state: boolean
   selected: boolean
   onClick?: () => void
   children: React.ReactNode
 }
 
-export const OptionBtn = (props: OptionProps) => {
+export const OptionBtn = (props: Props) => {
   return (
     <OptionBtnComponent onClick={props.onClick} state={props.state} selected={props.selected}>
       {props.children}

@@ -6,7 +6,11 @@ import { RootState } from '../state/store'
 import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
 
-export const Gnb = (props: { loginState: boolean }) => {
+interface Props{
+  loginState: boolean
+}
+
+export const Gnb = (props: Props) => {
   const navigate = useNavigate()
   const cid = useSelector((state: RootState) => state.userInfo.classes[0])  
   const userImg = useSelector((state: RootState) => state.userInfo).img

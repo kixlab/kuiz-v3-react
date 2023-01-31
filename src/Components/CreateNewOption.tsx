@@ -6,7 +6,7 @@ import { TagBtn } from './basic/button/TagButton'
 import { Label } from './basic/Label'
 import { useCallback } from 'react'
 
-interface propsType{
+interface Props{
   isAnswer: boolean
   setIsAnswer: (item:boolean)=>void
   setOption: (item:string)=>void
@@ -14,7 +14,7 @@ interface propsType{
   onSubmit: ()=>void
 }
 
-export const CreateNewOption = (props:propsType) => {
+export const CreateNewOption = (props:Props) => {
 
   const updateSuggested = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
     props.setOption(e.target.value)

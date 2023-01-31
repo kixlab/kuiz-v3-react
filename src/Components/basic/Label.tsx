@@ -2,7 +2,13 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { palette, typography } from '../../styles/theme'
 
-export const Label = (props: { text: string; color: string; size: number }) => {
+interface Props{
+  text: string; 
+  color: string; 
+  size: number
+}
+
+export const Label = (props: Props) => {
   return (
     <LabelComponent color={props.color} size={props.size}>
       {props.text}

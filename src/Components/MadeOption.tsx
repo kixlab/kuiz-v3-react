@@ -7,14 +7,14 @@ import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 
-interface propsType{
+interface Props{
   qid:string
   option: string
   question: string
   optionType: 'Answer' | 'Distractor'
 }
 
-export const MadeOption = (props: propsType) => {
+export const MadeOption = (props: Props) => {
   const navigate = useNavigate()
   const cid = useParams().cid
   const [isOpenModal, setIsOpenModal] = useState(false)

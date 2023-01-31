@@ -7,12 +7,12 @@ import { palette, typography } from '../styles/theme'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 
-interface propsType{
+interface Props{
   question:string
   qid: string
 }
 
-export const MadeStem = (props:propsType) => {
+export const MadeStem = (props:Props) => {
   const cid = useParams().cid
   const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
