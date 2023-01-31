@@ -11,14 +11,13 @@ import { Post } from '../utils/apiRequest';
 import { qinfoType } from '../apiTypes/qinfo';
 import { clusterType } from '../apiTypes/cluster';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
-interface propsType{
-	createOptions: boolean
-}
-
-export function MainPage(props:propsType) {
+export function MainPage() {
     const navigate = useNavigate();
 	const cid = useParams().cid;
+	const location = useLocation()
+	const createOptions = location.pathname.includes('qlist')
 	const uid = useSelector((state:RootState) => state.userInfo._id);
 	const [questionList, setQuestionList] = useState<qinfoType[]>([]);
 	const [validList, setValidList] = useState([false]);
@@ -100,7 +99,7 @@ export function MainPage(props:propsType) {
 							<Link
 								style={{ color: 'inherit', textDecoration: 'none' }}
 								key={question._id}
-								to={props.createOptions ? "/" + cid + "/question/" + question._id + "/createOption" : "/" + cid + "/solve/" + question._id}>
+								to={createOptions ? "/" + cid + "/question/" + question._id + "/createOption" : "/" + cid + "/solve/" + question._id}>
 									<QuizListContent 
 										key={index}
 										index={index+1}
