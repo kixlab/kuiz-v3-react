@@ -14,7 +14,7 @@ import { qinfoType } from '../apiTypes/qinfo'
 import { StrokeBtn } from '../Components/basic/button/Button'
 import { Label } from '../Components/basic/Label'
 import { palette, typography } from '../styles/theme'
-
+import { Post } from '../utils/apiRequest'
 interface optionWithQinfo extends optionType{
   qinfo: qinfoType
 }
@@ -27,20 +27,19 @@ export function MyPage(props: { stemNum: number; optionNum: number }) {
   const [madeOption, setMadeOption]=useState<optionWithQinfo[]>([])
 
   const getMadeStem = useCallback(() => {
-		axios.post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res) => {
-			setMadeStem(res.data.madeStem.reverse());
+		Post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res:any) => {
+			setMadeStem(res.madeStem.reverse());
 		});
 	}, [uid]);
 
   const getMadeOption = useCallback(() => {
-		axios.post(`${process.env.REACT_APP_BACK_END}/question/made/option`, { uid: uid }).then((res) => {
-			axios
-				.post(`${process.env.REACT_APP_BACK_END}/question/qstembyoption`, {
-					qstems: res.data.madeOption.map((o:optionType) => o.qstem),
+		Post(`${process.env.REACT_APP_BACK_END}/question/made/option`, { uid: uid }).then((res:any) => {
+			Post(`${process.env.REACT_APP_BACK_END}/question/qstembyoption`, {
+					qstems: res.madeOption.map((o:optionType) => o.qstem),
 				})
-				.then((res2) => {
-					const optionList = res.data.madeOption;
-					const qlist = res2.data.qstems.map((qstem:string) => {
+				.then((res2:any) => {
+					const optionList = res.madeOption;
+					const qlist = res2.qstems.map((qstem:string) => {
 						return { qinfo: qstem };
 					});
 					const newOptionList = optionList.map((option:optionType, index:number) => ({

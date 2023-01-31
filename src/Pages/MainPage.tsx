@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { RootState } from '../state/store';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { Post } from '../utils/apiRequest';
 import { qinfoType } from '../apiTypes/qinfo';
 import { clusterType } from '../apiTypes/cluster';
+import axios from 'axios';
 
 interface propsType{
 	createOptions: boolean
@@ -26,6 +27,7 @@ export function MainPage(props:propsType) {
 			axios
 				.get(`${process.env.REACT_APP_BACK_END}/question/list/load?cid=` + cid)
 				.then(async (res) => {
+					console.log(res)
 					const valid = [false];
 
 					await Promise.all(
@@ -57,21 +59,26 @@ export function MainPage(props:propsType) {
 		[]
 	);
 
+	interface PostInclassResponse{
+		cid: string
+		enrolled: true
+		inclass: true
+		valid: true
+	}
 	const checkValidUser = useCallback(() => {
-		axios
-			.post(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`, {
+		Post(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`, {
 				cid: cid,
 				uid: uid,
 			})
-			.then((res) => {
-				if (res.data.inclass) {
-					getQuestionList(res.data.cid);
+			.then((res:any) => {
+				if (res.inclass) {
+					getQuestionList(res.cid);
 				} else {
-					if (!res.data.enrolled) {
+					if (!res.enrolled) {
 						navigate("/");
 					} else {
 						axios
-							.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.data.cid)
+							.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.cid)
 							.then((res2) => {
 								getQuestionList(res2.data.cid);
 							});

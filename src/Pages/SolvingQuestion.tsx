@@ -17,6 +17,7 @@ import { InputDialog } from '../Components/Dialogs/InputDialog'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
 import ObjectID from 'bson-objectid';
 import { useDispatch } from 'react-redux'
+import { Post } from '../utils/apiRequest'
 
 export function SolvingQuestion() {
   const dispatch = useDispatch()
@@ -76,16 +77,15 @@ export function SolvingQuestion() {
 
 	const checkAnswer = () => {
 		if (!ansVisible) {
-			axios
-				.post(`${process.env.REACT_APP_BACK_END}/question/solve`, {
+			Post(`${process.env.REACT_APP_BACK_END}/question/solve`, {
 					qid: qid,
 					uid: uid,
 					initAns: optionSet && selected && optionSet[selected]._id,
 					isCorrect: selected === answer,
 					optionSet: options.map((o:optionType) => ObjectID(o._id)),
 				})
-				.then((res) => {
-					console.log("success:", res.data.success);
+				.then((res:any) => {
+					console.log("success:", res.success);
 				});
 		}
 		setAnsVisible(!ansVisible);

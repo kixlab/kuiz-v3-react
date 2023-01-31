@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import styled from '@emotion/styled'
 import jwtDecode from 'jwt-decode'
@@ -6,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { enroll, login } from '../state/features/userSlice'
 import { useCallback } from 'react'
-
+import { Post } from '../utils/apiRequest'
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -14,31 +13,30 @@ export function LogIn() {
   const signIn = useCallback((res: CredentialResponse)=> {
     if (res.credential) {
       const userData: any = jwtDecode(res.credential)
-      axios
-        .post(`${process.env.REACT_APP_BACK_END}/auth/register`,{
+      Post(`${process.env.REACT_APP_BACK_END}/auth/register`,{
           name: userData.name,
           email: userData.email,
           image: userData?.picture
         })
-        .then((res)=>{
+        .then((res:any)=>{
           dispatch(login({
-            _id:res.data.user._id,
+            _id:res.user._id,
             name: userData.name,
             email: userData.email,
             img: userData.picture,
             isLoggedIn: true,
-            isAdmin:res.data.user.isAdmin,
-            classes: res.data.user.classes,
-            made: res.data.user.made,
-            madeOptions: res.data.user.madeOptions,
-            solved: res.data.user.solved
+            isAdmin:res.user.isAdmin,
+            classes: res.user.classes,
+            made: res.user.made,
+            madeOptions: res.user.madeOptions,
+            solved: res.user.solved
           }))
-          if(res.data.user.classes.length>0){
+          if(res.user.classes.length>0){
             dispatch(enroll({
-              cid: res.data.user.classes[0],
-              cType: res.data.cType
+              cid: res.user.classes[0],
+              cType: res.cType
           }))
-            navigate("/" + res.data.user.classes[0])
+            navigate("/" + res.user.classes[0])
           }else{
             navigate('/')
           }

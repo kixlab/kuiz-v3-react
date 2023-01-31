@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router"
 import { RootState } from "../state/store"
 import { enroll } from "../state/features/userSlice"
+import { Post } from "../utils/apiRequest"
 
 export const PageNotFound = () => {
     const navigate = useNavigate()
@@ -12,18 +13,18 @@ export const PageNotFound = () => {
 	const uid = useSelector((state:RootState) => state.userInfo?._id);
 
     const checkValidUser = useCallback(() => {
-		axios.post(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`,{
+		Post(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`,{
 			cid: "invalid",
 			uid: uid
 		})
-		.then((res) => {
-			if(!res.data.enrolled){
+		.then((res:any) => {
+			if(!res.enrolled){
                 navigate('/')
             } else {
-                axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=`+res.data.cid)
+                axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=`+res.cid)
                     .then((res2) => {
-                        dispatch(enroll({ cid: res.data.cid, cType: res2.data.cType}));
-                            navigate('/'+res.data.cid)
+                        dispatch(enroll({ cid: res.cid, cType: res2.data.cType}));
+                            navigate('/'+res.cid)
                     })
             }
 		})

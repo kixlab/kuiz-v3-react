@@ -2,12 +2,11 @@ import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { enroll, login } from '../state/features/userSlice';
 import { RootState } from '../state/store';
 import { FillBtn } from '../Components/basic/button/Button';
 import { TextInput } from '../Components/basic/InputBox'
-
+import { Post } from '../utils/apiRequest';
 export function Enroll() {
     const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -27,18 +26,17 @@ export function Enroll() {
     },[])
 
 	const onSubmit = () => {
-		axios
-			.post(`${process.env.REACT_APP_BACK_END}/auth/class/join`, {
+		Post(`${process.env.REACT_APP_BACK_END}/auth/class/join`, {
 				code: code,
 				_id: uid,
 				userEmail: email,
 			})
-			.then((res) => {
-				dispatch(enroll({ cid: res.data.cid, cType: res.data.cType }));
+			.then((res:any) => {
+				dispatch(enroll({ cid: res.cid, cType: res.cType }));
 				const newInfo = { ...userInfo };
-				newInfo["classes"] = [res.data.cid];
+				newInfo["classes"] = [res.cid];
 				dispatch(login(newInfo));
-				navigate("/" + res.data.cid);
+				navigate("/" + res.cid);
 			});
 	};
     return (
