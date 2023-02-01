@@ -48,7 +48,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "type-check": "tsc --noEmit",
-    "lint": "eslint --ext .ts,.tsx --ignore-pattern *.d.ts src/"
+    "lint": "eslint --ext .ts,.tsx --ignore-pattern *.d.ts src/",
+    "style-check": "prettier --check 'src/**/*.{tsx,ts}'"
   },
   "eslintConfig": {
     "extends": [
