@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
 import { Label } from '../Components/basic/Label'
 import { CreateNewOption } from '../Components/CreateNewOption'
-import { QExplain } from '../Components/QExplain'
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -13,6 +12,7 @@ import { qinfoType } from '../apiTypes/qinfo'
 import { optionType } from '../apiTypes/option'
 import ObjectID from 'bson-objectid'
 import { Post } from '../utils/apiRequest'
+import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
 
 export function DetailAndCreateOption() {
   const navigate = useNavigate()
@@ -40,15 +40,17 @@ export function DetailAndCreateOption() {
     })
   }, [navigate, qid, setAnsList, setDistList, setQinfo])
 
-  const submit = useCallback(async () => {
-    const optionData = {
-      author: ObjectID(uid),
-      option_text: option,
-      is_answer: isAnswer,
-      class: cid && ObjectID(cid),
-      qstem: qid && ObjectID(qid),
-      keywords: keywords,
-    }
+  const submit = useCallback(() => {
+    const optionData = cid &&
+      qid && {
+        author: ObjectID(uid),
+        option_text: option,
+        is_answer: isAnswer,
+        explanation: '',
+        class: ObjectID(cid),
+        qstem: ObjectID(qid),
+        keywords: keywords,
+      }
 
     if (keywords.length > 0 && option.length > 0) {
       if (keywords.includes('Form similar to answer')) {
@@ -59,12 +61,14 @@ export function DetailAndCreateOption() {
         })
       }
     }
-    Post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
-      optionData: optionData,
-      similarOptions: similarOptions,
-    }).then(() => {
-      navigate('/' + cid)
-    })
+
+    optionData &&
+      Post<OptionCreateParams, OptionCreateResults>(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
+        optionData: optionData,
+        similarOptions: similarOptions,
+      }).then((res: OptionCreateResults | null) => {
+        res && navigate('/' + cid)
+      })
   }, [cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])
 
   return (

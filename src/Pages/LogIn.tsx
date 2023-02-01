@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux'
 import { enroll, login } from '../state/features/userSlice'
 import { useCallback } from 'react'
 import { Post } from '../utils/apiRequest'
+import { RegisterParams, RegisterResults } from '../api/auth/register'
+
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -14,35 +16,37 @@ export function LogIn() {
     (res: CredentialResponse) => {
       if (res.credential) {
         const userData: any = jwtDecode(res.credential)
-        Post(`${process.env.REACT_APP_BACK_END}/auth/register`, {
+        Post<RegisterParams, RegisterResults>(`${process.env.REACT_APP_BACK_END}/auth/register`, {
           name: userData.name,
           email: userData.email,
           image: userData?.picture,
-        }).then((res: any) => {
-          dispatch(
-            login({
-              _id: res.user._id,
-              name: userData.name,
-              email: userData.email,
-              img: userData.picture,
-              isLoggedIn: true,
-              isAdmin: res.user.isAdmin,
-              classes: res.user.classes,
-              made: res.user.made,
-              madeOptions: res.user.madeOptions,
-              solved: res.user.solved,
-            })
-          )
-          if (res.user.classes.length > 0) {
+        }).then((res: RegisterResults | null) => {
+          if (res) {
             dispatch(
-              enroll({
-                cid: res.user.classes[0],
-                cType: res.cType,
+              login({
+                _id: res.user._id,
+                name: userData.name,
+                email: userData.email,
+                img: userData.picture,
+                isLoggedIn: true,
+                isAdmin: res.user.isAdmin,
+                classes: res.user.classes,
+                made: res.user.made,
+                madeOptions: res.user.madeOptions,
+                solved: res.user.solved,
               })
             )
-            navigate('/' + res.user.classes[0])
-          } else {
-            navigate('/')
+            if (res.user.classes.length > 0) {
+              dispatch(
+                enroll({
+                  cid: res.user.classes[0],
+                  cType: res.user.cType,
+                })
+              )
+              navigate('/' + res.user.classes[0])
+            } else {
+              navigate('/')
+            }
           }
         })
       }

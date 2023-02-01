@@ -12,15 +12,13 @@ import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
 import { typography } from '../styles/theme'
-import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
 import { InputDialog } from '../Components/Dialogs/InputDialog'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
 import ObjectID from 'bson-objectid'
-import { useDispatch } from 'react-redux'
 import { Post } from '../utils/apiRequest'
+import { SolveQuestionParams, SolveQuestionResults } from '../api/question/solveQuestion'
 
 export function SolvingQuestion() {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id
   const cid = useParams().cid
@@ -35,15 +33,15 @@ export function SolvingQuestion() {
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
-  function getMultipleRandom(arr: optionType[], num: number) {
+  const getMultipleRandom = useCallback((arr: optionType[], num: number) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, num)
-  }
+  }, [])
 
-  function shuffle(array: optionType[]) {
+  const shuffle = useCallback((array: optionType[]) => {
     array.sort(() => Math.random() - 0.5)
     return array
-  }
+  }, [])
 
   const getQinfo = useCallback((qid: string | undefined) => {
     let optionList
@@ -75,49 +73,39 @@ export function SolvingQuestion() {
     })
   }, [])
 
-  const checkAnswer = () => {
+  const checkAnswer = useCallback(() => {
     if (!ansVisible) {
-      Post(`${process.env.REACT_APP_BACK_END}/question/solve`, {
-        qid: qid,
-        uid: uid,
-        initAns: optionSet && selected && optionSet[selected]._id,
-        isCorrect: selected === answer,
-        optionSet: options.map((o: optionType) => ObjectID(o._id)),
-      }).then((res: any) => {
-        console.log('success:', res.success)
-      })
+      optionSet &&
+        selected &&
+        Post<SolveQuestionParams, SolveQuestionResults>(`${process.env.REACT_APP_BACK_END}/question/solve`, {
+          qid: qid,
+          uid: uid,
+          initAns: optionSet[selected]._id,
+          isCorrect: selected === answer,
+          optionSet: options.map((o: optionType) => ObjectID(o._id)),
+        }).then((res: SolveQuestionResults | null) => {
+          res && console.log('success:', res.success)
+        })
     }
     setAnsVisible(!ansVisible)
-  }
-
-  const background = (index: number) => {
-    if (!showAnswer) {
-      return 'wrong-selected'
-    } else {
-      if (index === answer) {
-        return 'answer'
-      } else {
-        return 'wrong-selected'
-      }
-    }
-  }
+  }, [ansVisible, qid, uid, optionSet, selected, answer, options])
 
   useEffect(() => {
     getQinfo(qid)
   }, [getQinfo, qid])
 
-  const shuffleOptions = () => {
+  const shuffleOptions = useCallback(() => {
     getQinfo(qid)
     setIsSolved(false)
     setSelected(-1)
     setAnsVisible(false)
     setShowAnswer(false)
-  }
+  }, [qid])
 
-  function toggleModal() {
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
     return ''
-  }
+  }, [isOpenModal, setIsOpenModal])
 
   const reportSubmit = useCallback(
     async (msg: string) => {

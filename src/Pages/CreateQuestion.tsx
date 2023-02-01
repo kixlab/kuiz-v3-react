@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FillBtn } from '../Components/basic/button/Button'
 import { TextEditor } from '../Components/TextEditor'
 import { Label } from '../Components/basic/Label'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
 import { useSelector } from 'react-redux'
@@ -11,6 +11,8 @@ import { palette } from '../styles/theme'
 import ObjectID from 'bson-objectid'
 import { Post } from '../utils/apiRequest'
 import { TextInput } from '../Components/basic/InputBox'
+import { CreateQStemParams, CreateQStemResults } from '../api/question/createQStem'
+import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
 
 export function CreateQuestion() {
   const navigate = useNavigate()
@@ -29,23 +31,23 @@ export function CreateQuestion() {
     setAnswer(e.target.value)
   }
 
-  function submitStem() {
-    const qstemObj = {
+  const submitStem = useCallback(() => {
+    const qstemObj = cid && {
       uid: ObjectID(uid),
       stem_text: JSON.stringify(convertToRaw(question.getCurrentContent())),
       raw_string: question.getCurrentContent().getPlainText('\u0001'),
       explanation: JSON.stringify(convertToRaw(explanation.getCurrentContent())),
       action_verb: [],
       keyword: [],
-      cid: cid && ObjectID(cid),
+      cid: ObjectID(cid),
       options: [],
       optionSets: [],
       learning_objective: objective,
     }
 
-    const rawString = qstemObj.raw_string
-    const wordcount = rawString.split(' ').filter(word => word !== '').length
-    if (rawString === null || wordcount < 1) {
+    const rawString = qstemObj && qstemObj.raw_string
+    const wordcount = rawString && rawString.split(' ').filter(word => word !== '').length
+    if (wordcount && (rawString === null || wordcount < 1)) {
       alert('Please enter a question.')
       return
     }
@@ -53,30 +55,40 @@ export function CreateQuestion() {
       alert('Please enter an answer.')
       return
     }
-    if (qstemObj.learning_objective === null) {
+    if (qstemObj && qstemObj.learning_objective === null) {
       alert('Please enter learning objective.')
       return
     }
-
-    Post(`${process.env.REACT_APP_BACK_END}/question/qstem/create`, {
-      qstemObj: qstemObj,
-      cid: cid,
-      answer_text: answer,
-    }).then((res: any) => {
-      Post(`${process.env.REACT_APP_BACK_END}/question/option/create`, {
-        optionData: {
-          author: ObjectID(uid),
-          option_text: answer,
-          is_answer: true,
-          class: cid && ObjectID(cid),
-          qstem: ObjectID(res.data.data),
-        },
-        similarOptions: [],
-      }).then(() => {
-        navigate('/' + cid + '/question/' + res.data.data + '/createOption')
+    qstemObj &&
+      Post<CreateQStemParams, CreateQStemResults>(`${process.env.REACT_APP_BACK_END}/question/qstem/create`, {
+        qstemObj: qstemObj,
+        cid: cid,
       })
-    })
-  }
+        .then((res: CreateQStemResults | null) => {
+          if (res) {
+            cid &&
+              Post<OptionCreateParams, OptionCreateResults>(
+                `${process.env.REACT_APP_BACK_END}/question/option/create`,
+                {
+                  optionData: {
+                    author: ObjectID(uid),
+                    option_text: answer,
+                    is_answer: true,
+                    explanation: JSON.stringify(convertToRaw(explanation.getCurrentContent())),
+                    class: ObjectID(cid),
+                    qstem: ObjectID(res.data),
+                    keywords: [],
+                  },
+                  similarOptions: [],
+                }
+              )
+          }
+          return res
+        })
+        .then(
+          (res: CreateQStemResults | null) => res && navigate('/' + cid + '/question/' + res.data + '/createOption')
+        )
+  }, [uid, cid])
 
   return (
     <CreateQBox>

@@ -2,8 +2,8 @@ export interface optionType {
   author: string
   class: string
   dependency: {
-    same: string[]
-    contradictory: string[]
+    same: any[]
+    contradictory: any[]
     _id: string
   }
   disjointSet: string
@@ -15,8 +15,8 @@ export interface optionType {
   liked: string[]
   option_text: string
   plausible: {
-    similar: string[]
-    difference: string[]
+    similar: any[]
+    difference: any[]
     _id: string
   }
   qstem: string

@@ -12,6 +12,7 @@ import { qinfoType } from '../apiTypes/qinfo'
 import { clusterType } from '../apiTypes/cluster'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom'
+import { CheckIsInClassParams, CheckIsInClassResults } from '../api/auth/checkIsInClass'
 
 export function MainPage() {
   const navigate = useNavigate()
@@ -54,29 +55,26 @@ export function MainPage() {
     })
   }, [])
 
-  interface PostInclassResponse {
-    cid: string
-    enrolled: true
-    inclass: true
-    valid: true
-  }
   const checkValidUser = useCallback(() => {
-    Post(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`, {
-      cid: cid,
-      uid: uid,
-    }).then((res: any) => {
-      if (res.inclass) {
-        getQuestionList(res.cid)
-      } else {
-        if (!res.enrolled) {
-          navigate('/')
-        } else {
-          axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.cid).then(res2 => {
-            getQuestionList(res2.data.cid)
-          })
+    cid &&
+      Post<CheckIsInClassParams, CheckIsInClassResults>(`${process.env.REACT_APP_BACK_END}/auth/check/inclass`, {
+        cid: cid,
+        uid: uid,
+      }).then((res: CheckIsInClassResults | null) => {
+        if (res) {
+          if (res.inclass) {
+            res.cid && getQuestionList(res.cid)
+          } else {
+            if (!res.enrolled) {
+              navigate('/')
+            } else {
+              axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.cid).then(res2 => {
+                getQuestionList(res2.data.cid)
+              })
+            }
+          }
         }
-      }
-    })
+      })
   }, [cid, uid, getQuestionList, navigate])
 
   useEffect(() => {

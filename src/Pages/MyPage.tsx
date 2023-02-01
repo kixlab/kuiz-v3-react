@@ -1,4 +1,3 @@
-import axios from 'axios'
 import styled from '@emotion/styled'
 import { MadeOption } from '../Components/MadeOption'
 import { MadeStem } from '../Components/MadeStem'
@@ -15,8 +14,12 @@ import { StrokeBtn } from '../Components/basic/button/Button'
 import { Label } from '../Components/basic/Label'
 import { palette, typography } from '../styles/theme'
 import { Post } from '../utils/apiRequest'
+import { loadCreatedStemDataParams, loadCreatedStemDataResults } from '../api/question/loadCreatedStemData'
+import { LoadCreatedOptionParams, LoadCreatedOptionResults } from '../api/question/option/loadCreatedOption'
+import { GetQstemByOptionParams, GetQstemByOptionResults } from '../api/question/getQStemByOption'
+
 interface optionWithQinfo extends optionType {
-  qinfo: qinfoType
+  qinfo: GetQstemByOptionResults['qstems'][0]
 }
 
 interface Props {
@@ -32,26 +35,39 @@ export function MyPage(props: Props) {
   const [madeOption, setMadeOption] = useState<optionWithQinfo[]>([])
 
   const getMadeStem = useCallback(() => {
-    Post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res: any) => {
-      setMadeStem(res.madeStem.reverse())
+    Post<loadCreatedStemDataParams, loadCreatedStemDataResults>(
+      `${process.env.REACT_APP_BACK_END}/question/made/stem`,
+      { uid: uid }
+    ).then((res: loadCreatedStemDataResults | null) => {
+      if (res) {
+        setMadeStem(res.madeStem.reverse())
+      }
     })
   }, [uid])
-
   const getMadeOption = useCallback(() => {
-    Post(`${process.env.REACT_APP_BACK_END}/question/made/option`, { uid: uid }).then((res: any) => {
-      Post(`${process.env.REACT_APP_BACK_END}/question/qstembyoption`, {
-        qstems: res.madeOption.map((o: optionType) => o.qstem),
-      }).then((res2: any) => {
-        const optionList = res.madeOption
-        const qlist = res2.qstems.map((qstem: string) => {
-          return { qinfo: qstem }
+    Post<LoadCreatedOptionParams, LoadCreatedOptionResults>(`${process.env.REACT_APP_BACK_END}/question/made/option`, {
+      uid: uid,
+    }).then((res: LoadCreatedOptionResults | null) => {
+      if (res) {
+        Post<GetQstemByOptionParams, GetQstemByOptionResults>(
+          `${process.env.REACT_APP_BACK_END}/question/qstembyoption`,
+          {
+            qstems: res.madeOption.map((o: optionType) => o.qstem),
+          }
+        ).then((res2: GetQstemByOptionResults | null) => {
+          if (res2) {
+            const optionList = res.madeOption
+            const qlist = res2.qstems.map((qstem: string) => {
+              return { qinfo: qstem }
+            })
+            const newOptionList = optionList.map((option: optionType, index: number) => ({
+              ...option,
+              ...qlist[index],
+            }))
+            setMadeOption(newOptionList.reverse())
+          }
         })
-        const newOptionList = optionList.map((option: optionType, index: number) => ({
-          ...option,
-          ...qlist[index],
-        }))
-        setMadeOption(newOptionList.reverse())
-      })
+      }
     })
   }, [uid])
 
