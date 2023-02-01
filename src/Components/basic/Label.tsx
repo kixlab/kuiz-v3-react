@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { palette, typography } from '../../styles/theme'
 
-interface Props{
-  text: string; 
-  color: string; 
+interface Props {
+  text: string
+  color: string
   size: number
 }
 

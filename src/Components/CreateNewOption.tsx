@@ -6,19 +6,21 @@ import { TagBtn } from './basic/button/TagButton'
 import { Label } from './basic/Label'
 import { useCallback } from 'react'
 
-interface Props{
+interface Props {
   isAnswer: boolean
-  setIsAnswer: (item:boolean)=>void
-  setOption: (item:string)=>void
-  setKeywords: (item:string[])=>void
-  onSubmit: ()=>void
+  setIsAnswer: (item: boolean) => void
+  setOption: (item: string) => void
+  setKeywords: (item: string[]) => void
+  onSubmit: () => void
 }
 
-export const CreateNewOption = (props:Props) => {
-
-  const updateSuggested = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
-    props.setOption(e.target.value)
-  },[props.setOption])
+export const CreateNewOption = (props: Props) => {
+  const updateSuggested = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      props.setOption(e.target.value)
+    },
+    [props.setOption]
+  )
 
   return (
     <div>
@@ -33,10 +35,10 @@ export const CreateNewOption = (props:Props) => {
           </TagBtn>
         </div>
         <Block>
-          <TextInput placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested}/>
+          <TextInput placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested} />
           <CategoryInput getCategory={props.setKeywords} />
         </Block>
-        <FillBtn onClick= {props.onSubmit}>Submit</FillBtn>
+        <FillBtn onClick={props.onSubmit}>Submit</FillBtn>
       </Container>
     </div>
   )

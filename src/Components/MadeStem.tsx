@@ -7,25 +7,26 @@ import { palette, typography } from '../styles/theme'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 
-interface Props{
-  question:string
+interface Props {
+  question: string
   qid: string
 }
 
-export const MadeStem = (props:Props) => {
+export const MadeStem = (props: Props) => {
   const cid = useParams().cid
   const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  },[setIsOpenModal,isOpenModal])
-  
+  }, [setIsOpenModal, isOpenModal])
+
   return (
     <StemBox>
       <RowFlex>
         <QuestionLabel>
-          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>{props.question}
+          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>
+          {props.question}
         </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">

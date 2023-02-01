@@ -3,24 +3,21 @@ import { css } from '@emotion/react'
 import { typography } from '../styles/theme'
 import { useCallback } from 'react'
 
-interface Props{
-  index:number;
-  title: string;
-  options: number;
-  date: Date;
+interface Props {
+  index: number
+  title: string
+  options: number
+  date: Date
   type: 'Content' | 'End'
 }
 
 export const QuizListContent = (props: Props) => {
-
-  const changeDate = useCallback((date:Date)=>{
+  const changeDate = useCallback((date: Date) => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    return (
-      `${year}/${month}/${day}`
-    )
-  },[])
+    return `${year}/${month}/${day}`
+  }, [])
 
   return (
     <QuizList id={props.type}>

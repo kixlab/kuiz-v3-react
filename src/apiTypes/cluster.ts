@@ -1,6 +1,6 @@
-import { optionType } from "./option"
+import { optionType } from './option'
 
-export interface clusterType{
-    options: optionType[]
-    representative: optionType
+export interface clusterType {
+  options: optionType[]
+  representative: optionType
 }

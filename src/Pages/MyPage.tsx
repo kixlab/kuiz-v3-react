@@ -4,7 +4,7 @@ import { MadeOption } from '../Components/MadeOption'
 import { MadeStem } from '../Components/MadeStem'
 import { googleLogout } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
-import { useCallback,useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../state/features/userSlice'
 import { useSelector } from 'react-redux'
@@ -15,12 +15,12 @@ import { StrokeBtn } from '../Components/basic/button/Button'
 import { Label } from '../Components/basic/Label'
 import { palette, typography } from '../styles/theme'
 import { Post } from '../utils/apiRequest'
-interface optionWithQinfo extends optionType{
+interface optionWithQinfo extends optionType {
   qinfo: qinfoType
 }
 
-interface Props{
-  stemNum: number; 
+interface Props {
+  stemNum: number
   optionNum: number
 }
 
@@ -28,33 +28,32 @@ export function MyPage(props: Props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const uid = useSelector((state: RootState) => state.userInfo?._id)
-  const [madeStem, setMadeStem]=useState<qinfoType[]>([])
-  const [madeOption, setMadeOption]=useState<optionWithQinfo[]>([])
+  const [madeStem, setMadeStem] = useState<qinfoType[]>([])
+  const [madeOption, setMadeOption] = useState<optionWithQinfo[]>([])
 
   const getMadeStem = useCallback(() => {
-		Post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res:any) => {
-			setMadeStem(res.madeStem.reverse());
-		});
-	}, [uid]);
+    Post(`${process.env.REACT_APP_BACK_END}/question/made/stem`, { uid: uid }).then((res: any) => {
+      setMadeStem(res.madeStem.reverse())
+    })
+  }, [uid])
 
   const getMadeOption = useCallback(() => {
-		Post(`${process.env.REACT_APP_BACK_END}/question/made/option`, { uid: uid }).then((res:any) => {
-			Post(`${process.env.REACT_APP_BACK_END}/question/qstembyoption`, {
-					qstems: res.madeOption.map((o:optionType) => o.qstem),
-				})
-				.then((res2:any) => {
-					const optionList = res.madeOption;
-					const qlist = res2.qstems.map((qstem:string) => {
-						return { qinfo: qstem };
-					});
-					const newOptionList = optionList.map((option:optionType, index:number) => ({
-						...option,
-						...qlist[index],
-					}));
-					setMadeOption(newOptionList.reverse());
-				});
-		});
-	}, [uid]);
+    Post(`${process.env.REACT_APP_BACK_END}/question/made/option`, { uid: uid }).then((res: any) => {
+      Post(`${process.env.REACT_APP_BACK_END}/question/qstembyoption`, {
+        qstems: res.madeOption.map((o: optionType) => o.qstem),
+      }).then((res2: any) => {
+        const optionList = res.madeOption
+        const qlist = res2.qstems.map((qstem: string) => {
+          return { qinfo: qstem }
+        })
+        const newOptionList = optionList.map((option: optionType, index: number) => ({
+          ...option,
+          ...qlist[index],
+        }))
+        setMadeOption(newOptionList.reverse())
+      })
+    })
+  }, [uid])
 
   const signOut = useCallback(() => {
     googleLogout()
@@ -63,9 +62,9 @@ export function MyPage(props: Props) {
   }, [])
 
   useEffect(() => {
-		getMadeStem();
-		getMadeOption();
-	}, [getMadeOption, getMadeStem]);
+    getMadeStem()
+    getMadeOption()
+  }, [getMadeOption, getMadeStem])
 
   return (
     <div>
@@ -75,12 +74,8 @@ export function MyPage(props: Props) {
           {props.stemNum}
         </DataLabel>
         <MadeLists>
-          {madeStem.map((stem:qinfoType)=>{
-            return(
-              <MadeStem key={stem._id}
-                qid={stem._id}
-                question={stem.raw_string}/>
-            )
+          {madeStem.map((stem: qinfoType) => {
+            return <MadeStem key={stem._id} qid={stem._id} question={stem.raw_string} />
           })}
         </MadeLists>
       </div>
@@ -90,9 +85,15 @@ export function MyPage(props: Props) {
           {props.stemNum}
         </DataLabel>
         <MadeLists>
-          {madeOption.map((option:optionWithQinfo)=>{
-            return(
-              <MadeOption key={option._id} optionType={option.is_answer ? "Answer" : "Distractor"} qid={option.qinfo._id} question={option.qinfo.raw_string} option={option.option_text}/>
+          {madeOption.map((option: optionWithQinfo) => {
+            return (
+              <MadeOption
+                key={option._id}
+                optionType={option.is_answer ? 'Answer' : 'Distractor'}
+                qid={option.qinfo._id}
+                question={option.qinfo.raw_string}
+                option={option.option_text}
+              />
             )
           })}
         </MadeLists>

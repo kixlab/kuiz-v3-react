@@ -1,39 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface classesType{
+interface classesType {
   cid: string
   cType: string
 }
 
-interface userInfoType{
+interface userInfoType {
   _id: string
   name: string
   email: string
   img?: string
   isLoggedIn: boolean
-  isAdmin:boolean
+  isAdmin: boolean
   classes: classesType[]
   made: string[]
   madeOptions: string[]
   solved: string[]
 }
 
-interface userEnrollType{
+interface userEnrollType {
   cid: string
   cType: string
 }
 
 const initialState: userInfoType = {
-  _id:'',
+  _id: '',
   name: '',
   email: '',
   img: '',
   isLoggedIn: false,
-  isAdmin:false,
+  isAdmin: false,
   classes: [],
   made: [],
   madeOptions: [],
-  solved: []
+  solved: [],
 }
 
 export const userSlice = createSlice({
@@ -46,11 +46,11 @@ export const userSlice = createSlice({
       state.email = action.payload.email
       state.img = action.payload.img
       state.isLoggedIn = action.payload.isLoggedIn
-      state.isAdmin=action.payload.isAdmin,
-      state.classes=action.payload.classes,
-      state.made=action.payload.made,
-      state.madeOptions=action.payload.madeOptions,
-      state.solved=action.payload.solved
+      ;(state.isAdmin = action.payload.isAdmin),
+        (state.classes = action.payload.classes),
+        (state.made = action.payload.made),
+        (state.madeOptions = action.payload.madeOptions),
+        (state.solved = action.payload.solved)
     },
     logout: (state: userInfoType) => {
       state._id = ''
@@ -58,20 +58,16 @@ export const userSlice = createSlice({
       state.email = ''
       state.img = ''
       state.isLoggedIn = false
-      state.isAdmin=false,
-      state.classes= [],
-      state.made= [],
-      state.madeOptions= [],
-      state.solved= []
+      ;(state.isAdmin = false), (state.classes = []), (state.made = []), (state.madeOptions = []), (state.solved = [])
     },
-    enroll: (state: userInfoType, action:PayloadAction<userEnrollType>)=>{
-      if(state.isLoggedIn){
+    enroll: (state: userInfoType, action: PayloadAction<userEnrollType>) => {
+      if (state.isLoggedIn) {
         state.classes.push({
           cid: action.payload.cid,
           cType: action.payload.cType,
         })
       }
-    }
+    },
   },
 })
 

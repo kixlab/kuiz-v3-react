@@ -7,8 +7,8 @@ import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 
-interface Props{
-  qid:string
+interface Props {
+  qid: string
   option: string
   question: string
   optionType: 'Answer' | 'Distractor'
@@ -21,8 +21,8 @@ export const MadeOption = (props: Props) => {
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  },[setIsOpenModal,isOpenModal])
-  
+  }, [setIsOpenModal, isOpenModal])
+
   return (
     <OptionBox>
       <RowFlex>

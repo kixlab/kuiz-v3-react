@@ -6,20 +6,23 @@ import { RootState } from '../state/store'
 import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
 
-interface Props{
+interface Props {
   loginState: boolean
 }
 
 export const Gnb = (props: Props) => {
   const navigate = useNavigate()
-  const cid = useSelector((state: RootState) => state.userInfo.classes[0])  
+  const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
 
-  const onClickMenu = useCallback((path: string) => () => {
+  const onClickMenu = useCallback(
+    (path: string) => () => {
       navigate(`${path}`)
       setIsDisplay(!isDisplay)
-  },[isDisplay])
+    },
+    [isDisplay]
+  )
 
   return (
     <SideTab className="SideTab">
@@ -30,10 +33,10 @@ export const Gnb = (props: Props) => {
       {props.loginState == true && (
         <>
           <Menu isDisplay={isDisplay}>
-            <MenuBtn onClick={onClickMenu("/" + cid)}>Solve Problem</MenuBtn>
-            <MenuBtn onClick={onClickMenu("/" + cid + "/createQuestion")}>Create Question</MenuBtn>
-            <MenuBtn onClick={onClickMenu("/" + cid + "/qlist")}>Create Options</MenuBtn>
-            <MenuBtn onClick={onClickMenu("/" + cid +"/mypage")}>My Page</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid)}>Solve Problem</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/createQuestion')}>Create Question</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/qlist')}>Create Options</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/mypage')}>My Page</MenuBtn>
           </Menu>
           <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
         </>

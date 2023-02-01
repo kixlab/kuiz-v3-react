@@ -10,39 +10,45 @@ export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const signIn = useCallback((res: CredentialResponse)=> {
-    if (res.credential) {
-      const userData: any = jwtDecode(res.credential)
-      Post(`${process.env.REACT_APP_BACK_END}/auth/register`,{
+  const signIn = useCallback(
+    (res: CredentialResponse) => {
+      if (res.credential) {
+        const userData: any = jwtDecode(res.credential)
+        Post(`${process.env.REACT_APP_BACK_END}/auth/register`, {
           name: userData.name,
           email: userData.email,
-          image: userData?.picture
-        })
-        .then((res:any)=>{
-          dispatch(login({
-            _id:res.user._id,
-            name: userData.name,
-            email: userData.email,
-            img: userData.picture,
-            isLoggedIn: true,
-            isAdmin:res.user.isAdmin,
-            classes: res.user.classes,
-            made: res.user.made,
-            madeOptions: res.user.madeOptions,
-            solved: res.user.solved
-          }))
-          if(res.user.classes.length>0){
-            dispatch(enroll({
-              cid: res.user.classes[0],
-              cType: res.cType
-          }))
-            navigate("/" + res.user.classes[0])
-          }else{
+          image: userData?.picture,
+        }).then((res: any) => {
+          dispatch(
+            login({
+              _id: res.user._id,
+              name: userData.name,
+              email: userData.email,
+              img: userData.picture,
+              isLoggedIn: true,
+              isAdmin: res.user.isAdmin,
+              classes: res.user.classes,
+              made: res.user.made,
+              madeOptions: res.user.madeOptions,
+              solved: res.user.solved,
+            })
+          )
+          if (res.user.classes.length > 0) {
+            dispatch(
+              enroll({
+                cid: res.user.classes[0],
+                cType: res.cType,
+              })
+            )
+            navigate('/' + res.user.classes[0])
+          } else {
             navigate('/')
           }
         })
-    }
-  },[navigate,dispatch])
+      }
+    },
+    [navigate, dispatch]
+  )
 
   return (
     <div>
