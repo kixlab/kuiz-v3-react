@@ -12,6 +12,7 @@ interface Props {
 
 export const Gnb = (props: Props) => {
   const navigate = useNavigate()
+  //TODO: make it so that classes can be chosen
   const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)

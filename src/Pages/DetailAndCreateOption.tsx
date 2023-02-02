@@ -13,7 +13,6 @@ import ObjectID from 'bson-objectid'
 import { Post, Get } from '../utils/apiRequest'
 import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
 import { LoadOptionsParams, LoadOptionsResults } from '../api/question/option/loadOptions'
-import axios from 'axios'
 
 export function DetailAndCreateOption() {
   const navigate = useNavigate()
@@ -24,8 +23,6 @@ export function DetailAndCreateOption() {
   const [disList, setDistList] = useState<optionType[]>([])
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [similarOptions, setSimilarOptions] = useState<string[]>([])
-
-  axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + cid).then(res => console.log(res))
 
   // My option values
   const [option, setOption] = useState('')
