@@ -51,11 +51,11 @@ export function CreateQuestion() {
       alert('Please enter a question.')
       return
     }
-    if (answer === null || answer.match(/^\s*$/) !== null) {
+    if (answer === null || answer.match(/^\s*$/) !== null || answer.length === 0) {
       alert('Please enter an answer.')
       return
     }
-    if (qstemObj && qstemObj.learning_objective === null) {
+    if (qstemObj && (qstemObj.learning_objective === null || qstemObj.learning_objective.length === 0)) {
       alert('Please enter learning objective.')
       return
     }
@@ -88,7 +88,7 @@ export function CreateQuestion() {
         .then(
           (res: CreateQStemResults | null) => res && navigate('/' + cid + '/question/' + res.data + '/createOption')
         )
-  }, [uid, cid])
+  }, [uid, cid, answer, objective, question, explanation])
 
   return (
     <CreateQBox>

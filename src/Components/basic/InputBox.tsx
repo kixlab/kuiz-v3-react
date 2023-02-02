@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const TextInput = (props: Props) => {
-  return <TextInputComponent type="text" placeholder={props.placeholder} />
+  return <TextInputComponent type="text" placeholder={props.placeholder} onChange={props.onChange} />
 }
 
 const TextInputComponent = styled.input`

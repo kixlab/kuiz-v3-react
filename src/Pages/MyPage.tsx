@@ -74,7 +74,7 @@ export function MyPage(props: Props) {
   const signOut = useCallback(() => {
     googleLogout()
     dispatch(logout())
-    navigate('/login')
+    navigate('/')
   }, [])
 
   useEffect(() => {

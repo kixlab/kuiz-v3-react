@@ -141,6 +141,7 @@ export function SolvingQuestion() {
               state={isSolved}
               selected={selected === i}
               key={i}
+              isAnswer={showAnswer && answer === i ? true : false}
             >
               {e.option_text}
             </OptionBtn>

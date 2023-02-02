@@ -17,9 +17,12 @@ export function Enroll() {
   const email = useSelector((state: RootState) => state.userInfo.email)
   const userInfo = useSelector((state: RootState) => state.userInfo)
 
-  const detectChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value)
-  }, [])
+  const detectChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setCode(e.target.value)
+    },
+    [setCode]
+  )
 
   useEffect(() => {
     if (userInfo.classes.length > 0) {
@@ -42,7 +45,7 @@ export function Enroll() {
           navigate('/' + res.cid)
         }
       })
-  }, [email, uid, code, dispatch, navigate])
+  }, [email, uid, code, userInfo, dispatch, navigate])
 
   return (
     <CodeInputBox>

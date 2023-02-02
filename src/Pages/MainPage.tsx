@@ -63,7 +63,7 @@ export function MainPage() {
         }
       })
     },
-    [setValidList]
+    [setValidList, setQuestionList, cid]
   )
 
   const checkValidUser = useCallback(() => {
@@ -79,9 +79,9 @@ export function MainPage() {
             if (!res.enrolled) {
               navigate('/')
             } else {
-              res.cid &&
+              cid &&
                 Get<CheckClassTypeParams, CheckClassTypeResults>(`${process.env.REACT_APP_BACK_END}/auth/class/type`, {
-                  cid: res.cid,
+                  cid: cid,
                 }).then((res2: CheckClassTypeResults | null) => {
                   if (res2 && res2.valid) {
                     getQuestionList(cid)
