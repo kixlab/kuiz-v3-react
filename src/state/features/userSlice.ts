@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface classesType {
   cid: string
-  cType: string
+  cType: boolean
 }
 
 interface userInfoType {
@@ -20,7 +20,7 @@ interface userInfoType {
 
 interface userEnrollType {
   cid: string
-  cType: string
+  cType: boolean
 }
 
 const initialState: userInfoType = {

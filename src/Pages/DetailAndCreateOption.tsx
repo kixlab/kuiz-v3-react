@@ -7,12 +7,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '../state/store'
 import draftToHtml from 'draftjs-to-html'
-import axios from 'axios'
 import { qinfoType } from '../apiTypes/qinfo'
 import { optionType } from '../apiTypes/option'
 import ObjectID from 'bson-objectid'
-import { Post } from '../utils/apiRequest'
+import { Post, Get } from '../utils/apiRequest'
 import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
+import { LoadOptionsParams, LoadOptionsResults } from '../api/question/option/loadOptions'
+import axios from 'axios'
 
 export function DetailAndCreateOption() {
   const navigate = useNavigate()
@@ -24,19 +25,25 @@ export function DetailAndCreateOption() {
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [similarOptions, setSimilarOptions] = useState<string[]>([])
 
+  axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + cid).then(res => console.log(res))
+
   // My option values
   const [option, setOption] = useState('')
   const [isAnswer, setIsAnswer] = useState(false)
   const [keywords, setKeywords] = useState<string[]>([])
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACK_END}/question/option/load?qid=` + qid).then(res => {
-      const ans = res.data.options.filter((op: optionType) => op.is_answer === true)
-      const dis = res.data.options.filter((op: optionType) => op.is_answer === false)
+    Get<LoadOptionsParams, LoadOptionsResults>(`${process.env.REACT_APP_BACK_END}/question/option/load`, {
+      qid: qid,
+    }).then((res: LoadOptionsResults | null) => {
+      if (res) {
+        const ans = res.options.filter((op: optionType) => op.is_answer === true)
+        const dis = res.options.filter((op: optionType) => op.is_answer === false)
 
-      setAnsList(ans)
-      setDistList(dis)
-      setQinfo(res.data.qinfo)
+        setAnsList(ans)
+        setDistList(dis)
+        setQinfo(res.qinfo)
+      }
     })
   }, [navigate, qid, setAnsList, setDistList, setQinfo])
 

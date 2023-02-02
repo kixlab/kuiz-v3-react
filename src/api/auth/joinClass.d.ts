@@ -7,5 +7,5 @@ export interface JoinClassResults {
   msg: string
   success: boolean
   cid?: string
-  cType?: string
+  cType?: boolean
 }

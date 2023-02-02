@@ -1,11 +1,11 @@
-import axios from 'axios'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { RootState } from '../state/store'
 import { enroll } from '../state/features/userSlice'
-import { Post } from '../utils/apiRequest'
+import { Post, Get } from '../utils/apiRequest'
 import { CheckIsInClassParams, CheckIsInClassResults } from '../api/auth/checkIsInClass'
+import { CheckClassTypeParams, CheckClassTypeResults } from '../api/auth/checkClassType'
 
 export const PageNotFound = () => {
   const navigate = useNavigate()
@@ -24,9 +24,13 @@ export const PageNotFound = () => {
         } else {
           if (res.cid) {
             const cid = res.cid
-            axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + cid).then(res2 => {
-              dispatch(enroll({ cid: cid, cType: res2.data.cType }))
-              navigate('/' + cid)
+            Get<CheckClassTypeParams, CheckClassTypeResults>(`${process.env.REACT_APP_BACK_END}/auth/class/type`, {
+              cid: cid,
+            }).then((res2: CheckClassTypeResults | null) => {
+              if (res2) {
+                dispatch(enroll({ cid: cid, cType: res2.cType }))
+                navigate('/' + cid)
+              }
             })
           }
         }

@@ -6,7 +6,6 @@ import styled from '@emotion/styled'
 import { RootState } from '../state/store'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import axios from 'axios'
 import { qinfoType } from '../apiTypes/qinfo'
 import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
@@ -15,8 +14,10 @@ import { typography } from '../styles/theme'
 import { InputDialog } from '../Components/Dialogs/InputDialog'
 import { OptionBtn } from '../Components/basic/button/OptionButton'
 import ObjectID from 'bson-objectid'
-import { Post } from '../utils/apiRequest'
+import { Post, Get } from '../utils/apiRequest'
 import { SolveQuestionParams, SolveQuestionResults } from '../api/question/solveQuestion'
+import { LoadProblemDetailParams, LoadProblemDetailResults } from '../api/question/loadProblemDetail'
+import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/loadCluster'
 
 export function SolvingQuestion() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ export function SolvingQuestion() {
   const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const [optionSet, setOptionSet] = useState<optionType[]>()
-  const [options, setOptions] = useState([])
+  const [options, setOptions] = useState<optionType[]>([])
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [ansVisible, setAnsVisible] = useState(true)
   const [selected, setSelected] = useState<number>()
@@ -33,7 +34,7 @@ export function SolvingQuestion() {
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
-  const getMultipleRandom = useCallback((arr: optionType[], num: number) => {
+  const getMultipleRandom = useCallback((arr: clusterType[], num: number) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, num)
   }, [])
@@ -45,31 +46,38 @@ export function SolvingQuestion() {
 
   const getQinfo = useCallback((qid: string | undefined) => {
     let optionList
-    axios.get(`${process.env.REACT_APP_BACK_END}/question/detail/load?qid=` + qid).then(res => {
-      axios
-        .get(`${process.env.REACT_APP_BACK_END}/question/load/cluster?qid=` + qid)
-        .then(res2 => {
-          const cluster = res2.data.cluster
-          const ans = cluster.filter((c: clusterType) => c.representative.is_answer)
-          const dis = cluster.filter((c: clusterType) => !c.representative.is_answer)
-          const ansList = getMultipleRandom(ans, 1)
-          const disList = getMultipleRandom(dis, 3)
-
-          optionList = shuffle(
-            ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
-          )
-
-          setOptionSet(optionList)
-
-          optionList.forEach((o: optionType, i: number) => {
-            if (o.is_answer) {
-              setAnswer(i)
-            }
-          })
+    Get<LoadProblemDetailParams, LoadProblemDetailResults>(`${process.env.REACT_APP_BACK_END}/question/detail/load`, {
+      qid: qid,
+    }).then((res: LoadProblemDetailResults | null) => {
+      if (res) {
+        Get<LoadClusterParams, LoadClusterResults>(`${process.env.REACT_APP_BACK_END}/question/load/cluster`, {
+          qid: qid,
         })
-        .catch(err => console.log(err))
-      setOptions(res.data.options)
-      setQinfo(res.data.qinfo)
+          .then((res2: LoadClusterResults | null) => {
+            if (res2) {
+              const cluster = res2.cluster
+              const ans = cluster.filter((c: clusterType) => c.representative.is_answer)
+              const dis = cluster.filter((c: clusterType) => !c.representative.is_answer)
+              const ansList = getMultipleRandom(ans, 1)
+              const disList = getMultipleRandom(dis, 3)
+
+              optionList = shuffle(
+                ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
+              )
+
+              setOptionSet(optionList)
+              optionList.forEach((o: optionType, i: number) => {
+                if (o.is_answer) {
+                  setAnswer(i)
+                }
+              })
+            }
+
+            setOptions(res.options)
+            setQinfo(res.qinfo)
+          })
+          .catch(err => console.log(err))
+      }
     })
   }, [])
 

@@ -7,12 +7,14 @@ import { useSelector } from 'react-redux'
 import { useCallback } from 'react'
 import { RootState } from '../state/store'
 import { useEffect, useState } from 'react'
-import { Post } from '../utils/apiRequest'
+import { Post, Get } from '../utils/apiRequest'
 import { qinfoType } from '../apiTypes/qinfo'
 import { clusterType } from '../apiTypes/cluster'
-import axios from 'axios'
 import { useLocation } from 'react-router-dom'
 import { CheckIsInClassParams, CheckIsInClassResults } from '../api/auth/checkIsInClass'
+import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/loadCluster'
+import { LoadProblemListParams, LoadProblemListResults } from '../api/question/loadProblemList'
+import { CheckClassTypeParams, CheckClassTypeResults } from '../api/auth/checkClassType'
 
 export function MainPage() {
   const navigate = useNavigate()
@@ -21,39 +23,48 @@ export function MainPage() {
   const createOptions = location.pathname.includes('qlist')
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const [questionList, setQuestionList] = useState<qinfoType[]>([])
-  const [validList, setValidList] = useState([false])
+  const [validList, setValidList] = useState<boolean[]>([false])
 
-  const getQuestionList = useCallback((cid: string) => {
-    axios.get(`${process.env.REACT_APP_BACK_END}/question/list/load?cid=` + cid).then(async res => {
-      console.log(res)
-      const valid = [false]
+  const getQuestionList = useCallback(
+    (cid: string) => {
+      Get<LoadProblemListParams, LoadProblemListResults>(`${process.env.REACT_APP_BACK_END}/question/list/load`, {
+        cid: cid,
+      }).then(async (res: LoadProblemListResults | null) => {
+        if (res) {
+          const valid = [false]
 
-      await Promise.all(
-        res.data.problemList.map(async (q: qinfoType, i: number) => {
-          await axios
-            .get(`${process.env.REACT_APP_BACK_END}/question/load/cluster?qid=` + q._id)
-            .then(async res2 => {
-              const clusters = await res2.data.cluster
-
-              const ans = clusters.filter((c: clusterType) => c.representative.is_answer).length
-              const dis = clusters.filter((c: clusterType) => !c.representative.is_answer).length
-
-              if (ans + dis >= 4) {
-                valid[i] = true
-                return true
-              } else {
-                valid[i] = false
-                return false
-              }
+          await Promise.all(
+            res.problemList.map(async (q: qinfoType, i: number) => {
+              await Get<LoadClusterParams, LoadClusterResults>(
+                `${process.env.REACT_APP_BACK_END}/question/load/cluster`,
+                {
+                  qid: q._id,
+                }
+              )
+                .then(async (res2: LoadClusterResults | null) => {
+                  if (res2) {
+                    const clusters = await res2.cluster
+                    const ans = clusters.filter((c: clusterType) => c.representative.is_answer).length
+                    const dis = clusters.filter((c: clusterType) => !c.representative.is_answer).length
+                    if (ans + dis >= 4) {
+                      valid[i] = true
+                      return true
+                    } else {
+                      valid[i] = false
+                      return false
+                    }
+                  }
+                })
+                .catch(err => console.log(err))
             })
-            .catch(err => console.log(err))
-        })
-      )
-
-      setValidList(valid)
-      setQuestionList(res.data.problemList)
-    })
-  }, [])
+          )
+          setValidList(valid)
+          setQuestionList(res.problemList)
+        }
+      })
+    },
+    [setValidList]
+  )
 
   const checkValidUser = useCallback(() => {
     cid &&
@@ -68,9 +79,14 @@ export function MainPage() {
             if (!res.enrolled) {
               navigate('/')
             } else {
-              axios.get(`${process.env.REACT_APP_BACK_END}/auth/class/type?cid=` + res.cid).then(res2 => {
-                getQuestionList(res2.data.cid)
-              })
+              res.cid &&
+                Get<CheckClassTypeParams, CheckClassTypeResults>(`${process.env.REACT_APP_BACK_END}/auth/class/type`, {
+                  cid: res.cid,
+                }).then((res2: CheckClassTypeResults | null) => {
+                  if (res2 && res2.valid) {
+                    getQuestionList(cid)
+                  }
+                })
             }
           }
         }
@@ -80,7 +96,6 @@ export function MainPage() {
   useEffect(() => {
     checkValidUser()
   }, [checkValidUser])
-
   return (
     <BoxShadow>
       <QuizListHeader />
