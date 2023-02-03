@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 
-interface CheckModal {
+interface Props {
   title: string
   message: string
   modalState: boolean
@@ -11,7 +11,7 @@ interface CheckModal {
   toggleModal: () => void
 }
 
-export const CheckDialog = (props: CheckModal) => {
+export const CheckDialog = (props: Props) => {
   if (props.modalState) {
     return (
       <Modal>

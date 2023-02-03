@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '../../../styles/theme'
 
-interface buttonProps {
+interface Props {
   children: React.ReactNode
   onClick?: () => void
   disabled?: boolean
 }
 
-export const FillBtn = (props: buttonProps) => {
+export const FillBtn = (props: Props) => {
   return (
     <Fill onClick={props.onClick} disabled={props.disabled}>
       {props.children}
@@ -15,11 +15,11 @@ export const FillBtn = (props: buttonProps) => {
   )
 }
 
-export const StrokeBtn = (props: buttonProps) => {
+export const StrokeBtn = (props: Props) => {
   return <Stroke onClick={props.onClick}>{props.children}</Stroke>
 }
 
-export const TextBtn = (props: buttonProps) => {
+export const TextBtn = (props: Props) => {
   return (
     <Text onClick={props.onClick} style={{ color: `${palette.grey[400]}` }}>
       {props.children}
@@ -27,7 +27,7 @@ export const TextBtn = (props: buttonProps) => {
   )
 }
 
-export const TextBtnCta = (props: buttonProps) => {
+export const TextBtnCta = (props: Props) => {
   return (
     <Text onClick={props.onClick} style={{ color: `${palette.primary.dark}` }}>
       {props.children}

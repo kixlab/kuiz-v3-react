@@ -1,19 +1,25 @@
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import logoIcon from '../Asset/logo.svg'
+import { useSelector } from 'react-redux'
+import { RootState } from '../state/store'
 import { palette, typography } from '../styles/theme'
 import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../state/store'
 
-export const Gnb = (props: { loginState: boolean }) => {
+interface Props {
+  loginState: boolean
+}
+
+export const Gnb = (props: Props) => {
   const navigate = useNavigate()
+  //TODO: make it so that classes can be chosen
+  const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
 
-  const onClickNemu = useCallback(
+  const onClickMenu = useCallback(
     (path: string) => () => {
-      navigate(`/${path}`)
+      navigate(`${path}`)
       setIsDisplay(!isDisplay)
     },
     [isDisplay]
@@ -21,17 +27,17 @@ export const Gnb = (props: { loginState: boolean }) => {
 
   return (
     <SideTab className="SideTab">
-      <Logo onClick={() => props.loginState && navigate('/')}>
+      <Logo onClick={() => props.loginState && navigate('/' + cid)}>
         <LogoIcon src={logoIcon} />
         KUIZ
       </Logo>
       {props.loginState == true && (
         <>
           <Menu isDisplay={isDisplay}>
-            <MenuBtn onClick={onClickNemu('solve')}>Solve Problem</MenuBtn>
-            <MenuBtn onClick={onClickNemu('createQuestion')}>Create Question</MenuBtn>
-            <MenuBtn onClick={onClickNemu('question/createOption')}>Create Options</MenuBtn>
-            <MenuBtn onClick={onClickNemu('mypage')}>My Page</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid)}>Solve Problem</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/createQuestion')}>Create Question</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/qlist')}>Create Options</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/' + cid + '/mypage')}>My Page</MenuBtn>
           </Menu>
           <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
         </>

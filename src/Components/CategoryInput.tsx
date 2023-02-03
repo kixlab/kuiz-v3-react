@@ -36,7 +36,6 @@ export const CategoryInput = ({ getCategory }: Props) => {
 
   const deleteElement = useCallback(
     (item: string) => () => {
-      console.log('gg')
       setCategories(categories.filter(c => c != item))
       setSelections(selections.filter(s => s != item))
     },

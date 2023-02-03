@@ -2,23 +2,29 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { palette, typography } from '../../../styles/theme'
 
-interface OptionProps {
+interface Props {
   state: boolean
   selected: boolean
   onClick?: () => void
+  isAnswer?: boolean
   children: React.ReactNode
 }
 
-export const OptionBtn = (props: OptionProps) => {
+export const OptionBtn = (props: Props) => {
   return (
-    <OptionBtnComponent onClick={props.onClick} state={props.state} selected={props.selected}>
+    <OptionBtnComponent
+      onClick={props.onClick}
+      state={props.state}
+      selected={props.selected}
+      isAnswer={props.isAnswer ? 'answer' : null}
+    >
       {props.children}
     </OptionBtnComponent>
   )
 }
 
-const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean }>`
-  ${({ state, selected }) => css`
+const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean; isAnswer: 'answer' | null }>`
+  ${({ state, selected, isAnswer }) => css`
     ${typography.b02};
     background-color: ${palette.background.light};
     padding: 16px;
@@ -40,6 +46,12 @@ const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean }>`
       color: ${palette.primary.dark};
       background-color: ${palette.primary.light};
       border-color: ${palette.primary.main};
+    `}
+
+    ${isAnswer &&
+    css`
+      background-color: ${palette.tags.answer};
+      color: ${palette.primary.light};
     `}
   `}
 `

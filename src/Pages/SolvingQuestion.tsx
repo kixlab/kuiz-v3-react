@@ -2,138 +2,163 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { SubmitReportParams, SubmitReportResults } from '../api/question/submitReport'
-import { Post } from '../utils/apiRequest'
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
-import { InputDialog } from '../Components/Dialogs/InputDialog'
+import { RootState } from '../state/store'
+import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { qinfoType } from '../apiTypes/qinfo'
+import { optionType } from '../apiTypes/option'
+import { clusterType } from '../apiTypes/cluster'
 import { FillBtn, StrokeBtn } from '../Components/basic/button/Button'
-import { OptionBtn } from '../Components/basic/button/OptionButton'
 import { typography } from '../styles/theme'
-
-//SAMPLE OPTION LIST
-const sampleOptions = ['Answer', 'Distractor1', 'Distractor2', 'Distractor3']
+import { InputDialog } from '../Components/Dialogs/InputDialog'
+import { OptionBtn } from '../Components/basic/button/OptionButton'
+import ObjectID from 'bson-objectid'
+import { Post, Get } from '../utils/apiRequest'
+import { SolveQuestionParams, SolveQuestionResults } from '../api/question/solveQuestion'
+import { LoadProblemDetailParams, LoadProblemDetailResults } from '../api/question/loadProblemDetail'
+import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/loadCluster'
 
 export function SolvingQuestion() {
   const navigate = useNavigate()
-  const [options, setOptions] = useState(sampleOptions)
-  const [selectedOption, setSelectedOption] = useState<number | null>(null)
-  const [isAnswered, setIsAnswered] = useState(false)
-  const [answer, setAnswer] = useState<number | null>(null)
+  const qid = useParams().id
+  const cid = useParams().cid
+  const uid = useSelector((state: RootState) => state.userInfo._id)
+  const [optionSet, setOptionSet] = useState<optionType[]>()
+  const [options, setOptions] = useState<optionType[]>([])
+  const [qinfo, setQinfo] = useState<qinfoType>()
+  const [ansVisible, setAnsVisible] = useState(true)
+  const [selected, setSelected] = useState<number>()
+  const [answer, setAnswer] = useState(0)
+  const [isSolved, setIsSolved] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
-  /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
-    const qid = useParams().id;
-	const cid = useParams().cid;
-    /* CONNECTING DB AFTER FINISHING STATE CONTROL(BUILDING....)
+  const getMultipleRandom = useCallback((arr: clusterType[], num: number) => {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, num)
+  }, [])
 
-    function shuffle(arr:Array<any>) {
-        return [...arr].sort(() => 0.5 - Math.random())
+  const shuffle = useCallback((array: optionType[]) => {
+    array.sort(() => Math.random() - 0.5)
+    return array
+  }, [])
+
+  const getQinfo = useCallback((qid: string | undefined) => {
+    let optionList
+    Get<LoadProblemDetailParams, LoadProblemDetailResults>(`${process.env.REACT_APP_BACK_END}/question/detail/load`, {
+      qid: qid,
+    }).then((res: LoadProblemDetailResults | null) => {
+      if (res) {
+        Get<LoadClusterParams, LoadClusterResults>(`${process.env.REACT_APP_BACK_END}/question/load/cluster`, {
+          qid: qid,
+        })
+          .then((res2: LoadClusterResults | null) => {
+            if (res2) {
+              const cluster = res2.cluster
+              const ans = cluster.filter((c: clusterType) => c.representative.is_answer)
+              const dis = cluster.filter((c: clusterType) => !c.representative.is_answer)
+              const ansList = getMultipleRandom(ans, 1)
+              const disList = getMultipleRandom(dis, 3)
+
+              optionList = shuffle(
+                ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
+              )
+
+              setOptionSet(optionList)
+              optionList.forEach((o: optionType, i: number) => {
+                if (o.is_answer) {
+                  setAnswer(i)
+                }
+              })
+            }
+
+            setOptions(res.options)
+            setQinfo(res.qinfo)
+          })
+          .catch(err => console.log(err))
+      }
+    })
+  }, [])
+
+  const checkAnswer = useCallback(() => {
+    if (!ansVisible) {
+      optionSet &&
+        selected &&
+        Post<SolveQuestionParams, SolveQuestionResults>(`${process.env.REACT_APP_BACK_END}/question/solve`, {
+          qid: qid,
+          uid: uid,
+          initAns: optionSet[selected]._id,
+          isCorrect: selected === answer,
+          optionSet: options.map((o: optionType) => ObjectID(o._id)),
+        }).then((res: SolveQuestionResults | null) => {
+          res && console.log('success:', res.success)
+        })
     }
-
-    function getMultipleRandom(arr: Array<any>, num: number) {
-		const shuffled = shuffle(arr);
-		return shuffled.slice(0, num);
-	}
-
-    function getShuffledOptions() {
-        axios.get(`${process.env.REACT_APP_BACK_END}/question/detail/load?qid=` + qid).then((res) => {
-			axios
-				.get(`${process.env.REACT_APP_BACK_END}/question/load/cluster?qid=` + qid)
-				.then((res2) => {
-					const cluster = res2.data.cluster;
-					const ans = cluster.filter((c:any) => c.representative.is_answer).map((e:any) => e.representative);
-					const dis = cluster.filter((c:any) => !c.representative.is_answer).map((e:any) => e.representative);
-					const ansList = getMultipleRandom(ans, 1);
-					const disList = getMultipleRandom(dis, 3);
-
-                    ansRef.current = ans;
-					setOptions(shuffle(ansList.concat(disList)));
-				})
-				.catch((err) => console.log(err));
-            setQInfo(res.data.qinfo);
-		});
-        setSelectedOption('');
-    }
-    */
+    setAnsVisible(!ansVisible)
+  }, [ansVisible, qid, uid, optionSet, selected, answer, options])
 
   useEffect(() => {
-    setAnswer(0)
-  }, [])
+    getQinfo(qid)
+  }, [getQinfo, qid])
 
-  const clickOption = useCallback(
-    (i: number) => () => {
-      if (isAnswered == false) {
-        setSelectedOption(i)
-        console.log('sdf', i)
-      }
-    },
-    [selectedOption, isAnswered]
-  )
+  const shuffleOptions = useCallback(() => {
+    getQinfo(qid)
+    setIsSolved(false)
+    setSelected(-1)
+    setAnsVisible(false)
+    setShowAnswer(false)
+  }, [qid])
 
-  const shuffle = useCallback(() => {
-    setOptions([...options].sort(() => Math.random() - 0.5))
-    setSelectedOption(null)
-  }, [])
-
-  const submit = useCallback(() => {
-    console.log(answer, selectedOption)
-    //DEMO VALUE FOR SIMULATING
-    if (selectedOption == answer) {
-      alert('CORRECT!')
-      setIsAnswered(true)
-    } else console.log('WRONG')
-  }, [answer, selectedOption])
-
-  //--------------->Modal Functions
-
-  function toggleModal() {
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
     return ''
-  }
+  }, [isOpenModal, setIsOpenModal])
 
   const reportSubmit = useCallback(
     async (msg: string) => {
       console.log(msg)
       toggleModal()
-      // TODO: Needs to put actual uid and comments
-      await Post<SubmitReportParams, SubmitReportResults>('submitReport', {
-        uid: 'FAKE_UID',
-        comment: msg,
-      })
+      // TODO: Link to the backend
     },
     [isOpenModal]
   )
 
-  //<---------------------
-
   return (
     <QuestionBox>
-      <ReturnBtn onClick={() => navigate('/')}>
+      <ReturnBtn onClick={() => navigate('/' + cid)}>
         <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
       </ReturnBtn>
-      <Label>Q. What is the question?</Label>
+      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
       <div>
-        {options.map((e, i) => {
+        {optionSet?.map((e: optionType, i: number) => {
           return (
-            <OptionBtn key={i} onClick={clickOption(i)} state={isAnswered} selected={selectedOption === i}>
-              {e}
+            <OptionBtn
+              onClick={() => {
+                setSelected(i)
+                setIsSolved(true)
+              }}
+              state={isSolved}
+              selected={selected === i}
+              key={i}
+              isAnswer={showAnswer && answer === i ? true : false}
+            >
+              {e.option_text}
             </OptionBtn>
           )
         })}
       </div>
       <BtnDisplay>
-        {isAnswered == false ? (
-          <>
-            <FillBtn onClick={submit} disabled={selectedOption == null}>
-              Submit
-            </FillBtn>
-            <StrokeBtn onClick={shuffle}>Shuffle Answers</StrokeBtn>
-            {/* FOR NOW, SHUFFLING FUNCTION IS A SAMPLE FUNCTION */}
-          </>
-        ) : (
-          <FillBtn>Add Options</FillBtn>
-        )}
+        <FillBtn
+          onClick={() => {
+            checkAnswer()
+            setShowAnswer(true)
+          }}
+          disabled={selected == null}
+        >
+          Submit
+        </FillBtn>
+        <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
         <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>

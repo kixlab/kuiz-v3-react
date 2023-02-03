@@ -4,19 +4,29 @@ import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { palette, typography } from '../styles/theme'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useCallback } from 'react'
 
-export const MadeStem = () => {
+interface Props {
+  question: string
+  qid: string
+}
+
+export const MadeStem = (props: Props) => {
+  const cid = useParams().cid
   const navigate = useNavigate()
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const toggleModal = () => {
+
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  }
+  }, [setIsOpenModal, isOpenModal])
+
   return (
     <StemBox>
       <RowFlex>
         <QuestionLabel>
-          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>The question you made
+          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>
+          {props.question}
         </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
@@ -28,7 +38,7 @@ export const MadeStem = () => {
           modalState={isOpenModal}
           toggleModal={toggleModal}
         />
-        <TextBtnCta onClick={() => navigate('/question/createOption')}>View</TextBtnCta>
+        <TextBtnCta onClick={() => navigate('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
       </RowFlex>
     </StemBox>
   )

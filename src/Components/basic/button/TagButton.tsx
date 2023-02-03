@@ -2,13 +2,13 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { palette, typography } from '../../../styles/theme'
 
-interface tagProps {
+interface Props {
   onClick: () => void
   id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct'
   children: React.ReactNode
 }
 
-export const TagBtn = (props: tagProps) => {
+export const TagBtn = (props: Props) => {
   return (
     <TagBtnComponent onClick={props.onClick} id={props.id}>
       {props.children}

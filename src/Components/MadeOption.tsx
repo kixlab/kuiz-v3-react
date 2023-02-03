@@ -4,22 +4,33 @@ import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
 import { palette, typography } from '../styles/theme'
 import { TextBtn, TextBtnCta } from './basic/button/Button'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useCallback } from 'react'
 
-export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
+interface Props {
+  qid: string
+  option: string
+  question: string
+  optionType: 'Answer' | 'Distractor'
+}
+
+export const MadeOption = (props: Props) => {
   const navigate = useNavigate()
+  const cid = useParams().cid
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const toggleModal = () => {
+
+  const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
-  }
+  }, [setIsOpenModal, isOpenModal])
+
   return (
     <OptionBox>
       <RowFlex>
         <Tag id={props.optionType}>{props.optionType}</Tag>
-        <OptionLabel>option</OptionLabel>
+        <OptionLabel>{props.option}</OptionLabel>
       </RowFlex>
       <RowFlex>
-        <QuestionLabel>Q. what is the question?</QuestionLabel>
+        <QuestionLabel>Q. {props.question}</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
         <TextBtn onClick={toggleModal}>Delete</TextBtn>
@@ -30,7 +41,7 @@ export const MadeOption = (props: { optionType: 'Answer' | 'Distractor' }) => {
           modalState={isOpenModal}
           toggleModal={toggleModal}
         />
-        <TextBtnCta onClick={() => navigate('/question/createOption')}>View</TextBtnCta>
+        <TextBtnCta onClick={() => navigate('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
       </RowFlex>
     </OptionBox>
   )

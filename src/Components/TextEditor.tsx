@@ -1,21 +1,20 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { CSSProperties, useState } from 'react'
-import { EditorState, convertToRaw } from 'draft-js'
+import { CSSProperties } from 'react'
+import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
-import draftToHtml from 'draftjs-to-html'
 import { palette } from '../styles/theme'
 
-export const TextEditor = () => {
-  const [editorState, setEditorState] = useState<EditorState>(() => EditorState.createEmpty())
-  const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState)
-    console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())))
-  }
+interface Props {
+  editorState: EditorState
+  onChange: (state: EditorState) => void
+}
+
+export const TextEditor = (props: Props) => {
   return (
     <Editor
-      editorState={editorState}
+      editorState={props.editorState}
       editorStyle={editorStyle}
-      onEditorStateChange={onEditorStateChange}
+      onEditorStateChange={props.onChange}
       placeholder="Write down the content here"
       wrapperClassName="wrapper-class"
       editorClassName="editor-class"

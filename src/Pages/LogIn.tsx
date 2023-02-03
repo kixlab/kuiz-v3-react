@@ -3,28 +3,56 @@ import styled from '@emotion/styled'
 import jwtDecode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { login } from '../state/features/userSlice'
+import { enroll, login } from '../state/features/userSlice'
+import { useCallback } from 'react'
+import { Post } from '../utils/apiRequest'
+import { RegisterParams, RegisterResults } from '../api/auth/register'
 
 export function LogIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  function signIn(res: CredentialResponse) {
-    if (res.credential) {
-      const userData: any = jwtDecode(res.credential)
-      dispatch(
-        login({
+  const signIn = useCallback(
+    (res: CredentialResponse) => {
+      if (res.credential) {
+        const userData: any = jwtDecode(res.credential)
+        Post<RegisterParams, RegisterResults>(`${process.env.REACT_APP_BACK_END}/auth/register`, {
           name: userData.name,
           email: userData.email,
-          img: userData.picture,
-          isLoggedIn: true,
+          image: userData?.picture,
+        }).then((res: RegisterResults | null) => {
+          if (res) {
+            dispatch(
+              login({
+                _id: res.user._id,
+                name: userData.name,
+                email: userData.email,
+                img: userData.picture,
+                isLoggedIn: true,
+                isAdmin: res.user.isAdmin,
+                classes: res.user.classes,
+                made: res.user.made,
+                madeOptions: res.user.madeOptions,
+                solved: res.user.solved,
+              })
+            )
+            if (res.user.classes.length > 0) {
+              dispatch(
+                enroll({
+                  cid: res.user.classes[0],
+                  cType: res.user.cType,
+                })
+              )
+              navigate('/' + res.user.classes[0])
+            } else {
+              navigate('/')
+            }
+          }
         })
-      )
-    }
-    navigate('/')
-  }
-
-  //TODO: 토큰 받기
+      }
+    },
+    [navigate, dispatch]
+  )
 
   return (
     <div>
