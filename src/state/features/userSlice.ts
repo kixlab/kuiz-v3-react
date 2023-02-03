@@ -46,11 +46,11 @@ export const userSlice = createSlice({
       state.email = action.payload.email
       state.img = action.payload.img
       state.isLoggedIn = action.payload.isLoggedIn
-      ;(state.isAdmin = action.payload.isAdmin),
-        (state.classes = action.payload.classes),
-        (state.made = action.payload.made),
-        (state.madeOptions = action.payload.madeOptions),
-        (state.solved = action.payload.solved)
+      state.isAdmin = action.payload.isAdmin
+      state.classes = action.payload.classes
+      state.made = action.payload.made
+      state.madeOptions = action.payload.madeOptions
+      state.solved = action.payload.solved
     },
     logout: (state: userInfoType) => {
       state._id = ''
@@ -58,7 +58,11 @@ export const userSlice = createSlice({
       state.email = ''
       state.img = ''
       state.isLoggedIn = false
-      ;(state.isAdmin = false), (state.classes = []), (state.made = []), (state.madeOptions = []), (state.solved = [])
+      state.isAdmin = false
+      state.classes = []
+      state.made = []
+      state.madeOptions = []
+      state.solved = []
     },
     enroll: (state: userInfoType, action: PayloadAction<userEnrollType>) => {
       if (state.isLoggedIn) {
