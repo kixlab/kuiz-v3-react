@@ -1,4 +1,4 @@
-name: CD-Back
+name: CD-Back-dev
 
 # Controls when the workflow will run
 on:
@@ -29,4 +29,4 @@ jobs:
           script: |
             cd back
             git pull
-            yarn pm2:restart
+            yarn pm2:restart:dev
