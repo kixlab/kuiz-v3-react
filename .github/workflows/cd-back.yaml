@@ -27,6 +27,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            cd kuiz-v2-node
+            cd back
             git pull
             yarn pm2:restart
