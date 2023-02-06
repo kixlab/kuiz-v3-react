@@ -6,6 +6,8 @@ import { cors } from './middlewares/cors'
 import { logger } from './middlewares/logger'
 import rootRouter from './routes'
 import { Env } from './utils/getEnv'
+import fs from 'fs'
+import https from 'https'
 
 const app = express()
 
@@ -26,3 +28,15 @@ app.use('/', rootRouter)
 app.listen(Env.PORT, () => {
   console.log(`server is listening at localhost:${Env.PORT}`)
 })
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync(Env.SSL_KEY_FILE),
+      cert: fs.readFileSync(Env.SSL_CRT_FILE),
+    },
+    app
+  )
+  .listen(Env.PORT, () => {
+    console.log(`server is listening at localhost:${Env.PORT}`)
+  })
