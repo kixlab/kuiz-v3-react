@@ -9,7 +9,7 @@ on:
       - develop
     paths:
       - back/**
-  
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -34,7 +34,7 @@ jobs:
       - name: type check
         run: yarn type-check
 
-       - name: lint
+      - name: lint
         run: yarn lint
 
       - name: style check

@@ -40,7 +40,7 @@
     "type-check": "tsc --noEmit",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern *.d.ts src/",
     "style-check": "prettier --check 'src/**/*.{tsx,ts}'",
-    "pm2:start:dev": "yarn; pm2 --name front-dev start \"yarn start\"",
+    "pm2:start:dev": "yarn; pm2 --name front-dev start \"yarn start:https\"",
     "pm2:restart:dev": "yarn; pm2 restart front-dev"
   },
   "eslintConfig": {
