@@ -10,7 +10,8 @@
     "pm2:start:dev": "yarn; yarn build; pm2 --name back-dev start \"yarn start\"",
     "pm2:restart:dev": "yarn; yarn build; pm2 restart back-dev",
     "type-check": "tsc --noEmit",
-    "style-check": "prettier --check 'src/**/*.{tsx,ts}'"
+    "style-check": "prettier --check 'src/**/*.{tsx,ts}'",
+    "lint": "eslint --ext .ts,.tsx --ignore-pattern *.d.ts src/"
   },
   "repository": {
     "type": "git",
