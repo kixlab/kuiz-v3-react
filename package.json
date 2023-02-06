@@ -1,0 +1,17 @@
+{
+  "name": "kuiz-v3-react",
+  "version": "3.0.0",
+  "description": "Project to make crowdsourcing easier through modular and dynamic multiple choice questions",
+  "main": "index.js",
+  "repository": "git@github.com:kixlab/kuiz-v3-react.git",
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "start": "concurrently --kill-others \"cd back && yarn run dev\" \" cd front && yarn start\"",
+    "installation": "(cd back && yarn install) && (cd ../front && yarn install)"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
