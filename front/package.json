@@ -33,13 +33,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:https": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern *.d.ts src/",
     "style-check": "prettier --check 'src/**/*.{tsx,ts}'",
-    "pm2:start:dev": "yarn; pm2 --name front-dev start \"yarn start\"",
+    "pm2:start:dev": "yarn; pm2 --name front-dev start \"yarn start:https\"",
     "pm2:restart:dev": "yarn; pm2 restart front-dev"
   },
   "eslintConfig": {

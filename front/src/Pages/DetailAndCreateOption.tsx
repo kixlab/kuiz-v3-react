@@ -32,7 +32,7 @@ export function DetailAndCreateOption() {
   useEffect(() => {
     Get<LoadOptionsParams, LoadOptionsResults>(`${process.env.REACT_APP_BACK_END}/question/option/load`, {
       qid: qid,
-    }).then((res: LoadOptionsResults | null) => {
+    }).then(res => {
       if (res) {
         const ans = res.options.filter((op: optionType) => op.is_answer === true)
         const dis = res.options.filter((op: optionType) => op.is_answer === false)
@@ -58,7 +58,7 @@ export function DetailAndCreateOption() {
 
     if (keywords.length > 0 && option.length > 0) {
       if (keywords.includes('Form similar to answer')) {
-        ansList.map((item: optionType) => {
+        ansList.forEach((item: optionType) => {
           if (!similarOptions.includes(item._id)) {
             setSimilarOptions([item._id, ...similarOptions])
           }
@@ -73,7 +73,7 @@ export function DetailAndCreateOption() {
       }).then((res: OptionCreateResults | null) => {
         res && navigate('/' + cid)
       })
-  }, [cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])
+  }, [ansList, cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])
 
   return (
     <QuestionBox>
