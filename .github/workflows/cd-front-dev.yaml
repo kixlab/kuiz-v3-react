@@ -27,6 +27,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
+            cd kuiz
             cd front
             git pull
             yarn pm2:restart:dev
