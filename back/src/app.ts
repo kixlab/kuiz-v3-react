@@ -25,10 +25,6 @@ mongoose
 
 app.use('/', rootRouter)
 
-app.listen(Env.PORT, () => {
-  console.log(`server is listening at localhost:${Env.PORT}`)
-})
-
 https
   .createServer(
     {
