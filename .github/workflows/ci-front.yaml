@@ -1,4 +1,4 @@
-name: CI
+name: CI-Front
 
 # Controls when the workflow will run
 on:
@@ -7,6 +7,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - front/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -17,6 +19,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
