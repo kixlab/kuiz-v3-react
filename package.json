@@ -9,7 +9,9 @@
   "private": true,
   "scripts": {
     "start": "concurrently --kill-others \"cd back && yarn run dev\" \" cd front && yarn start\"",
-    "installation": "(cd back && yarn install) && (cd ../front && yarn install)"
+    "installation": "(cd back && yarn install) && (cd ../front && yarn install)",
+    "type-check": "(cd back && yarn run type-check) && (cd ../front && yarn run type-check)",
+    "lint": "cd front && yarn run lint"
   },
   "devDependencies": {
     "concurrently": "^7.6.0"
