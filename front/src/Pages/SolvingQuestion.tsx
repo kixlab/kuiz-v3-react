@@ -28,7 +28,7 @@ export function SolvingQuestion() {
   const [options, setOptions] = useState<optionType[]>([])
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [ansVisible, setAnsVisible] = useState(true)
-  const [selected, setSelected] = useState<number>()
+  const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
@@ -154,7 +154,7 @@ export function SolvingQuestion() {
             checkAnswer()
             setShowAnswer(true)
           }}
-          disabled={selected == null}
+          disabled={selected == -1}
         >
           Submit
         </FillBtn>

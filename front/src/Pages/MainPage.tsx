@@ -3,10 +3,9 @@ import { QuizListContent } from '../Components/QuizListContent'
 import { QuizListHeader } from '../Components/QuizListHeader'
 import { useNavigate } from 'react-router-dom'
 import { useParams, Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { useCallback } from 'react'
 import { RootState } from '../state/store'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Post, Get } from '../utils/apiRequest'
 import { qinfoType } from '../apiTypes/qinfo'
 import { clusterType } from '../apiTypes/cluster'
@@ -15,15 +14,17 @@ import { CheckIsInClassParams, CheckIsInClassResults } from '../api/auth/checkIs
 import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/loadCluster'
 import { LoadProblemListParams, LoadProblemListResults } from '../api/question/loadProblemList'
 import { CheckClassTypeParams, CheckClassTypeResults } from '../api/auth/checkClassType'
+import { useSelector, useDispatch } from 'react-redux'
+import { addQList } from '../state/features/qListSlice'
 
 export function MainPage() {
+  const dispatch = useDispatch()
+  const qList = useSelector((state: RootState) => state.qList.qinfo)
   const navigate = useNavigate()
   const cid = useParams().cid
   const location = useLocation()
   const createOptions = location.pathname.includes('qlist')
   const uid = useSelector((state: RootState) => state.userInfo._id)
-  const [questionList, setQuestionList] = useState<qinfoType[]>([])
-  const [validList, setValidList] = useState<boolean[]>([false])
 
   const getQuestionList = useCallback(
     (cid: string) => {
@@ -58,12 +59,11 @@ export function MainPage() {
                 .catch(err => console.log(err))
             })
           )
-          setValidList(valid)
-          setQuestionList(res.problemList)
+          dispatch(addQList({ qinfo: res.problemList.filter((q: qinfoType, j: number) => valid[j]).reverse() }))
         }
       })
     },
-    [setValidList, setQuestionList, cid]
+    [dispatch, addQList, cid]
   )
 
   const checkValidUser = useCallback(() => {
@@ -73,20 +73,25 @@ export function MainPage() {
         uid: uid,
       }).then((res: CheckIsInClassResults | null) => {
         if (res) {
-          if (res.inclass) {
-            res.cid && getQuestionList(res.cid)
-          } else {
-            if (!res.enrolled) {
-              navigate('/')
+          if (qList.length === 0) {
+            if (res.inclass) {
+              res.cid && getQuestionList(res.cid)
             } else {
-              cid &&
-                Get<CheckClassTypeParams, CheckClassTypeResults>(`${process.env.REACT_APP_BACK_END}/auth/class/type`, {
-                  cid: cid,
-                }).then((res2: CheckClassTypeResults | null) => {
-                  if (res2 && res2.valid) {
-                    getQuestionList(cid)
-                  }
-                })
+              if (!res.enrolled) {
+                navigate('/')
+              } else {
+                cid &&
+                  Get<CheckClassTypeParams, CheckClassTypeResults>(
+                    `${process.env.REACT_APP_BACK_END}/auth/class/type`,
+                    {
+                      cid: cid,
+                    }
+                  ).then((res2: CheckClassTypeResults | null) => {
+                    if (res2 && res2.valid) {
+                      getQuestionList(cid)
+                    }
+                  })
+              }
             }
           }
         }
@@ -96,32 +101,30 @@ export function MainPage() {
   useEffect(() => {
     checkValidUser()
   }, [checkValidUser])
+
   return (
     <BoxShadow>
       <QuizListHeader />
-      {questionList
-        .filter((q: qinfoType, j: number) => validList[j])
-        .map((question: qinfoType, index: number) => (
-          <Link
-            style={{ color: 'inherit', textDecoration: 'none' }}
-            key={question._id}
-            to={
-              createOptions
-                ? '/' + cid + '/question/' + question._id + '/createOption'
-                : '/' + cid + '/solve/' + question._id
-            }
-          >
-            <QuizListContent
-              key={index}
-              index={index + 1}
-              title={question.raw_string}
-              options={question.options.length}
-              date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
-              type={index + 1 === questionList.length ? 'End' : 'Content'}
-            />
-          </Link>
-        ))
-        .reverse()}
+      {qList.map((question: qinfoType, index: number) => (
+        <Link
+          style={{ color: 'inherit', textDecoration: 'none' }}
+          key={question._id}
+          to={
+            createOptions
+              ? '/' + cid + '/question/' + question._id + '/createOption'
+              : '/' + cid + '/solve/' + question._id
+          }
+        >
+          <QuizListContent
+            key={index}
+            index={index + 1}
+            title={question.raw_string}
+            options={question.options.length}
+            date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
+            type={index + 1 === qList.length ? 'End' : 'Content'}
+          />
+        </Link>
+      ))}
     </BoxShadow>
   )
 }
