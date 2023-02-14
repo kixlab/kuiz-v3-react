@@ -1,6 +1,6 @@
 # How to install requirements
 
-## Basic Syntax
+## Install packages in requirements.txt
 
 All the required packages are found in the requirements.txt file use that for your installation.
 
