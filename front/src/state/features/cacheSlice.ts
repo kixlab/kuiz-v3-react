@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { qinfoType } from '../../apiTypes/qinfo'
 import { optionType } from '../../apiTypes/option'
 import { clusterType } from '../../apiTypes/cluster'
+import { GetQstemByOptionResults } from '../../api/question/getQStemByOption'
 
 interface Question {
   qid: string
@@ -12,14 +13,22 @@ interface Question {
   distractorCluster: clusterType[]
 }
 
+interface optionWithQinfo extends optionType {
+  qinfo: GetQstemByOptionResults['qstems'][0]
+}
+
 interface Cache {
   qList: qinfoType[]
   visitedQuestions: Question[]
+  userMadeQuestions: qinfoType[]
+  userMadeOptions: optionWithQinfo[]
 }
 
 const initialState: Cache = {
   qList: [],
   visitedQuestions: [],
+  userMadeQuestions: [],
+  userMadeOptions: [],
 }
 
 export const cacheSlice = createSlice({
@@ -44,8 +53,37 @@ export const cacheSlice = createSlice({
         state.visitedQuestions.pop()
       }
     },
+    addUserMadeQuestions: (state, action: PayloadAction<Cache['userMadeQuestions']>) => {
+      for (let i = 0; i < action.payload.length; i++) {
+        state.userMadeQuestions.push(action.payload[i])
+      }
+    },
+    removeUserMadeQuestions: state => {
+      for (let i = 0; i < state.userMadeQuestions.length; i++) {
+        state.userMadeQuestions.pop()
+      }
+    },
+    addUserMadeOptions: (state, action: PayloadAction<Cache['userMadeOptions']>) => {
+      for (let i = 0; i < action.payload.length; i++) {
+        state.userMadeOptions.push(action.payload[i])
+      }
+    },
+    removeUserMadeOptions: state => {
+      for (let i = 0; i < state.userMadeOptions.length; i++) {
+        state.userMadeOptions.pop()
+      }
+    },
   },
 })
 
-export const { addQList, removeQList, addVisitedProblem, removeVisitedProblems } = cacheSlice.actions
+export const {
+  addQList,
+  removeQList,
+  addVisitedProblem,
+  removeVisitedProblems,
+  addUserMadeQuestions,
+  removeUserMadeQuestions,
+  addUserMadeOptions,
+  removeUserMadeOptions,
+} = cacheSlice.actions
 export const cacheReducer = cacheSlice.reducer

@@ -19,6 +19,7 @@ export function DetailAndCreateOption() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id
+  const visitedQuestions = useSelector((state: RootState) => state.cache.visitedQuestions)
   const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const [ansList, setAnsList] = useState<optionType[]>([])
@@ -32,18 +33,37 @@ export function DetailAndCreateOption() {
   const [keywords, setKeywords] = useState<string[]>([])
 
   useEffect(() => {
-    Get<LoadOptionsParams, LoadOptionsResults>(`${process.env.REACT_APP_BACK_END}/question/option/load`, {
-      qid: qid,
-    }).then(res => {
-      if (res) {
-        const ans = res.options.filter((op: optionType) => op.is_answer === true)
-        const dis = res.options.filter((op: optionType) => op.is_answer === false)
-
-        setAnsList(ans)
-        setDistList(dis)
-        setQinfo(res.qinfo)
+    let isVisited = false
+    for (const visitedQuestion of visitedQuestions) {
+      if (visitedQuestion.qid === qid) {
+        isVisited = true
+        const answer = []
+        const distractor = []
+        for (const ans of visitedQuestion.answerCluster) {
+          answer.push(ans.options[0])
+        }
+        for (const dis of visitedQuestion.distractorCluster) {
+          distractor.push(dis.options[0])
+        }
+        setAnsList(answer)
+        setDistList(distractor)
+        setQinfo(visitedQuestion.question)
       }
-    })
+    }
+    if (isVisited === false) {
+      Get<LoadOptionsParams, LoadOptionsResults>(`${process.env.REACT_APP_BACK_END}/question/option/load`, {
+        qid: qid,
+      }).then(res => {
+        if (res) {
+          const ans = res.options.filter((op: optionType) => op.is_answer === true)
+          const dis = res.options.filter((op: optionType) => op.is_answer === false)
+
+          setAnsList(ans)
+          setDistList(dis)
+          setQinfo(res.qinfo)
+        }
+      })
+    }
   }, [navigate, qid, setAnsList, setDistList, setQinfo])
 
   const submit = useCallback(() => {
