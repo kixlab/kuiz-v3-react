@@ -4,7 +4,7 @@ import { Label } from '../Components/basic/Label'
 import { CreateNewOption } from '../Components/CreateNewOption'
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../state/store'
 import draftToHtml from 'draftjs-to-html'
 import { qinfoType } from '../apiTypes/qinfo'
@@ -13,8 +13,10 @@ import ObjectID from 'bson-objectid'
 import { Post, Get } from '../utils/apiRequest'
 import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
 import { LoadOptionsParams, LoadOptionsResults } from '../api/question/option/loadOptions'
+import { removeQList } from '../state/features/cacheSlice'
 
 export function DetailAndCreateOption() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id
   const cid = useParams().cid
@@ -71,6 +73,7 @@ export function DetailAndCreateOption() {
         optionData: optionData,
         similarOptions: similarOptions,
       }).then((res: OptionCreateResults | null) => {
+        dispatch(removeQList())
         res && navigate('/' + cid)
       })
   }, [ansList, cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])

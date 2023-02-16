@@ -47,8 +47,15 @@ export function CreateQuestion() {
 
     const rawString = qstemObj && qstemObj.raw_string
     const wordcount = rawString && rawString.split(' ').filter(word => word !== '').length
-    if (wordcount && (rawString === null || wordcount < 1)) {
+    if (rawString === null || rawString?.length === 0 || wordcount === null || (wordcount && wordcount <= 0)) {
       alert('Please enter a question.')
+      return
+    }
+    if (
+      explanation === null ||
+      convertToRaw(explanation.getCurrentContent()).blocks[0].text.replace(/\s/g, '').length === 0
+    ) {
+      alert('Please enter an explanation for how to solve the question.')
       return
     }
     if (answer === null || answer.match(/^\s*$/) !== null || answer.length === 0) {

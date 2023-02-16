@@ -15,11 +15,11 @@ import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/l
 import { LoadProblemListParams, LoadProblemListResults } from '../api/question/loadProblemList'
 import { CheckClassTypeParams, CheckClassTypeResults } from '../api/auth/checkClassType'
 import { useSelector, useDispatch } from 'react-redux'
-import { addQList } from '../state/features/qListSlice'
+import { addQList } from '../state/features/cacheSlice'
 
 export function MainPage() {
   const dispatch = useDispatch()
-  const qList = useSelector((state: RootState) => state.qList.qinfo)
+  const qList = useSelector((state: RootState) => state.cache.qList)
   const navigate = useNavigate()
   const cid = useParams().cid
   const location = useLocation()
@@ -59,7 +59,7 @@ export function MainPage() {
                 .catch(err => console.log(err))
             })
           )
-          dispatch(addQList({ qinfo: res.problemList.filter((q: qinfoType, j: number) => valid[j]).reverse() }))
+          dispatch(addQList(res.problemList.filter((q: qinfoType, j: number) => valid[j]).reverse()))
         }
       })
     },

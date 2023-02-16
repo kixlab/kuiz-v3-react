@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { RootState } from '../state/store'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { qinfoType } from '../apiTypes/qinfo'
 import { optionType } from '../apiTypes/option'
 import { clusterType } from '../apiTypes/cluster'
@@ -18,18 +17,24 @@ import { Post, Get } from '../utils/apiRequest'
 import { SolveQuestionParams, SolveQuestionResults } from '../api/question/solveQuestion'
 import { LoadProblemDetailParams, LoadProblemDetailResults } from '../api/question/loadProblemDetail'
 import { LoadClusterParams, LoadClusterResults } from '../api/question/cluster/loadCluster'
+import { useSelector, useDispatch } from 'react-redux'
+import { addVisitedProblem } from '../state/features/cacheSlice'
 
 export function SolvingQuestion() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id
+  const visitedQuestions = useSelector((state: RootState) => state.cache.visitedQuestions)
   const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
+  // all the options created for the question
   const [optionSet, setOptionSet] = useState<optionType[]>()
+  // the 4 options selected post shuffle
   const [options, setOptions] = useState<optionType[]>([])
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [ansVisible, setAnsVisible] = useState(true)
   const [selected, setSelected] = useState<number>(-1)
-  const [answer, setAnswer] = useState(0)
+  const [answer, setAnswer] = useState<number>()
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
@@ -44,41 +49,72 @@ export function SolvingQuestion() {
     return array
   }, [])
 
-  const getQinfo = useCallback((qid: string | undefined) => {
-    let optionList
-    Get<LoadProblemDetailParams, LoadProblemDetailResults>(`${process.env.REACT_APP_BACK_END}/question/detail/load`, {
-      qid: qid,
-    }).then((res: LoadProblemDetailResults | null) => {
-      if (res) {
-        Get<LoadClusterParams, LoadClusterResults>(`${process.env.REACT_APP_BACK_END}/question/load/cluster`, {
-          qid: qid,
+  const getQinfo = useCallback((qid: string) => {
+    let isVisited = false
+    for (const visitedQuestion of visitedQuestions) {
+      if (visitedQuestion.qid === qid) {
+        isVisited = true
+        setQinfo(visitedQuestion.question)
+        setOptions(visitedQuestion.options)
+        const ansList = getMultipleRandom(visitedQuestion.answerCluster, 1)
+        const disList = getMultipleRandom(visitedQuestion.distractorCluster, 3)
+        const optionList = shuffle(
+          ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
+        )
+        optionList.forEach((o: optionType, i: number) => {
+          if (o.is_answer) {
+            setAnswer(i)
+          }
         })
-          .then((res2: LoadClusterResults | null) => {
-            if (res2) {
-              const cluster = res2.cluster
-              const ans = cluster.filter((c: clusterType) => c.representative.is_answer)
-              const dis = cluster.filter((c: clusterType) => !c.representative.is_answer)
-              const ansList = getMultipleRandom(ans, 1)
-              const disList = getMultipleRandom(dis, 3)
-
-              optionList = shuffle(
-                ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
-              )
-
-              setOptionSet(optionList)
-              optionList.forEach((o: optionType, i: number) => {
-                if (o.is_answer) {
-                  setAnswer(i)
-                }
-              })
-            }
-
-            setOptions(res.options)
-            setQinfo(res.qinfo)
-          })
-          .catch(err => console.log(err))
+        setOptionSet(optionList)
+        break
       }
-    })
+    }
+    if (isVisited === false) {
+      Get<LoadProblemDetailParams, LoadProblemDetailResults>(`${process.env.REACT_APP_BACK_END}/question/detail/load`, {
+        qid: qid,
+      }).then((res: LoadProblemDetailResults | null) => {
+        if (res) {
+          Get<LoadClusterParams, LoadClusterResults>(`${process.env.REACT_APP_BACK_END}/question/load/cluster`, {
+            qid: qid,
+          })
+            .then((res2: LoadClusterResults | null) => {
+              if (res2) {
+                const cluster = res2.cluster
+                const ans = cluster.filter((c: clusterType) => c.representative.is_answer)
+                const dis = cluster.filter((c: clusterType) => !c.representative.is_answer)
+                const ansList = getMultipleRandom(ans, 1)
+                const disList = getMultipleRandom(dis, 3)
+
+                const optionList = shuffle(
+                  ansList.map((a: any) => a.representative).concat(disList.map((d: any) => d.representative))
+                )
+
+                setOptionSet(optionList)
+
+                optionList.forEach((o: optionType, i: number) => {
+                  if (o.is_answer) {
+                    setAnswer(i)
+                  }
+                })
+
+                setOptions(res.options)
+                setQinfo(res.qinfo)
+                dispatch(
+                  addVisitedProblem({
+                    qid: qid,
+                    question: res.qinfo,
+                    options: res.options,
+                    answerCluster: ans,
+                    distractorCluster: dis,
+                  })
+                )
+              }
+            })
+            .catch(err => console.log(err))
+        }
+      })
+    }
   }, [])
 
   const checkAnswer = useCallback(() => {
@@ -99,16 +135,16 @@ export function SolvingQuestion() {
   }, [ansVisible, qid, uid, optionSet, selected, answer, options])
 
   useEffect(() => {
-    getQinfo(qid)
+    qid && getQinfo(qid)
   }, [getQinfo, qid])
 
   const shuffleOptions = useCallback(() => {
-    getQinfo(qid)
+    qid && getQinfo(qid)
     setIsSolved(false)
     setSelected(-1)
     setAnsVisible(false)
     setShowAnswer(false)
-  }, [qid])
+  }, [])
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
