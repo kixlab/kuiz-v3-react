@@ -1,9 +1,3 @@
-# How to install nltk?
-# 1. pip install nltk
-# 2. to install the corpus uncomment the following 2 lines and follow the popup steps
-# import nltk
-# nltk.download()
-
 from nltk.corpus import wordnet 
 from pywsd.similarity import max_similarity
 from pywsd.lesk import simple_lesk
