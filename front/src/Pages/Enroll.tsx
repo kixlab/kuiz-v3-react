@@ -12,10 +12,10 @@ import { JoinClassParams, JoinClassResults } from '../api/auth/joinClass'
 export function Enroll() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [code, setCode] = useState<string>('')
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const email = useSelector((state: RootState) => state.userInfo.email)
   const userInfo = useSelector((state: RootState) => state.userInfo)
+  const [code, setCode] = useState<string>('')
 
   const detectChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -10,7 +10,6 @@ import { CheckClassTypeParams, CheckClassTypeResults } from '../api/auth/checkCl
 export const PageNotFound = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const uid = useSelector((state: RootState) => state.userInfo?._id)
 
   const checkValidUser = useCallback(() => {

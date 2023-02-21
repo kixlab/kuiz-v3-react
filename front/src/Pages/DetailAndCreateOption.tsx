@@ -14,18 +14,21 @@ import { Post, Get } from '../utils/apiRequest'
 import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
 import { LoadOptionsParams, LoadOptionsResults } from '../api/question/option/loadOptions'
 import { removeQList } from '../state/features/cacheSlice'
+import { addVisitedOptions, removeVisitedOptions, removeUserMadeOptions } from '../state/features/cacheSlice'
 
 export function DetailAndCreateOption() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const qid = useParams().id
-  const visitedQuestions = useSelector((state: RootState) => state.cache.visitedQuestions)
   const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const [ansList, setAnsList] = useState<optionType[]>([])
   const [disList, setDistList] = useState<optionType[]>([])
   const [qinfo, setQinfo] = useState<qinfoType>()
   const [similarOptions, setSimilarOptions] = useState<string[]>([])
+  const visitedQuestions = useSelector((state: RootState) => state.cache.visitedQuestions)
+  const visitedOptions = useSelector((state: RootState) => state.cache.visitedOptions)
+  const [isVisited, setIsVisited] = useState(false)
 
   // My option values
   const [option, setOption] = useState('')
@@ -33,21 +36,32 @@ export function DetailAndCreateOption() {
   const [keywords, setKeywords] = useState<string[]>([])
 
   useEffect(() => {
-    let isVisited = false
-    for (const visitedQuestion of visitedQuestions) {
-      if (visitedQuestion.qid === qid) {
-        isVisited = true
-        const answer = []
-        const distractor = []
-        for (const ans of visitedQuestion.answerCluster) {
-          answer.push(ans.options[0])
+    for (const visitedOption of visitedOptions) {
+      if (visitedOption.qid === qid) {
+        setIsVisited(true)
+        setAnsList(visitedOption.answers)
+        setDistList(visitedOption.distractors)
+        setQinfo(visitedOption.question)
+        break
+      }
+    }
+    if (isVisited === false) {
+      for (const visitedQuestion of visitedQuestions) {
+        if (visitedQuestion.qid === qid) {
+          setIsVisited(true)
+          const answer = []
+          const distractor = []
+          for (const ans of visitedQuestion.answerCluster) {
+            answer.push(ans.options[0])
+          }
+          for (const dis of visitedQuestion.distractorCluster) {
+            distractor.push(dis.options[0])
+          }
+          setAnsList(answer)
+          setDistList(distractor)
+          setQinfo(visitedQuestion.question)
+          break
         }
-        for (const dis of visitedQuestion.distractorCluster) {
-          distractor.push(dis.options[0])
-        }
-        setAnsList(answer)
-        setDistList(distractor)
-        setQinfo(visitedQuestion.question)
       }
     }
     if (isVisited === false) {
@@ -57,10 +71,10 @@ export function DetailAndCreateOption() {
         if (res) {
           const ans = res.options.filter((op: optionType) => op.is_answer === true)
           const dis = res.options.filter((op: optionType) => op.is_answer === false)
-
           setAnsList(ans)
           setDistList(dis)
           setQinfo(res.qinfo)
+          qid && dispatch(addVisitedOptions({ qid: qid, question: res.qinfo, answers: ans, distractors: dis }))
         }
       })
     }
@@ -94,6 +108,8 @@ export function DetailAndCreateOption() {
         similarOptions: similarOptions,
       }).then((res: OptionCreateResults | null) => {
         dispatch(removeQList())
+        dispatch(removeUserMadeOptions())
+        dispatch(removeVisitedOptions())
         res && navigate('/' + cid)
       })
   }, [ansList, cid, isAnswer, keywords, navigate, option, qid, similarOptions, uid])

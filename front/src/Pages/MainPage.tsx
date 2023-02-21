@@ -19,12 +19,12 @@ import { addQList } from '../state/features/cacheSlice'
 
 export function MainPage() {
   const dispatch = useDispatch()
-  const qList = useSelector((state: RootState) => state.cache.qList)
   const navigate = useNavigate()
-  const cid = useParams().cid
   const location = useLocation()
   const createOptions = location.pathname.includes('qlist')
+  const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
+  const qList = useSelector((state: RootState) => state.cache.qList)
 
   const getQuestionList = useCallback(
     (cid: string) => {

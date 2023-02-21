@@ -5,7 +5,7 @@ import { Label } from '../Components/basic/Label'
 import { useCallback, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../state/store'
 import { palette } from '../styles/theme'
 import ObjectID from 'bson-objectid'
@@ -13,9 +13,11 @@ import { Post } from '../utils/apiRequest'
 import { TextInput } from '../Components/basic/InputBox'
 import { CreateQStemParams, CreateQStemResults } from '../api/question/createQStem'
 import { OptionCreateParams, OptionCreateResults } from '../api/question/option/optionCreate'
+import { removeUserMadeQuestions } from '../state/features/cacheSlice'
 
 export function CreateQuestion() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const cid = useParams().cid
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const [answer, setAnswer] = useState('')
@@ -92,10 +94,13 @@ export function CreateQuestion() {
           }
           return res
         })
-        .then(
-          (res: CreateQStemResults | null) => res && navigate('/' + cid + '/question/' + res.data + '/createOption')
-        )
-  }, [uid, cid, answer, objective, question, explanation])
+        .then((res: CreateQStemResults | null) => {
+          if (res) {
+            dispatch(removeUserMadeQuestions())
+            navigate('/' + cid + '/question/' + res.data + '/createOption')
+          }
+        })
+  }, [uid, cid, answer, objective, question, explanation, removeUserMadeQuestions])
 
   return (
     <CreateQBox>

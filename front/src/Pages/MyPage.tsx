@@ -31,10 +31,10 @@ export function MyPage(props: Props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const uid = useSelector((state: RootState) => state.userInfo?._id)
-  const [madeStem, setMadeStem] = useState<qinfoType[]>([])
-  const [madeOption, setMadeOption] = useState<optionWithQinfo[]>([])
   const userMadeOptions = useSelector((state: RootState) => state.cache.userMadeOptions)
   const userMadeQuestions = useSelector((state: RootState) => state.cache.userMadeQuestions)
+  const [madeStem, setMadeStem] = useState<qinfoType[]>([])
+  const [madeOption, setMadeOption] = useState<optionWithQinfo[]>([])
 
   const getMadeStem = useCallback(() => {
     if (userMadeQuestions.length > 0) {

@@ -38,6 +38,7 @@ export function SolvingQuestion() {
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [isVisited, setIsVisited] = useState(false)
 
   const getMultipleRandom = useCallback((arr: clusterType[], num: number) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random())
@@ -50,10 +51,9 @@ export function SolvingQuestion() {
   }, [])
 
   const getQinfo = useCallback((qid: string) => {
-    let isVisited = false
     for (const visitedQuestion of visitedQuestions) {
       if (visitedQuestion.qid === qid) {
-        isVisited = true
+        setIsVisited(true)
         setQinfo(visitedQuestion.question)
         setOptions(visitedQuestion.options)
         const ansList = getMultipleRandom(visitedQuestion.answerCluster, 1)
