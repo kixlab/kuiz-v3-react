@@ -6,7 +6,6 @@ import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
 import { palette } from '@styles/theme'
 import { request } from '@utils/api'
-import ObjectID from 'bson-objectid'
 import { convertToRaw, EditorState } from 'draft-js'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
@@ -33,13 +32,13 @@ export default function Page() {
 
   const submitStem = useCallback(() => {
     const qstemObj = cid && {
-      uid: ObjectID(uid),
+      uid,
       stem_text: JSON.stringify(convertToRaw(question.getCurrentContent())),
       raw_string: question.getCurrentContent().getPlainText('\u0001'),
       explanation: JSON.stringify(convertToRaw(explanation.getCurrentContent())),
       action_verb: [],
       keyword: [],
-      cid: ObjectID(cid),
+      cid,
       options: [],
       optionSets: [],
       learning_objective: objective,

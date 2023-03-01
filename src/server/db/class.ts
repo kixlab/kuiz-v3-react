@@ -1,6 +1,6 @@
-import { Types, Schema, model } from 'mongoose'
+import { Types, Schema, model, Document } from 'mongoose'
 
-export interface Class {
+export interface Class extends Document {
   code: string
   students: Types.ObjectId[]
   qstems: Types.ObjectId[]

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { request } from '@utils/api'
+import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { FillBtn } from '../components/basic/button/Button'
 import { TextInput } from '../components/basic/InputBox'
 import { enroll, login } from '../redux/features/userSlice'
@@ -10,9 +10,9 @@ import { RootState } from '../redux/store'
 import { JoinClassParams, JoinClassResults } from './api/auth/joinClass'
 
 export default function Page() {
-  const navigate = useNavigate()
+  const { push } = useRouter()
   const dispatch = useDispatch()
-  const [code, setCode] = useState<string>('')
+  const [code, setCode] = useState('')
   const uid = useSelector((state: RootState) => state.userInfo._id)
   const email = useSelector((state: RootState) => state.userInfo.email)
   const userInfo = useSelector((state: RootState) => state.userInfo)
@@ -27,9 +27,9 @@ export default function Page() {
   useEffect(() => {
     if (userInfo.classes.length > 0) {
       const cid = userInfo.classes[0]
-      navigate('/' + cid)
+      push('/' + cid)
     }
-  }, [navigate, userInfo.classes])
+  }, [push, userInfo.classes])
 
   const onSubmit = useCallback(() => {
     email &&
@@ -42,10 +42,10 @@ export default function Page() {
           const newInfo = { ...userInfo }
           newInfo['classes'] = [{ cid: res.cid, cType: res.cType }]
           dispatch(login(newInfo))
-          navigate('/' + res.cid)
+          push('/' + res.cid)
         }
       })
-  }, [email, uid, code, userInfo, dispatch, navigate])
+  }, [email, uid, code, userInfo, dispatch, push])
 
   return (
     <CodeInputBox>

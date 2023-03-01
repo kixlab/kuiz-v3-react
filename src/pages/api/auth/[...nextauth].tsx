@@ -16,7 +16,7 @@ export default NextAuth({
     async signIn({ user }) {
       const userInfo = await UserModel.findOne({ authId: user.id.toString() })
       if (!userInfo) {
-        await userService.create(user.name ?? '', user.email ?? '', user.image ?? '')
+        await userService.create(user.name ?? '', user.email ?? '', user.image ?? '', user.id.toString())
       }
       return true
     },

@@ -1,25 +1,21 @@
 import { css } from '@emotion/react'
-import raleway from '../Asset/Raleway-ExtraBold.ttf'
-import interR from '../Asset/Inter-Regular.ttf'
-import interM from '../Asset/Inter-Medium.ttf'
-import interSb from '../Asset/Inter-SemiBold.ttf'
 
 export const GlobalStyles = css`
   @font-face {
     font-family: 'raleway';
-    src: url(${raleway});
+    src: url('/Raleway-ExtraBold.ttf');
   }
   @font-face {
     font-family: 'inter-r';
-    src: url(${interR});
+    src: url('/Inter-Regular.ttf');
   }
   @font-face {
     font-family: 'inter-m';
-    src: url(${interM});
+    src: url('/Inter-Medium.ttf');
   }
   @font-face {
     font-family: 'inter-sb';
-    src: url(${interSb});
+    src: url('Inter-SemiBold.ttf');
   }
   body {
     background-color: #e6eaef;

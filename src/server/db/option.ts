@@ -1,6 +1,6 @@
-import { model, Schema, Types } from 'mongoose'
+import { model, Schema, Types, Document } from 'mongoose'
 
-export interface Option {
+export interface Option extends Document {
   author: Types.ObjectId
   option_text: string
   explanation: string

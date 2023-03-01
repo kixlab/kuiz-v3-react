@@ -84,7 +84,7 @@ export default function Page() {
     if (!ansVisible && optionSet && selected && qid) {
       request<SolveQuestionParams, SolveQuestionResults>(`question/solve`, {
         qid,
-        uid: uid,
+        uid,
         initAns: optionSet[selected]._id,
         isCorrect: selected === answer,
         optionSet: options.map(o => o._id),

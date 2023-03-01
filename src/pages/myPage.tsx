@@ -37,7 +37,7 @@ export default function Page() {
     }).then(res => {
       if (res) {
         request<GetQstemByOptionParams, GetQstemByOptionResults>(`question/qstembyoption`, {
-          qstems: res.madeOption.map(o => o.qstem),
+          qstems: res.madeOption.map(o => o.qstem.toString()),
         }).then(res2 => {
           if (res2) {
             const optionList = res.madeOption

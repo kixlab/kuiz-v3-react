@@ -1,6 +1,6 @@
-import { model, Schema, Types } from 'mongoose'
+import { model, Schema, Types, Document } from 'mongoose'
 
-export interface QStem {
+export interface QStem extends Document {
   author: Types.ObjectId
   stem_text: string
   raw_string: string

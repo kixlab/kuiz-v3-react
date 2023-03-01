@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
+import { typography, palette } from '@styles/theme'
 import { useState } from 'react'
-import { palette, typography } from '../../../../front/src/styles/theme'
 import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
