@@ -4,9 +4,7 @@ import { ID } from 'src/types/common'
 
 export interface CreateQStemParams {
   qstemObj: {
-    uid: ID
     stem_text: string
-    raw_string: string
     explanation: string
     action_verb: string[]
     keyword: string[]
@@ -15,15 +13,14 @@ export interface CreateQStemParams {
     optionSets: ID[]
     learning_objective: string
   }
-  cid: ID
 }
 
 export interface CreateQStemResults {
   data: string
 }
 
-export default apiController<CreateQStemParams, CreateQStemResults>(async ({ qstemObj, cid }) => {
-  const qStem = await qStemService.create(qstemObj)
+export default apiController<CreateQStemParams, CreateQStemResults>(async ({ qstemObj }, user) => {
+  const qStem = await qStemService.create({ uid: user.id, ...qstemObj })
 
   return {
     data: qStem.id,

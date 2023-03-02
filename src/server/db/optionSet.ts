@@ -1,6 +1,7 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model, Types, models } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface OptionSet {
+export interface OptionSet extends Doc {
   options: Types.ObjectId[]
   qstem: Types.ObjectId
   class: Types.ObjectId
@@ -30,4 +31,4 @@ const OptionSetSchema = new Schema<OptionSet>({
   },
 })
 
-export const OptionSetModel = model<OptionSet>('OptionSet', OptionSetSchema)
+export const OptionSetModel = models?.OptionSet ?? model<OptionSet>('OptionSet', OptionSetSchema)

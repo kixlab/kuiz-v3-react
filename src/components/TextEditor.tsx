@@ -1,37 +1,28 @@
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { CSSProperties } from 'react'
-import { EditorState } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
 import { palette } from '@styles/theme'
+import styled from '@emotion/styled'
+import { useCallback } from 'react'
 
 interface Props {
-  editorState: EditorState
-  onChange: (state: EditorState) => void
+  value: string
+  placeholder?: string
+  onChange: (state: string) => void
 }
 
-export const TextEditor = (props: Props) => {
-  return (
-    <Editor
-      editorState={props.editorState}
-      editorStyle={editorStyle}
-      onEditorStateChange={props.onChange}
-      placeholder="Write down the content here"
-      wrapperClassName="wrapper-class"
-      editorClassName="editor-class"
-      toolbarClassName="toolbar-class"
-      toolbar={{
-        inline: { inDropdown: true },
-        list: { inDropdown: true },
-        textAlign: { inDropdown: true },
-        link: { inDropdown: true },
-      }}
-    />
+export const TextEditor = ({ value, placeholder = 'Write down the content here', onChange }: Props) => {
+  const onValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onChange(e.target.value)
+    },
+    [onChange]
   )
+
+  return <Editor value={value} onChange={onValueChange} placeholder={placeholder} rows={4} />
 }
 
-const editorStyle: CSSProperties = {
-  border: `1px solid ${palette.grey[500]}`,
-  padding: '16px',
-  borderRadius: '6px',
-  height: '200px',
-}
+const Editor = styled.textarea`
+  border: 1px solid ${palette.grey[500]};
+  padding: 16px;
+  border-radius: 6px;
+  height: 200px;
+  resize: none;
+`

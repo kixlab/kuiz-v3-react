@@ -1,17 +1,18 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { useCallback } from 'react'
+import styled from '@emotion/styled'
 import { typography } from '@styles/theme'
+import { useCallback } from 'react'
 
 interface Props {
-  index: number
   title: string
   options: number
   date: Date
   type: 'Content' | 'End'
+  onSolve: () => void
+  onAddOption: () => void
 }
 
-export const QuizListContent = (props: Props) => {
+export const QuizListContent = ({ title, options, date, type, onAddOption, onSolve }: Props) => {
   const changeDate = useCallback((date: Date) => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
@@ -20,22 +21,27 @@ export const QuizListContent = (props: Props) => {
   }, [])
 
   return (
-    <QuizList id={props.type}>
-      <Item>{props.title}</Item>
-      <Item>{props.options}</Item>
-      <Item>{changeDate(props.date)}</Item>
+    <QuizList type={type}>
+      <Item>{title}</Item>
+      <Item>{options}</Item>
+      <Item>{changeDate(date)}</Item>
+      <button onClick={onSolve}>Solve</button>
+      <button onClick={onAddOption}>Add Option</button>
     </QuizList>
   )
 }
 
-const QuizList = styled.div<{ id?: 'Content' | 'End' }>`
+const QuizList = styled.div<{ type?: 'Content' | 'End' }>`
   display: grid;
   grid-template-columns: auto 110px 130px;
   background-color: white;
   place-items: left;
   padding: 20px;
+  ${typography.b02};
+  text-align: center;
+
   ${props =>
-    props.id === 'Content' &&
+    props.type === 'Content' &&
     css`
       border-bottom: 1px solid #dbdbdb;
       &:hover {
@@ -44,7 +50,7 @@ const QuizList = styled.div<{ id?: 'Content' | 'End' }>`
       }
     `}
   ${props =>
-    props.id === 'End' &&
+    props.type === 'End' &&
     css`
       border-radius: 0 0 8px 8px;
     `}
@@ -54,15 +60,10 @@ const QuizList = styled.div<{ id?: 'Content' | 'End' }>`
 `
 
 const Item = styled.div`
-  ${typography.b02};
-  padding-right: 20px;
   overflow: hidden;
   white-space: normal;
   line-height: 1.3;
-  max-height: 2.6em;
   word-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  max-height: 2.6em;
 `

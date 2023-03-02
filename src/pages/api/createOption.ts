@@ -4,9 +4,8 @@ import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
 
-export interface OptionCreateParams {
+export interface CreateOptionParams {
   optionData: {
-    author: ID
     option_text: string
     is_answer: boolean
     explanation: string
@@ -17,15 +16,13 @@ export interface OptionCreateParams {
   similarOptions: ID[]
 }
 
-export interface OptionCreateResults {
+export interface CreateOptionResults {
   option: Option
 }
 
-export default apiController<OptionCreateParams, OptionCreateResults>(async ({ optionData, similarOptions }) => {
-  console.log(optionData)
-
+export default apiController<CreateOptionParams, CreateOptionResults>(async ({ optionData, similarOptions }, user) => {
   const option = await optionService.create({
-    uid: new Types.ObjectId(optionData.author),
+    uid: new Types.ObjectId(user.id),
     cid: new Types.ObjectId(optionData.class),
     qid: new Types.ObjectId(optionData.qstem),
     isAnswer: optionData.is_answer,

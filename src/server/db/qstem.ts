@@ -1,9 +1,9 @@
-import { model, Schema, Types, Document } from 'mongoose'
+import { model, models, Schema, Types } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface QStem extends Document {
+export interface QStem extends Doc {
   author: Types.ObjectId
   stem_text: string
-  raw_string: string
   action_verb: string[]
   keyword: string[]
   learning_objective: string
@@ -23,10 +23,6 @@ const QstemSchema = new Schema<QStem>(
       ref: 'User',
     },
     stem_text: {
-      type: String,
-      required: true,
-    },
-    raw_string: {
       type: String,
       required: true,
     },
@@ -92,4 +88,4 @@ const QstemSchema = new Schema<QStem>(
   }
 )
 
-export const QStemModel = model<QStem>('Qstem', QstemSchema)
+export const QStemModel = models?.Qstem ?? model<QStem>('Qstem', QstemSchema)

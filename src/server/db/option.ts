@@ -1,6 +1,7 @@
-import { model, Schema, Types, Document } from 'mongoose'
+import { model, models, Schema, Types } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface Option extends Document {
+export interface Option extends Doc {
   author: Types.ObjectId
   option_text: string
   explanation: string
@@ -131,4 +132,4 @@ const optionSchema = new Schema<Option>({
   },
 })
 
-export const OptionModel = model('Option', optionSchema)
+export const OptionModel = models?.Option ?? model('Option', optionSchema)

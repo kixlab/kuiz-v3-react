@@ -1,6 +1,7 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model, Types, models } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface User {
+export interface User extends Doc {
   name: string
   email: string
   imageUrl: string
@@ -101,4 +102,4 @@ const UserSchema = new Schema<User>({
   },
 })
 
-export const UserModel = model<User>('User', UserSchema)
+export const UserModel = models?.User ?? model<User>('User', UserSchema)

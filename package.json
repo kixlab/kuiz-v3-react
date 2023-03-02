@@ -8,11 +8,14 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "style-check": "prettier --check 'src/**/*.{tsx,ts}'"
+    "style-check": "prettier --check 'src/**/*.{tsx,ts}'",
+    "pm2:start:dev": "pm2 start npm --name dev -- run dev",
+    "pm2:restart:dev": "pm2 restart dev"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@reduxjs/toolkit": "^1.9.3",
@@ -28,6 +31,7 @@
     "mongoose": "^7.0.0",
     "next": "13.2.1",
     "next-auth": "^4.19.2",
+    "pm2": "^5.2.2",
     "prettier": "^2.8.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

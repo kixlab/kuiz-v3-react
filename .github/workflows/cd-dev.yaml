@@ -1,4 +1,4 @@
-name: CD-Front-dev
+name: CD-Back-dev
 
 # Controls when the workflow will run
 on:
@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - develop
-    paths:
-      - front/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,6 +26,5 @@ jobs:
           script_stop: true
           script: |
             cd kuiz
-            cd front
             git pull
             yarn pm2:restart:dev

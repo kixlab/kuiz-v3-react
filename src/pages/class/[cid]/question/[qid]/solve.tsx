@@ -1,26 +1,20 @@
+import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
 import { FillBtn, StrokeBtn } from '@components/basic/button/Button'
 import { OptionBtn } from '@components/basic/button/OptionButton'
 import { InputDialog } from '@components/Dialogs/InputDialog'
 import styled from '@emotion/styled'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { RootState } from '@redux/store'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
 import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { LoadClusterParams, LoadClusterResults } from 'src/pages/api/question/cluster/loadCluster'
-import { LoadProblemDetailParams, LoadProblemDetailResults } from 'src/pages/api/question/loadProblemDetail'
-import { SolveQuestionParams, SolveQuestionResults } from 'src/pages/api/question/solveQuestion'
+import { LoadProblemDetailParams, LoadProblemDetailResults } from '@api/loadProblemDetail'
+import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
 
 export default function Page() {
-  const { push, query } = useRouter()
-  const qid = query.id as string | undefined
-  const cid = query.cid as string | undefined
-  const uid = useSelector((state: RootState) => state.userInfo._id)
+  const { query } = useRouter()
+  const qid = query.qid as string | undefined
   const [optionSet, setOptionSet] = useState<Option[]>()
   const [options, setOptions] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
@@ -43,11 +37,11 @@ export default function Page() {
 
   const getQinfo = useCallback(
     (qid: string) => {
-      request<LoadProblemDetailParams, LoadProblemDetailResults>(`question/detail/load`, {
+      request<LoadProblemDetailParams, LoadProblemDetailResults>(`loadProblemDetail`, {
         qid,
       }).then(res => {
         if (res) {
-          request<LoadClusterParams, LoadClusterResults>(`question/load/cluster`, {
+          request<LoadClusterParams, LoadClusterResults>(`loadCluster`, {
             qid,
           })
             .then(res2 => {
@@ -82,9 +76,8 @@ export default function Page() {
 
   const checkAnswer = useCallback(() => {
     if (!ansVisible && optionSet && selected && qid) {
-      request<SolveQuestionParams, SolveQuestionResults>(`question/solve`, {
+      request<SolveQuestionParams, SolveQuestionResults>(`solveQuestion`, {
         qid,
-        uid,
         initAns: optionSet[selected]._id,
         isCorrect: selected === answer,
         optionSet: options.map(o => o._id),
@@ -93,11 +86,13 @@ export default function Page() {
       })
     }
     setAnsVisible(!ansVisible)
-  }, [ansVisible, qid, uid, optionSet, selected, answer, options])
+  }, [ansVisible, qid, optionSet, selected, answer, options])
 
   useEffect(() => {
+    console.log(qid)
     if (qid) {
       getQinfo(qid)
+      console.log(qid)
     }
   }, [getQinfo, qid])
 
@@ -127,10 +122,7 @@ export default function Page() {
 
   return (
     <QuestionBox>
-      <ReturnBtn onClick={() => push('/' + cid)}>
-        <FontAwesomeIcon icon={faArrowLeft} /> Return to Question List
-      </ReturnBtn>
-      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
+      <Label>Q. {qinfo?.stem_text}</Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
@@ -177,16 +169,6 @@ const QuestionBox = styled.div`
   margin: 30px;
   @media (max-width: 599px) {
     margin: 30px 0 30px 0;
-  }
-`
-
-const ReturnBtn = styled.div`
-  cursor: pointer;
-  font-size: 15px;
-  font-family: 'inter-m';
-  color: #616161;
-  :hover {
-    color: #919191;
   }
 `
 

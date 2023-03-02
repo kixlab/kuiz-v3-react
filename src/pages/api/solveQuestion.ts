@@ -4,7 +4,6 @@ import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
 
 export interface SolveQuestionParams {
-  uid: ID
   initAns: string
   qid: ID
   optionSet: ID[]
@@ -16,7 +15,7 @@ export interface SolveQuestionResults {
 }
 
 export default apiController<SolveQuestionParams, SolveQuestionResults>(
-  async ({ uid, initAns, qid, optionSet, isCorrect }) => {
+  async ({ initAns, qid, optionSet, isCorrect }, user) => {
     const solved = {
       question: new Types.ObjectId(qid),
       history: {
@@ -26,7 +25,7 @@ export default apiController<SolveQuestionParams, SolveQuestionResults>(
       },
     }
 
-    await UserModel.findByIdAndUpdate(uid, { $push: { solved } })
+    await user.updateOne({ $push: { solved } })
     return {
       success: true,
     }

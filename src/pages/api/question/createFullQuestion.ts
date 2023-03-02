@@ -12,6 +12,7 @@ export interface CreateFullQuestionParams {
   }[]
   qinfo: {
     authorId: ID
+    stem_text: string
   }
   cid: ID
   explanation: string
@@ -35,8 +36,7 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
     const question = await qStemService.create({
       uid: qinfo.authorId,
       cid,
-      stem_text: qinfo.authorId,
-      raw_string: qinfo.authorId,
+      stem_text: qinfo.stem_text,
       learning_objective: qinfo.authorId,
       explanation: qinfo.authorId,
     })

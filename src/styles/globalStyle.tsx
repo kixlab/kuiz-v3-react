@@ -15,7 +15,7 @@ export const GlobalStyles = css`
   }
   @font-face {
     font-family: 'inter-sb';
-    src: url('Inter-SemiBold.ttf');
+    src: url('/Inter-SemiBold.ttf');
   }
   body {
     background-color: #e6eaef;

@@ -1,6 +1,7 @@
-import { Types, Schema, model, Document } from 'mongoose'
+import { model, models, Schema, Types } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface Class extends Document {
+export interface Class extends Doc {
   code: string
   students: Types.ObjectId[]
   qstems: Types.ObjectId[]
@@ -38,4 +39,4 @@ const ClassSchema = new Schema<Class>({
   },
 })
 
-export const ClassModel = model('Class', ClassSchema)
+export const ClassModel = models?.Class ?? model('Class', ClassSchema)

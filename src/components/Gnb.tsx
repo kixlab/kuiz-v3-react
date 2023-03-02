@@ -1,17 +1,14 @@
 import styled from '@emotion/styled'
+import { palette, typography } from '@styles/theme'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { useCallback, useState } from 'react'
-import { palette, typography } from '@styles/theme'
-import { useRouter } from 'next/router'
 
-interface Props {
-  loginState: boolean
-}
-
-export const Gnb = (props: Props) => {
+export const Gnb = () => {
   const { push } = useRouter()
-  //TODO: make it so that classes can be chosen
+  const { data } = useSession()
   const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
@@ -26,17 +23,15 @@ export const Gnb = (props: Props) => {
 
   return (
     <SideTab className="SideTab">
-      <Logo onClick={() => props.loginState && push('/' + cid)}>
+      <Logo onClick={() => data && push('/' + cid)}>
         <LogoIcon src={'/logo.svg'} />
         KUIZ
       </Logo>
-      {props.loginState == true && (
+      {data && (
         <>
           <Menu isDisplay={isDisplay}>
-            <MenuBtn onClick={onClickMenu('/' + cid)}>Solve Problem</MenuBtn>
-            <MenuBtn onClick={onClickMenu('/' + cid + '/createQuestion')}>Create Question</MenuBtn>
-            <MenuBtn onClick={onClickMenu('/' + cid)}>Create Options</MenuBtn>
-            <MenuBtn onClick={onClickMenu('/mypage')}>My Page</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/')}>Switch Class</MenuBtn>
+            <MenuBtn onClick={onClickMenu('/my-page')}>My Page</MenuBtn>
           </Menu>
           <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
         </>

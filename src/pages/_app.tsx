@@ -1,38 +1,26 @@
+import { GlobalDialog } from '@components/GlobalDialog'
+import { Gnb } from '@components/Gnb'
 import { Global } from '@emotion/react'
 import styled from '@emotion/styled'
-import { RootState, store } from '@redux/store'
+import { store } from '@redux/store'
+import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
-import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Provider } from 'react-redux'
 import { GlobalStyles } from 'src/styles/globalStyle'
-import { removeError } from '@redux/features/errorSlice'
-import { CheckDialog } from '@components/Dialogs/CheckDialog'
-import { Gnb } from '@components/Gnb'
 
 export default function App({ Component, pageProps }: AppProps) {
-  const dispatch = useDispatch()
-  const userInfo = useSelector((state: RootState) => state.userInfo)
-  const errorTitle = useSelector((state: RootState) => state.error.title)
-  const errorMessage = useSelector((state: RootState) => state.error.message)
-  const errorAvailable = useSelector((state: RootState) => state.error.error)
-
   return (
     <Provider store={store}>
-      <Container>
-        <Global styles={GlobalStyles} />
-        <Gnb loginState={userInfo.isLoggedIn} />
-        <CheckDialog
-          title={errorTitle}
-          message={errorMessage}
-          modalState={errorAvailable}
-          btnName="Ok"
-          toggleModal={() => {
-            dispatch(removeError())
-          }}
-        />
-        <InnerBox>
-          <Component {...pageProps} />
-        </InnerBox>
-      </Container>
+      <SessionProvider session={pageProps.session}>
+        <Container>
+          <Global styles={GlobalStyles} />
+          <Gnb />
+          <GlobalDialog />
+          <InnerBox>
+            <Component {...pageProps} />
+          </InnerBox>
+        </Container>
+      </SessionProvider>
     </Provider>
   )
 }

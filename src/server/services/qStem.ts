@@ -6,7 +6,6 @@ import { UserModel } from '../db/user'
 interface QStemData {
   uid: string
   stem_text: string
-  raw_string: string
   explanation: string
   action_verb?: string[]
   keyword?: string[]
@@ -20,7 +19,6 @@ class QStemService {
   async create({
     uid,
     stem_text,
-    raw_string,
     explanation,
     action_verb = [],
     keyword = [],
@@ -32,7 +30,6 @@ class QStemService {
     const qStem = new QStemModel({
       author: uid,
       stem_text,
-      raw_string,
       explanation,
       action_verb,
       keyword,

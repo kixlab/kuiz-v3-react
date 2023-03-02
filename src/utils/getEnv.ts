@@ -7,4 +7,5 @@ export const Env = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? '',
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? '',
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ?? '',
+  OPEN_AI_KEY: process.env.OPEN_AI_KEY ?? '',
 }

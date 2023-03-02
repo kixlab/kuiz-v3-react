@@ -5,13 +5,12 @@ import { ID } from 'src/types/common'
 
 export interface RemoveDownVoteParams {
   oid: ID
-  uid: ID
 }
 
 export interface RemoveDownVoteResults {}
 
-export default apiController<RemoveDownVoteParams, RemoveDownVoteResults>(async ({ oid, uid }) => {
-  await optionService.removeVote('disliked', new Types.ObjectId(oid), new Types.ObjectId(uid))
+export default apiController<RemoveDownVoteParams, RemoveDownVoteResults>(async ({ oid }, user) => {
+  await optionService.removeVote('disliked', new Types.ObjectId(oid), new Types.ObjectId(user.id))
 
   return {}
 })

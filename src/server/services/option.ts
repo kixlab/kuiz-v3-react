@@ -87,7 +87,7 @@ class OptionService {
   }
 
   async addVote(type: 'liked' | 'disliked', oid: Types.ObjectId, uid: Types.ObjectId): Promise<void> {
-    const option = await OptionModel.findById(oid)
+    const option: Option | null = await OptionModel.findById(oid)
 
     if (option) {
       const i = option[type].findIndex(u => u.equals(uid._id))
@@ -101,7 +101,7 @@ class OptionService {
   }
 
   async removeVote(type: 'liked' | 'disliked', oid: Types.ObjectId, uid: Types.ObjectId): Promise<void> {
-    const option = await OptionModel.findById(oid)
+    const option: Option | null = await OptionModel.findById(oid)
 
     if (option) {
       const i = option[type].findIndex(u => u.equals(uid._id))

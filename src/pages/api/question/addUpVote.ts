@@ -5,13 +5,12 @@ import { ID } from 'src/types/common'
 
 export interface AddUpVoteParams {
   oid: ID
-  uid: ID
 }
 
 export interface AddUpVoteResults {}
 
-export default apiController<AddUpVoteParams, AddUpVoteResults>(async ({ oid, uid }) => {
-  await optionService.addVote('liked', new Types.ObjectId(oid), new Types.ObjectId(uid))
+export default apiController<AddUpVoteParams, AddUpVoteResults>(async ({ oid }, user) => {
+  await optionService.addVote('liked', new Types.ObjectId(oid), new Types.ObjectId(user.id))
 
   return {}
 })

@@ -1,47 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface classesType {
-  cid: string
-  cType: boolean
-}
-
-interface userInfoType {
-  _id: string
+interface UserInfoType {
   name: string
   email: string
   img?: string
   isLoggedIn: boolean
   isAdmin: boolean
-  classes: classesType[]
+  classes: { name: string; cid: string }[]
   made: string[]
   madeOptions: string[]
   solved: string[]
 }
 
-interface userEnrollType {
-  cid: string
-  cType: boolean
-}
-
-const initialState: userInfoType = {
-  _id: '',
-  name: '',
-  email: '',
-  img: '',
-  isLoggedIn: false,
-  isAdmin: false,
-  classes: [],
-  made: [],
-  madeOptions: [],
-  solved: [],
-}
-
 export const userSlice = createSlice({
   name: 'userInfo',
-  initialState,
+  initialState: {
+    name: '',
+    email: '',
+    img: '',
+    isLoggedIn: false,
+    isAdmin: false,
+    classes: [],
+    made: [],
+    madeOptions: [],
+    solved: [],
+  } as UserInfoType,
   reducers: {
-    login: (state: userInfoType, action: PayloadAction<userInfoType>) => {
-      state._id = action.payload._id
+    login: (state: UserInfoType, action: PayloadAction<UserInfoType>) => {
       state.name = action.payload.name
       state.email = action.payload.email
       state.img = action.payload.img
@@ -52,8 +37,7 @@ export const userSlice = createSlice({
       state.madeOptions = action.payload.madeOptions
       state.solved = action.payload.solved
     },
-    logout: (state: userInfoType) => {
-      state._id = ''
+    logout: (state: UserInfoType) => {
       state.name = ''
       state.email = ''
       state.img = ''
@@ -64,12 +48,9 @@ export const userSlice = createSlice({
       state.madeOptions = []
       state.solved = []
     },
-    enroll: (state: userInfoType, action: PayloadAction<userEnrollType>) => {
+    enroll: (state: UserInfoType, action: PayloadAction<{ name: string; cid: string }>) => {
       if (state.isLoggedIn) {
-        state.classes.push({
-          cid: action.payload.cid,
-          cType: action.payload.cType,
-        })
+        state.classes.push(action.payload)
       }
     },
   },

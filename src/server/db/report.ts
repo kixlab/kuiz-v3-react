@@ -1,6 +1,7 @@
-import { model, Schema, Types } from 'mongoose'
+import { model, models, Schema, Types } from 'mongoose'
+import { Doc } from 'src/types/common'
 
-export interface Report {
+export interface Report extends Doc {
   uid: Types.ObjectId
   comment: string
 }
@@ -17,4 +18,4 @@ ReportSchema.static('createDoc', (args: Report) => {
   return new ReportModel(args)
 })
 
-export const ReportModel = model('Report', ReportSchema)
+export const ReportModel = models?.Report ?? model('Report', ReportSchema)
