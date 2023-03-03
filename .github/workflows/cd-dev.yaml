@@ -27,4 +27,5 @@ jobs:
           script: |
             cd kuiz
             git pull
+            yarn install
             yarn pm2:restart:dev

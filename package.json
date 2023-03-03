@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=5000 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "PORT=3000 next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "style-check": "prettier --check 'src/**/*.{tsx,ts}'",
