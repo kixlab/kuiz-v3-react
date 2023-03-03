@@ -1,0 +1,91 @@
+import { model, models, Schema, Types } from 'mongoose'
+import { Doc } from 'src/types/common'
+
+export interface QStem extends Doc {
+  author: Types.ObjectId
+  stem_text: string
+  action_verb: string[]
+  keyword: string[]
+  learning_objective: string
+  material: string
+  class: Types.ObjectId
+  options: Types.ObjectId[]
+  optionSets: Types.ObjectId[]
+  explanation: string
+  contributor: Types.ObjectId[]
+  report: Types.ObjectId[]
+}
+
+const QstemSchema = new Schema<QStem>(
+  {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    stem_text: {
+      type: String,
+      required: true,
+    },
+    action_verb: {
+      type: [String],
+      default: [],
+    },
+    keyword: {
+      type: [String],
+      default: [],
+    },
+    learning_objective: {
+      type: String,
+      default: '',
+    },
+    material: {
+      type: String,
+    },
+    class: {
+      type: Schema.Types.ObjectId,
+      ref: 'Class',
+    },
+    options: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Option',
+        },
+      ],
+    },
+    optionSets: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'OptionSet',
+        },
+      ],
+    },
+    explanation: {
+      type: String,
+      default: '',
+    },
+    contributor: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      ],
+      default: [],
+    },
+    report: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Report',
+        },
+      ],
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+
+export const QStemModel = models?.Qstem ?? model<QStem>('Qstem', QstemSchema)
