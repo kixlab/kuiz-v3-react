@@ -9,7 +9,6 @@ import { RootState } from '../redux/store'
 export const Gnb = () => {
   const { push } = useRouter()
   const { data } = useSession()
-  const cid = useSelector((state: RootState) => state.userInfo.classes[0])
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
 
@@ -22,19 +21,17 @@ export const Gnb = () => {
   )
 
   return (
-    <SideTab className="SideTab">
-      <Logo onClick={() => data && push('/' + cid)}>
+    <SideTab>
+      <Logo>
         <LogoIcon src={'/logo.svg'} />
         KUIZ
       </Logo>
       {data && (
-        <>
-          <Menu isDisplay={isDisplay}>
-            <MenuBtn onClick={onClickMenu('/')}>Switch Class</MenuBtn>
-            <MenuBtn onClick={onClickMenu('/my-page')}>My Page</MenuBtn>
-          </Menu>
+        <Menu isDisplay={isDisplay}>
+          <MenuBtn onClick={onClickMenu('/')}>Switch Class</MenuBtn>
+          <MenuBtn onClick={onClickMenu('/my-page')}>My Page</MenuBtn>
           <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
-        </>
+        </Menu>
       )}
     </SideTab>
   )
@@ -43,22 +40,15 @@ export const Gnb = () => {
 const SideTab = styled.div`
   width: 100vw;
   height: 60px;
-  position: fixed;
-  top: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 30px 0px 30px;
+  padding: 0px 30px;
   background-color: ${palette.background.light};
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
   z-index: 100;
-  @media (max-width: 599px) {
-    padding: 12px;
-    height: auto;
-    align-items: start;
-  }
 `
 
 const Logo = styled.div`
@@ -66,10 +56,6 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
-  &:hover {
-    color: ${palette.primary.main};
-  }
 `
 
 const LogoIcon = styled.img`
@@ -78,14 +64,10 @@ const LogoIcon = styled.img`
 `
 
 const ProfileImg = styled.img`
-  display: none;
   border-radius: 50%;
-  cursor: pointer;
-  @media (max-width: 599px) {
-    display: flex;
-    width: 28px;
-    height: 28px;
-  }
+  display: flex;
+  width: 28px;
+  height: 28px;
 `
 
 const Menu = styled.div<{ isDisplay: boolean }>`
@@ -93,33 +75,21 @@ const Menu = styled.div<{ isDisplay: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 16px;
+  align-items: center;
   color: ${palette.grey[200]};
-  @media (max-width: 599px) {
-    ${props =>
-      props.isDisplay
-        ? `
-      display: flex;
-    `
-        : `display: none;`}
-    flex-direction: column;
-    padding-top: 48px;
-    padding-bottom: 20px;
-  }
 `
 
-const MenuBtn = styled.div`
-  line-height: 60px;
+const MenuBtn = styled.button`
   vertical-align: middle;
+  border: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0);
+  height: 48px;
+  cursor: pointer;
+
   &:hover {
     color: ${palette.primary.main};
     border-color: ${palette.primary.main};
-    cursor: pointer;
-  }
-  @media (max-width: 599px) {
-    line-height: initial;
-    text-align: center;
-    padding: 4px 0 4px 0;
-    border: none;
   }
 `
+
+const Content = styled.div``

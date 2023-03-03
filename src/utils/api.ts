@@ -41,7 +41,6 @@ export async function request<P, R>(url: string, params: P): Promise<R | null> {
     })
 
     if (res.status === 403) {
-      alert('로그인이 필요합니다.')
       location.href = '/'
       return null
     } else if (res.ok) {

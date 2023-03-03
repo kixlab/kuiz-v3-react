@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faX } from '@fortawesome/free-solid-svg-icons'
 import { TextBtnCta } from './basic/button/Button'
 import { palette, typography } from '@styles/theme'
 
@@ -64,11 +62,7 @@ export const CategoryInput = ({ getCategory }: Props) => {
           return (
             <Category key={idx} selected={selections.includes(e)}>
               <CategoryLabel onClick={selectElement(e)}>{e}</CategoryLabel>
-              {idx < categories.length - 2 && (
-                <DeleteIcon onClick={deleteElement(e)}>
-                  <FontAwesomeIcon icon={faX} />
-                </DeleteIcon>
-              )}
+              {idx < categories.length - 2 && <DeleteIcon onClick={deleteElement(e)}>X</DeleteIcon>}
             </Category>
           )
         })}

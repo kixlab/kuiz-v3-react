@@ -63,39 +63,39 @@ export default function Page() {
   }, [getMadeOption, getMadeStem])
 
   return (
-    <>
-      <div>
-        <DataLabel>
-          <Label text="Created Question Stems" color="black" size={0} />
-        </DataLabel>
-        <MadeLists>
-          {madeStem.map(stem => {
-            return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} />
-          })}
-        </MadeLists>
-      </div>
-      <div>
-        <DataLabel>
-          <Label text="Created Options" color="black" size={0} />
-        </DataLabel>
-        <MadeLists>
-          {madeOption.map((option, i) => {
-            return (
-              <MadeOption
-                key={i}
-                optionType={option.isAnswer ? 'Answer' : 'Distractor'}
-                qid={option.qid}
-                question={option.stemText}
-                option={option.optionText}
-              />
-            )
-          })}
-        </MadeLists>
-      </div>
+    <Container>
+      <DataLabel>
+        <Label text="My Questions" color="black" size={0} />
+      </DataLabel>
+      <MadeLists>
+        {madeStem.map(stem => {
+          return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} />
+        })}
+      </MadeLists>
+      <DataLabel>
+        <Label text="My Options" color="black" size={0} />
+      </DataLabel>
+      <MadeLists>
+        {madeOption.map((option, i) => {
+          return (
+            <MadeOption
+              key={i}
+              optionType={option.isAnswer ? 'Answer' : 'Distractor'}
+              qid={option.qid}
+              question={option.stemText}
+              option={option.optionText}
+            />
+          )
+        })}
+      </MadeLists>
       <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
-    </>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  padding: 20px;
+`
 
 const MadeLists = styled.div`
   display: flex;
@@ -107,7 +107,4 @@ const MadeLists = styled.div`
 const DataLabel = styled.div`
   ${typography.hLabel};
   color: ${palette.primary.main};
-  padding: 30px 0 12px;
-  display: flex;
-  gap: 10px;
 `

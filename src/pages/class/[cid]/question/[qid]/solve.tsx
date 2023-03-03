@@ -36,63 +36,53 @@ export default function Page() {
   }, [])
 
   const getQinfo = useCallback(
-    (qid: string) => {
-      request<LoadProblemDetailParams, LoadProblemDetailResults>(`loadProblemDetail`, {
+    async (qid: string) => {
+      const res = await request<LoadProblemDetailParams, LoadProblemDetailResults>(`loadProblemDetail`, {
         qid,
-      }).then(res => {
-        if (res) {
-          request<LoadClusterParams, LoadClusterResults>(`loadCluster`, {
-            qid,
-          })
-            .then(res2 => {
-              if (res2) {
-                const cluster = res2.cluster
-                const ans = cluster.filter(c => c.representative.is_answer)
-                const dis = cluster.filter(c => !c.representative.is_answer)
-                const ansList = getMultipleRandom(ans, 1)
-                const disList = getMultipleRandom(dis, 3)
-
-                const optionList = shuffle(
-                  ansList.map(a => a.representative).concat(disList.map(d => d.representative))
-                )
-
-                setOptionSet(optionList)
-                optionList.forEach((o, i) => {
-                  if (o.is_answer) {
-                    setAnswer(i)
-                  }
-                })
-              }
-
-              setOptions(res.options)
-              setQinfo(res.qinfo)
-            })
-            .catch(err => console.log(err))
-        }
       })
+      if (res) {
+        const res2 = await request<LoadClusterParams, LoadClusterResults>(`loadCluster`, {
+          qid,
+        })
+        if (res2) {
+          const cluster = res2.cluster
+          const ans = cluster.filter(c => c.representative.is_answer)
+          const dis = cluster.filter(c => !c.representative.is_answer)
+          const ansList = getMultipleRandom(ans, 1)
+          const disList = getMultipleRandom(dis, 3)
+
+          const optionList = shuffle(ansList.map(a => a.representative).concat(disList.map(d => d.representative)))
+
+          setOptionSet(optionList)
+          optionList.forEach((o, i) => {
+            if (o.is_answer) {
+              setAnswer(i)
+            }
+          })
+        }
+
+        setOptions(res.options)
+        setQinfo(res.qinfo)
+      }
     },
     [getMultipleRandom, shuffle]
   )
 
-  const checkAnswer = useCallback(() => {
+  const checkAnswer = useCallback(async () => {
     if (!ansVisible && optionSet && selected && qid) {
-      request<SolveQuestionParams, SolveQuestionResults>(`solveQuestion`, {
+      await request<SolveQuestionParams, SolveQuestionResults>(`solveQuestion`, {
         qid,
         initAns: optionSet[selected]._id,
         isCorrect: selected === answer,
         optionSet: options.map(o => o._id),
-      }).then((res: SolveQuestionResults | null) => {
-        res && console.log('success:', res.success)
       })
     }
     setAnsVisible(!ansVisible)
   }, [ansVisible, qid, optionSet, selected, answer, options])
 
   useEffect(() => {
-    console.log(qid)
     if (qid) {
       getQinfo(qid)
-      console.log(qid)
     }
   }, [getQinfo, qid])
 
@@ -113,7 +103,6 @@ export default function Page() {
 
   const reportSubmit = useCallback(
     async (msg: string) => {
-      console.log(msg)
       toggleModal()
       // TODO: Link to the backend
     },

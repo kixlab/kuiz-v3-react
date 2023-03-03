@@ -21,6 +21,7 @@ export const GlobalStyles = css`
     background-color: #e6eaef;
     display: flex;
     justify-content: center;
+    margin: 0px;
   }
   .Box {
     width: 70vw;

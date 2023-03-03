@@ -10,10 +10,10 @@ export interface LoadUserInfoResults {
 }
 
 export default apiController<LoadUserInfoParams, LoadUserInfoResults>(async ({}, user) => {
-  const classes: Class[] = await ClassModel.find({ _id: { $in: user.classes } })
+  const classes: Class[] = (await ClassModel.find({ _id: { $in: user.classes } })) ?? []
 
   return {
     user,
-    classes: classes.map(c => ({ cid: c._id, name: c.code })),
+    classes: classes.map(c => ({ cid: c._id, name: c.name })),
   }
 })
