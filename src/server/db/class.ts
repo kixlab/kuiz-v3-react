@@ -5,8 +5,8 @@ export interface Class extends Doc {
   code: string
   students: Types.ObjectId[]
   qstems: Types.ObjectId[]
-  classType: boolean
   topics: string[]
+  name: string
 }
 
 const ClassSchema = new Schema<Class>({
@@ -30,8 +30,9 @@ const ClassSchema = new Schema<Class>({
       },
     ],
   },
-  classType: {
-    type: Boolean,
+  name: {
+    type: String,
+    default: '',
   },
   topics: {
     type: [String],

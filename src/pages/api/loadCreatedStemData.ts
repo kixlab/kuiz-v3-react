@@ -9,7 +9,6 @@ export interface LoadCreatedStemDataResults {
 
 export default apiController<LoadCreatedStemDataParams, LoadCreatedStemDataResults>(async ({}, user) => {
   const userAfterPopulation = await user.populate<{ made: QStem[] }>('made')
-  console.log(user.name)
   return {
     madeStem: userAfterPopulation.made,
   }

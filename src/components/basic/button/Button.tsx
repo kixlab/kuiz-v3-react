@@ -50,9 +50,6 @@ const Fill = styled.button`
   &:disabled {
     background-color: ${palette.grey[500]};
   }
-  @media (max-width: 599px) {
-    padding: 12px;
-  }
 `
 
 const Stroke = styled.button`
@@ -66,9 +63,6 @@ const Stroke = styled.button`
   cursor: pointer;
   &:hover {
     background-color: ${palette.background.light};
-  }
-  @media (max-width: 599px) {
-    padding: 12px;
   }
 `
 const Text = styled.button`

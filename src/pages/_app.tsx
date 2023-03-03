@@ -12,37 +12,19 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <SessionProvider session={pageProps.session}>
-        <Container>
-          <Global styles={GlobalStyles} />
-          <Gnb />
-          <GlobalDialog />
-          <InnerBox>
-            <Component {...pageProps} />
-          </InnerBox>
-        </Container>
+        <Global styles={GlobalStyles} />
+        <Gnb />
+        <Content>
+          <Component {...pageProps} />
+        </Content>
+        <GlobalDialog />
       </SessionProvider>
     </Provider>
   )
 }
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  font-family: 'inter-r';
-  @media (max-width: 599px) {
-    flex-direction: column;
-  }
-`
-
-const InnerBox = styled.div`
-  width: 70vw;
-  position: absolute;
-  top: 80px;
-  margin: 0 auto 0 auto;
-  box-sizing: border-box;
-  @media (max-width: 599px) {
-    width: calc(100vw - 40px);
-    margin: 0 20px 0 20px;
-    top: 50px;
-  }
+const Content = styled.div`
+  padding-bottom: 60px;
+  max-width: 800px;
+  margin: 0 auto;
 `

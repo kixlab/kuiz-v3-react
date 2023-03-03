@@ -25,7 +25,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            cd kuiz
+            cd kuiz-dev
             git checkout develop
             git pull
             yarn install
