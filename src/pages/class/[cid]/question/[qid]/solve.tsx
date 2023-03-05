@@ -111,7 +111,7 @@ export default function Page() {
 
   return (
     <QuestionBox>
-      <Label>Q. {qinfo?.stem_text}</Label>
+      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
       <div>
         {optionSet?.map((e, i) => {
           return (

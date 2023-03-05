@@ -47,7 +47,7 @@ export default function Page() {
       {questionList.map((question, i) => (
         <QuizListContent
           key={i}
-          title={question.stem_text}
+          title={JSON.parse(question.stem_text).blocks[0].text}
           options={question.options.length}
           date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
           type={i + 1 === questionList.length ? 'End' : 'Content'}
