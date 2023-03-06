@@ -6,8 +6,9 @@ export const QuizListHeader = () => {
   return (
     <QuizList id="Header">
       <div>Question</div>
-      <div># Options</div>
-      <div>Last Updated</div>
+      <Item># Options</Item>
+      <Item>Last Updated</Item>
+      <div>Actions</div>
     </QuizList>
   )
 }
@@ -15,7 +16,9 @@ export const QuizListHeader = () => {
 const QuizList = styled.div<{ id: 'Header' }>`
   ${typography.b02b};
   display: grid;
-  grid-template-columns: auto 110px 130px;
+  grid-template-columns: auto 100px 100px 100px;
+  column-gap: 8px;
+  text-align: center;
   background-color: white;
   place-items: left;
   padding: 20px;
@@ -29,6 +32,14 @@ const QuizList = styled.div<{ id: 'Header' }>`
       margin-top: 40px;
     `}
   @media(max-width: 599px) {
-    grid-template-columns: auto 60px 90px;
+    grid-template-columns: auto 100px;
+    padding: 12px;
+    margin: 16px 16px 0;
+  }
+`
+
+const Item = styled.div`
+  @media (max-width: 599px) {
+    display: none;
   }
 `

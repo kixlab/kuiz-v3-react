@@ -100,6 +100,13 @@ export const typography = {
       font-size: 14px;
     }
   `,
+  smallbutton: css`
+    font-family: 'inter-m';
+    font-size: 12px;
+    @media (max-width: 599px) {
+      font-size: 14px;
+    }
+  `,
   overline: css`
     font-family: 'inter-r';
     font-size: 12px;
