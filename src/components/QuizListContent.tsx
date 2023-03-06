@@ -52,10 +52,6 @@ const QuizList = styled.div<{ type?: 'Content' | 'End' }>`
     props.type === 'Content' &&
     css`
       border-bottom: 1px solid #dbdbdb;
-      // &:hover {
-      //   background-color: #fafafa;
-      //   cursor: pointer;
-      // }
     `}
   ${props =>
     props.type === 'End' &&
