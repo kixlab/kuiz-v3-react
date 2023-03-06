@@ -3,6 +3,7 @@ import { Doc } from 'src/types/common'
 
 export interface User extends Doc {
   name: string
+  studentID?: number
   email: string
   imageUrl: string
   classes: Types.ObjectId[]
@@ -25,6 +26,11 @@ const UserSchema = new Schema<User>({
     type: String,
     max: 32,
     trim: true,
+  },
+  studentID: {
+    type: Number,
+    max: 8,
+    required: false,
   },
   email: {
     type: String,

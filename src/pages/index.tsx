@@ -36,6 +36,12 @@ export default function Page({ providers }: Props) {
       request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
         if (res) {
           const { user, classes } = res
+          if (!user.studentID) {
+            push({
+              pathname: '/registration/studentID',
+              query: { _id: user._id },
+            })
+          }
           dispatch(
             login({
               name: user.name,
@@ -52,7 +58,7 @@ export default function Page({ providers }: Props) {
         }
       })
     }
-  }, [dispatch, session])
+  }, [push, dispatch, session])
 
   const onSubmit = useCallback(async () => {
     const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
