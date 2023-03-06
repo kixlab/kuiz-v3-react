@@ -1,12 +1,9 @@
 import { css } from '@emotion/react'
 
-const white = '#fff'
-const black = '#000'
-
 export const palette = {
   common: {
-    black,
-    white,
+    black: '#000000',
+    white: '#ffffff',
     transparent: 'rgba(0,0,0,0)',
   },
   primary: {
@@ -22,7 +19,7 @@ export const palette = {
   tags: {
     answer: '#0F9C50',
     distractor: '#CF3434',
-    contrastText: white,
+    contrastText: '#ffffff',
   },
   grey: {
     100: '#121212',

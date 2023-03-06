@@ -1,4 +1,3 @@
-import { UserModel } from '@server/db/user'
 import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
