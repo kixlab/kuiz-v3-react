@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 
 export const Gnb = () => {
-  const { push } = useRouter()
+  const { push, query } = useRouter()
   const { data } = useSession()
+  const cid = query.cid as string | undefined
   const userImg = useSelector((state: RootState) => state.userInfo).img
   const [isDisplay, setIsDisplay] = useState(false)
 
@@ -28,9 +29,10 @@ export const Gnb = () => {
       </Logo>
       {data && (
         <Menu isDisplay={isDisplay}>
+          <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn>
           <MenuBtn onClick={onClickMenu('/')}>Switch Class</MenuBtn>
           <MenuBtn onClick={onClickMenu('/my-page')}>My Page</MenuBtn>
-          <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
+          {/* <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg> */}
         </Menu>
       )}
     </SideTab>
@@ -80,10 +82,12 @@ const Menu = styled.div<{ isDisplay: boolean }>`
 `
 
 const MenuBtn = styled.button`
+  background: none;
+  border: none;
   vertical-align: middle;
   border: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0);
-  height: 48px;
+  height: 32px;
   cursor: pointer;
 
   &:hover {

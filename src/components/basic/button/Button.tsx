@@ -38,7 +38,7 @@ export const TextBtnCta = (props: Props) => {
 const Fill = styled.button`
   ${typography.button};
   width: 100%;
-  padding: 16px;
+  padding: 12px;
   border-radius: 6px;
   border: none;
   color: ${palette.common.white};
@@ -55,7 +55,7 @@ const Fill = styled.button`
 const Stroke = styled.button`
   ${typography.button};
   width: 100%;
-  padding: 16px;
+  padding: 12px;
   border-radius: 6px;
   border: 1px solid ${palette.grey[500]};
   color: ${palette.grey[200]};

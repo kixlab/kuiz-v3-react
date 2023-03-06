@@ -31,6 +31,9 @@ const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean; isAns
     margin-bottom: 8px;
     border-radius: 6px;
     border: 1.5px solid rgba(0, 0, 0, 0);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 8px;
 
     ${!state &&
     css`

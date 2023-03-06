@@ -19,7 +19,7 @@ export default function Page() {
   const [options, setOptions] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
   const [ansVisible, setAnsVisible] = useState(true)
-  const [selected, setSelected] = useState<number>()
+  const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
@@ -111,7 +111,7 @@ export default function Page() {
 
   return (
     <QuestionBox>
-      <Label>Q. {qinfo?.stem_text}</Label>
+      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
@@ -136,12 +136,12 @@ export default function Page() {
             checkAnswer()
             setShowAnswer(true)
           }}
-          disabled={selected == null}
+          disabled={selected == -1}
         >
           Submit
         </FillBtn>
-        <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
-        <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
+        <StrokeBtn onClick={shuffleOptions}>Shuffle Options</StrokeBtn>
+        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>

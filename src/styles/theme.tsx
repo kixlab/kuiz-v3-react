@@ -95,7 +95,14 @@ export const typography = {
   `,
   button: css`
     font-family: 'inter-m';
-    font-size: 16px;
+    font-size: 14px;
+    @media (max-width: 599px) {
+      font-size: 14px;
+    }
+  `,
+  smallbutton: css`
+    font-family: 'inter-m';
+    font-size: 12px;
     @media (max-width: 599px) {
       font-size: 14px;
     }
