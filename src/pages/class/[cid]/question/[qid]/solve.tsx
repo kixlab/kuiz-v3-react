@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { LoadProblemDetailParams, LoadProblemDetailResults } from '@api/loadProblemDetail'
 import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
   const { query } = useRouter()
@@ -111,7 +112,7 @@ export default function Page() {
 
   return (
     <QuestionBox>
-      <Label>Q. {qinfo && JSON.parse(qinfo.stem_text).blocks[0].text}</Label>
+      <Label>Q. {qinfo?.stem_text}</Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
@@ -156,7 +157,7 @@ const QuestionBox = styled.div`
   flex-direction: column;
   gap: 30px;
   margin: 30px;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     margin: 30px 0 30px 0;
   }
 `
@@ -164,7 +165,7 @@ const QuestionBox = styled.div`
 const Label = styled.div`
   ${typography.hStem};
   padding: 8px 0 0 0;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     padding: 0px;
   }
 `

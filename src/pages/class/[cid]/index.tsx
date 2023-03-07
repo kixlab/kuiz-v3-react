@@ -1,6 +1,7 @@
 import { LoadProblemListParams, LoadProblemListResults } from '@api/loadProblemList'
-import { QuizListContent } from '@components/QuizListContent'
+import { FloatingButton } from '@components/basic/button/Floating'
 import { QuizListHeader } from '@components/QuizListHeader'
+import { QuizListItem } from '@components/QuizListItem'
 import styled from '@emotion/styled'
 import { QStem } from '@server/db/qstem'
 import { request } from '@utils/api'
@@ -12,20 +13,17 @@ export default function Page() {
   const cid = query.cid as string | undefined
   const [questionList, setQuestionList] = useState<QStem[]>([])
 
-  const getQuestionList = useCallback(async () => {
-    if (cid) {
-      const res = await request<LoadProblemListParams, LoadProblemListResults>(`loadProblemList`, {
-        cid,
-      })
-      if (res) {
-        setQuestionList(res.problemList.reverse())
-      }
-    }
-  }, [cid])
-
   useEffect(() => {
-    getQuestionList()
-  }, [getQuestionList])
+    if (cid) {
+      request<LoadProblemListParams, LoadProblemListResults>(`loadProblemList`, {
+        cid,
+      }).then(res => {
+        if (res) {
+          setQuestionList(res.problemList.reverse())
+        }
+      })
+    }
+  }, [cid, setQuestionList])
 
   const onSolve = useCallback(
     (qid: string) => () => {
@@ -41,25 +39,34 @@ export default function Page() {
     [cid, push]
   )
 
+  const onCreateQuestion = useCallback(() => {
+    push(`/class/${cid}/question/create`)
+  }, [cid, push])
+
   return (
-    <BoxShadow>
-      <QuizListHeader />
-      {questionList.map((question, i) => (
-        <QuizListContent
-          key={i}
-          title={JSON.parse(question.stem_text).blocks[0].text}
-          options={question.options.length}
-          date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
-          type={i + 1 === questionList.length ? 'End' : 'Content'}
-          onSolve={onSolve(question._id)}
-          onAddOption={onAddOption(question._id)}
-        />
-      ))}
-    </BoxShadow>
+    <>
+      <BoxShadow>
+        <QuizListHeader />
+        {questionList.map((question, i) => (
+          <QuizListItem
+            key={i}
+            title={question.stem_text}
+            options={question.options.length}
+            date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
+            onSolve={onSolve(question._id)}
+            onAddOption={onAddOption(question._id)}
+          />
+        ))}
+      </BoxShadow>
+      <FloatingButton onClick={onCreateQuestion}>Create a New Question</FloatingButton>
+    </>
   )
 }
 
 const BoxShadow = styled.div`
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
   border-radius: 8px;
+  overflow: hidden;
+  margin: 40px 12px;
+  margin-top: 40px;
 `

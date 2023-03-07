@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import styled from '@emotion/styled'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export const Modal = ({ children }: PropsWithChildren) => {
   return (
@@ -19,7 +20,7 @@ const ModalContainer = styled.div`
   display: flex;
   justify-content: center;
   z-index: 20;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     align-items: center;
   }
 `
@@ -36,7 +37,7 @@ const DialogBox = styled.div`
   box-sizing: border-box;
   background-color: white;
   z-index: 21;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     width: 100%;
     height: auto;
     gap: 12px;
