@@ -4,7 +4,7 @@ import { FillBtn } from '@components/basic/button/Button'
 import { ChangeEvent, useState } from 'react'
 import { withRouter, NextRouter, useRouter } from 'next/router'
 import { request } from '@utils/api'
-import { PutStudentIDParams, PutStudentIDResults } from '@api/auth/insertStudentID'
+import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
 interface Props {
   router: NextRouter
 }
@@ -23,9 +23,7 @@ export default withRouter(function StudentID({ router }: Props) {
     }
   }
   const onSubmit = async () => {
-    console.log(router.query)
-    console.log(studentID)
-    const res = await request<PutStudentIDParams, PutStudentIDResults>(`auth/insertStudentID`, {
+    const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
       _id: router.query.toString(),
       studentID: parseInt(studentID),
     })
