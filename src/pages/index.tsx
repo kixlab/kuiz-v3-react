@@ -36,9 +36,6 @@ export default function Page({ providers }: Props) {
       request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
         if (res) {
           const { user, classes } = res
-          if (!user.studentID) {
-            push('/registration/studentID')
-          }
           dispatch(
             login({
               name: user.name,
@@ -52,6 +49,9 @@ export default function Page({ providers }: Props) {
               solved: user.solved.map(c => c.toString()),
             })
           )
+          if (!user.studentID) {
+            push('/register')
+          }
         }
       })
     }

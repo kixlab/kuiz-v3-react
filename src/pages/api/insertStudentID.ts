@@ -1,7 +1,7 @@
 import { apiController } from '@utils/api'
 
 export interface PutStudentIDParams {
-  studentID: number
+  studentID: string
 }
 
 export interface PutStudentIDResults {

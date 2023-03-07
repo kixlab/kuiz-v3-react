@@ -2,23 +2,19 @@ import styled from '@emotion/styled'
 import { TextInput } from '@components/basic/InputBox'
 import { FillBtn } from '@components/basic/button/Button'
 import { ChangeEvent, useState, useEffect } from 'react'
-import { withRouter, NextRouter, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { request } from '@utils/api'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
 import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
-interface Props {
-  router: NextRouter
-}
 
-export default withRouter(function StudentID({ router }: Props) {
+export default function StudentID() {
   const [studentID, setStudentID] = useState('')
-  const [disabled, setDisabled] = useState(true)
   const { push } = useRouter()
 
   useEffect(() => {
     request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
       if (res) {
-        const { user, classes } = res
+        const { user } = res
         if (user.studentID) {
           push('/')
         }
@@ -28,16 +24,11 @@ export default withRouter(function StudentID({ router }: Props) {
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStudentID(e.target.value)
-    if (Number(e.target.value) && e.target.value.length === 8) {
-      setDisabled(false)
-    } else {
-      setDisabled(true)
-    }
   }
 
   const onSubmit = async () => {
     const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      studentID: parseInt(studentID),
+      studentID: studentID,
     })
     if (res) {
       push('/')
@@ -46,13 +37,11 @@ export default withRouter(function StudentID({ router }: Props) {
   return (
     <CodeInputBox>
       <strong>Please enter Your Student ID</strong>
-      <TextInput placeholder="Enter new class" onChange={inputChange} />
-      <FillBtn onClick={onSubmit} disabled={disabled}>
-        Enter
-      </FillBtn>
+      <TextInput placeholder="Enter your student ID" onChange={inputChange} />
+      <FillBtn onClick={onSubmit}>Enter</FillBtn>
     </CodeInputBox>
   )
-})
+}
 
 const CodeInputBox = styled.div`
   display: flex;
