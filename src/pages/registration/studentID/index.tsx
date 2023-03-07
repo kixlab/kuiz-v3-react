@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { TextInput } from '@components/basic/InputBox'
 import { FillBtn } from '@components/basic/button/Button'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 import { withRouter, NextRouter, useRouter } from 'next/router'
 import { request } from '@utils/api'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
+import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
 interface Props {
   router: NextRouter
 }
@@ -13,6 +14,17 @@ export default withRouter(function StudentID({ router }: Props) {
   const [studentID, setStudentID] = useState('')
   const [disabled, setDisabled] = useState(true)
   const { push } = useRouter()
+
+  useEffect(() => {
+    request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
+      if (res) {
+        const { user, classes } = res
+        if (user.studentID) {
+          push('/')
+        }
+      }
+    })
+  }, [push])
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStudentID(e.target.value)

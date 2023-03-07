@@ -37,10 +37,7 @@ export default function Page({ providers }: Props) {
         if (res) {
           const { user, classes } = res
           if (!user.studentID) {
-            push({
-              pathname: '/registration/studentID',
-              query: { _id: user._id },
-            })
+            push('/registration/studentID')
           }
           dispatch(
             login({
