@@ -1,15 +1,15 @@
+import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
+import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { OptionBtn } from '@components/basic/button/OptionButton'
 import { Label } from '@components/basic/Label'
 import { CreateNewOption } from '@components/CreateNewOption'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
+import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
-import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { typography, palette } from '@styles/theme'
 
 export default function Page() {
   const { push, query } = useRouter()
@@ -81,11 +81,11 @@ export default function Page() {
           </Section>
           <Section>
             <Label text="Explanation" color="blue" size={0} />
-            <SectionText>{JSON.parse(qinfo.explanation).blocks[0].text}</SectionText>
+            <SectionText>{qinfo.explanation}</SectionText>
           </Section>
           <DividerLine />
           <Section>
-            <SectionText>{JSON.parse(qinfo.stem_text).blocks[0].text}</SectionText>
+            <SectionText>{qinfo.stem_text}</SectionText>
           </Section>
         </>
       )}

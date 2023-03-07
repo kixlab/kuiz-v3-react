@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 interface Props {
   children: React.ReactNode
@@ -74,7 +75,7 @@ const Text = styled.button`
   &:hover {
     text-decoration: underline;
   }
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     padding: 6px;
   }
 `

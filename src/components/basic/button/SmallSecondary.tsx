@@ -11,16 +11,13 @@ export function SmallSecondaryButton({ children, onClick }: Props) {
 }
 
 const Container = styled.button`
-  background: none;
   border: none;
-  text-align: right;
+  text-align: center;
   display: flex;
   justify-content: space-between;
   padding: 8px 12px;
   border-radius: 4px;
   ${typography.overline};
-  margin-bottom: 4px;
-
   background-color: ${palette.grey[600]};
   color: black;
 

@@ -12,6 +12,7 @@ import { RootState } from '@redux/store'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { AsyncReturnType } from 'src/types/utils'
 import { typography, palette } from '@styles/theme'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -171,7 +172,7 @@ const IntroBox = styled.div`
   padding: 30px;
   box-sizing: border-box;
   margin: 24px 0;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     box-sizing: border-box;
   }
   ${typography.b02};

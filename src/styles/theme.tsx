@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export const palette = {
   common: {
@@ -36,7 +37,7 @@ export const typography = {
     font-family: 'raleway';
     font-size: 20px;
     color: ${palette.primary.main};
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 18px;
     }
   `,
@@ -44,70 +45,70 @@ export const typography = {
     font-family: 'inter-sb';
     font-size: 18px;
     color: ${palette.grey[100]};
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 16px;
     }
   `,
   hLabel: css`
     font-family: 'inter-sb';
     font-size: 17px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 15px;
     }
   `,
   b01: css`
     font-family: 'inter-r';
     font-size: 16px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   b02: css`
     font-family: 'inter-r';
     font-size: 15px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   b02b: css`
     font-family: 'inter-m';
     font-size: 15px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   b03: css`
     font-family: 'inter-r';
     font-size: 14px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 13px;
     }
   `,
   b03b: css`
     font-family: 'inter-m';
     font-size: 14px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   button: css`
     font-family: 'inter-m';
     font-size: 14px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   smallbutton: css`
     font-family: 'inter-m';
     font-size: 12px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   overline: css`
     font-family: 'inter-r';
     font-size: 12px;
-    @media (max-width: 599px) {
+    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 11px;
     }
   `,

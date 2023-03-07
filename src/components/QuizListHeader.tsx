@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export const QuizListHeader = () => {
   return (
@@ -23,15 +24,10 @@ const QuizList = styled.div`
   background-color: ${palette.primary.dark};
   color: ${palette.common.white};
   border-radius: 8px 8px 0 0;
-  @media (max-width: 599px) {
-    grid-template-columns: auto 100px;
-    padding: 12px;
-    margin: 16px 16px 0;
-  }
 `
 
 const Item = styled.div`
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     display: none;
   }
 `

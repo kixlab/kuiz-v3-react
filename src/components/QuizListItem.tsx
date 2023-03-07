@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { typography } from '@styles/theme'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { SmallPrimaryButton } from './basic/button/SmallPrimary'
 import { SmallSecondaryButton } from './basic/button/SmallSecondary'
 
@@ -19,10 +20,10 @@ export const QuizListItem = ({ title, options, date, onAddOption, onSolve }: Pro
       <Item>{date.toLocaleDateString()}</Item>
       <ButtonArea>
         <SmallSecondaryButton onClick={onSolve}>
-          Solve <div>&gt;</div>
+          Solve <span>&gt;</span>
         </SmallSecondaryButton>
         <SmallPrimaryButton onClick={onAddOption}>
-          Add Option <div>&gt;</div>
+          Add Option <span>&gt;</span>
         </SmallPrimaryButton>
       </ButtonArea>
     </QuizList>
@@ -41,9 +42,8 @@ const QuizList = styled.div`
   text-align: center;
   border-bottom: 1px solid #dbdbdb;
 
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     grid-template-columns: auto 100px;
-    margin: 0 16px;
   }
 `
 
@@ -56,7 +56,7 @@ const Item = styled.div`
   max-height: 2.6em;
   text-align: center;
 
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     display: none;
   }
 `
@@ -73,4 +73,5 @@ const QuizText = styled.div`
 
 const ButtonArea = styled.div`
   display: grid;
+  row-gap: 4px;
 `
