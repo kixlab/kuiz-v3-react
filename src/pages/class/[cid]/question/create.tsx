@@ -27,7 +27,7 @@ export default function Page() {
       return
     }
     if (objective.trim().length === 0) {
-      alert('Please enter learning objective.')
+      alert('Please enter a learning objective.')
       return
     }
 

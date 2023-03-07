@@ -11,7 +11,8 @@ import { enroll, login } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { AsyncReturnType } from 'src/types/utils'
-import { palette } from '@styles/theme'
+import { typography, palette } from '@styles/theme'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -85,14 +86,17 @@ export default function Page({ providers }: Props) {
     <>
       {session ? (
         <CodeInputBox>
-          {0 < classes.length && <strong>Choose Your Class</strong>}
+          <Header>Choose a Class or Enroll in a new Class</Header>
           {classes.map(({ cid, name }, i) => (
             <ClassButton key={i} onClick={onClassEnter(cid)}>
               {name}
+              {/* ({code}) */}
             </ClassButton>
           ))}
-          <TextInput placeholder="Enter new class" onChange={detectChange} />
-          <FillBtn onClick={onSubmit}>Enter</FillBtn>
+          <InputSection>
+            <TextInput placeholder="Enter class code" onChange={detectChange} />
+            <FillBtn onClick={onSubmit}>Enter</FillBtn>
+          </InputSection>
         </CodeInputBox>
       ) : (
         <>
@@ -171,9 +175,21 @@ const IntroBox = styled.div`
   padding: 30px;
   box-sizing: border-box;
   margin: 24px 0;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     box-sizing: border-box;
   }
+  ${typography.b02};
+`
+
+const Header = styled.div`
+  ${typography.hLabel};
+`
+
+const InputSection = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 12px;
 `
 
 export async function getServerSideProps() {

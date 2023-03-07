@@ -7,18 +7,18 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 
 export const Gnb = () => {
-  const { push } = useRouter()
+  const { push, query } = useRouter()
   const { data } = useSession()
+  const cid = query.cid as string | undefined
   const userImg = useSelector((state: RootState) => state.userInfo).img
-  const [isDisplay, setIsDisplay] = useState(false)
 
-  const onClickMenu = useCallback(
-    (path: string) => () => {
-      push(`${path}`)
-      setIsDisplay(!isDisplay)
-    },
-    [isDisplay, push]
-  )
+  const onClickSwitchClass = useCallback(() => {
+    push('/')
+  }, [push])
+
+  const onClickMyPage = useCallback(() => {
+    push('/my-page')
+  }, [push])
 
   return (
     <SideTab>
@@ -27,10 +27,11 @@ export const Gnb = () => {
         KUIZ
       </Logo>
       {data && (
-        <Menu isDisplay={isDisplay}>
-          <MenuBtn onClick={onClickMenu('/')}>Switch Class</MenuBtn>
-          <MenuBtn onClick={onClickMenu('/my-page')}>My Page</MenuBtn>
-          <ProfileImg onClick={() => setIsDisplay(!isDisplay)} src={userImg}></ProfileImg>
+        <Menu>
+          {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
+          <MenuBtn onClick={onClickSwitchClass}>Switch Class</MenuBtn>
+          <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+          <ProfileImg src={userImg}></ProfileImg>
         </Menu>
       )}
     </SideTab>
@@ -70,7 +71,7 @@ const ProfileImg = styled.img`
   height: 28px;
 `
 
-const Menu = styled.div<{ isDisplay: boolean }>`
+const Menu = styled.div`
   ${typography.b03b};
   display: flex;
   flex-direction: row;
@@ -80,10 +81,12 @@ const Menu = styled.div<{ isDisplay: boolean }>`
 `
 
 const MenuBtn = styled.button`
+  background: none;
+  border: none;
   vertical-align: middle;
   border: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0);
-  height: 48px;
+  height: 32px;
   cursor: pointer;
 
   &:hover {

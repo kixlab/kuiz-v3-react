@@ -41,7 +41,9 @@ export async function request<P, R>(url: string, params: P): Promise<R | null> {
     })
 
     if (res.status === 403) {
-      location.href = '/'
+      if (location.pathname !== '/') {
+        location.href = '/'
+      }
       return null
     } else if (res.ok) {
       return res.json()

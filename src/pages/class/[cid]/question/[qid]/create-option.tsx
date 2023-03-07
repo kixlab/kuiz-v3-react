@@ -1,14 +1,15 @@
+import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
+import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { OptionBtn } from '@components/basic/button/OptionButton'
 import { Label } from '@components/basic/Label'
 import { CreateNewOption } from '@components/CreateNewOption'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
+import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
-import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 
 export default function Page() {
   const { push, query } = useRouter()
@@ -76,26 +77,30 @@ export default function Page() {
         <>
           <Section>
             <Label text="Learning Objective" color="blue" size={0} />
-            <div>{qinfo.learning_objective}</div>
+            <SectionText>{qinfo.learning_objective}</SectionText>
           </Section>
           <Section>
             <Label text="Explanation" color="blue" size={0} />
-            <div>{qinfo.explanation}</div>
+            <SectionText>{qinfo.explanation}</SectionText>
           </Section>
           <DividerLine />
-          <div>{qinfo.stem_text}</div>
+          <Section>
+            <SectionText>{qinfo.stem_text}</SectionText>
+          </Section>
         </>
       )}
 
       <div>
         {ansList.map((item, i) => (
           <OptionBtn key={i} state={true} selected={false}>
-            ✅{item?.option_text}
+            <div>✅</div>
+            {item?.option_text}
           </OptionBtn>
         ))}
         {disList.map((item, i) => (
           <OptionBtn key={i} state={true} selected={false}>
-            ❌{item?.option_text}
+            <div>❌</div>
+            {item?.option_text}
           </OptionBtn>
         ))}
       </div>
@@ -121,7 +126,7 @@ const QuestionBox = styled.div`
 const Section = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin: 20px 0;
 `
 
 const DividerLine = styled.hr`
@@ -129,4 +134,8 @@ const DividerLine = styled.hr`
   height: 1px;
   background-color: #dbdbdb;
   margin: 30px 0 20px 0;
+`
+
+const SectionText = styled.div`
+  ${typography.b02};
 `

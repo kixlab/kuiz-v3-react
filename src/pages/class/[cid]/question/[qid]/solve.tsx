@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { LoadProblemDetailParams, LoadProblemDetailResults } from '@api/loadProblemDetail'
 import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
   const { query } = useRouter()
@@ -19,7 +20,7 @@ export default function Page() {
   const [options, setOptions] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
   const [ansVisible, setAnsVisible] = useState(true)
-  const [selected, setSelected] = useState<number>()
+  const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
@@ -136,12 +137,12 @@ export default function Page() {
             checkAnswer()
             setShowAnswer(true)
           }}
-          disabled={selected == null}
+          disabled={selected == -1}
         >
           Submit
         </FillBtn>
-        <StrokeBtn onClick={shuffleOptions}>Shuffle Answers</StrokeBtn>
-        <StrokeBtn onClick={toggleModal}>Report Errors</StrokeBtn>
+        <StrokeBtn onClick={shuffleOptions}>Shuffle Options</StrokeBtn>
+        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>
@@ -156,7 +157,7 @@ const QuestionBox = styled.div`
   flex-direction: column;
   gap: 30px;
   margin: 30px;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     margin: 30px 0 30px 0;
   }
 `
@@ -164,7 +165,7 @@ const QuestionBox = styled.div`
 const Label = styled.div`
   ${typography.hStem};
   padding: 8px 0 0 0;
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     padding: 0px;
   }
 `

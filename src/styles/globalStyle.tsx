@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export const GlobalStyles = css`
   @font-face {
@@ -30,7 +31,7 @@ export const GlobalStyles = css`
     margin: 0 auto 0 auto;
     box-sizing: border-box;
   }
-  @media (max-width: 599px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     body {
       flex-direction: column;
     }
