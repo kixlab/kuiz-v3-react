@@ -16,15 +16,15 @@ export default withRouter(function StudentID({ router }: Props) {
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStudentID(e.target.value)
-    if (!isNaN(e.target.value) && e.target.value.length === 8) {
+    if (Number(e.target.value) && e.target.value.length === 8) {
       setDisabled(false)
     } else {
       setDisabled(true)
     }
   }
+
   const onSubmit = async () => {
     const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      _id: router.query.toString(),
       studentID: parseInt(studentID),
     })
     if (res) {
