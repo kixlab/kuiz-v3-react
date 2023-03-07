@@ -5,32 +5,32 @@ import { ChangeEvent, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { request } from '@utils/api'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
-import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@redux/store'
+import { addStudentID } from '@redux/features/userSlice'
 
 export default function StudentID() {
-  const [studentID, setStudentID] = useState('')
+  const studentID = useSelector((state: RootState) => state.userInfo.studentID)
+  const [insertedStudentID, setInsertedStudentID] = useState('')
+  const dispatch = useDispatch()
   const { push } = useRouter()
 
   useEffect(() => {
-    request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
-      if (res) {
-        const { user } = res
-        if (user.studentID) {
-          push('/')
-        }
-      }
-    })
-  }, [push])
+    if (studentID !== '') {
+      push('/')
+    }
+  }, [studentID, push])
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setStudentID(e.target.value)
+    setInsertedStudentID(e.target.value)
   }
 
   const onSubmit = async () => {
     const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      studentID: studentID,
+      studentID: insertedStudentID,
     })
     if (res) {
+      dispatch(addStudentID(insertedStudentID))
       push('/')
     }
   }

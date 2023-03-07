@@ -10,18 +10,22 @@ import { request } from '@utils/api'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GetQstemByOptionParams, GetQstemByOptionResults } from './api/getQstemByOption'
 import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 import { LoadCreatedOptionParams, LoadCreatedOptionResults } from './api/loadCreatedOption'
+import { FloatingButton } from '@components/basic/button/Floating'
+import { RootState } from '@redux/store'
 
 export default function Page() {
+  const studentID = useSelector((state: RootState) => state.userInfo.studentID)
   const { push } = useRouter()
   const dispatch = useDispatch()
   const [madeStem, setMadeStem] = useState<QStem[]>([])
   const [madeOption, setMadeOption] = useState<
     { qid: string; stemText: string; optionText: string; isAnswer: boolean }[]
   >([])
+  const [registeredStudentID, setRegisteredStudentID] = useState(false)
 
   const getMadeStem = useCallback(() => {
     request<LoadCreatedStemDataParams, LoadCreatedStemDataResults>(`loadCreatedStemData`, {}).then(res => {
@@ -51,6 +55,9 @@ export default function Page() {
     }
   }, [])
 
+  const onInsertStudentID = () => {
+    push('/register')
+  }
   const logOut = useCallback(() => {
     signOut()
     dispatch(logout())
@@ -58,9 +65,10 @@ export default function Page() {
   }, [dispatch, push])
 
   useEffect(() => {
+    studentID === '' ? setRegisteredStudentID(true) : setRegisteredStudentID(false)
     getMadeStem()
     getMadeOption()
-  }, [getMadeOption, getMadeStem])
+  }, [getMadeOption, getMadeStem, setRegisteredStudentID, studentID])
 
   return (
     <Container>
@@ -88,6 +96,7 @@ export default function Page() {
           )
         })}
       </MadeLists>
+      {registeredStudentID ? <FloatingButton onClick={onInsertStudentID}>Add Student ID</FloatingButton> : null}
       <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
     </Container>
   )
