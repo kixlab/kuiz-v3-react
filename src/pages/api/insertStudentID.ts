@@ -5,13 +5,15 @@ export interface PutStudentIDParams {
 }
 
 export interface PutStudentIDResults {
-  res: boolean
+  res: string
 }
 
 export default apiController<PutStudentIDParams, PutStudentIDResults>(async ({ studentID }, user) => {
   if (user) {
-    await user.updateOne({ $set: { studentID: studentID } })
-    return { res: true }
+    const updatedUser = await user.updateOne({ $set: { studentID: studentID } })
+    if (updatedUser) {
+      return { res: updatedUser.studentID }
+    }
   }
   throw new Error('User not found')
 })

@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FillBtn } from '@components/basic/button/Button'
 import { TextInput } from '@components/basic/InputBox'
-import { addStudentID, enroll, login } from '@redux/features/userSlice'
+import { updateStudentID, enroll, login } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { AsyncReturnType } from 'src/types/utils'
@@ -51,7 +51,7 @@ export default function Page({ providers }: Props) {
             })
           )
           if (user.studentID) {
-            dispatch(addStudentID(user.studentID))
+            dispatch(updateStudentID(user.studentID))
           }
         }
       })

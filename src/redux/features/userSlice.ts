@@ -39,7 +39,7 @@ export const userSlice = createSlice({
       state.madeOptions = action.payload.madeOptions
       state.solved = action.payload.solved
     },
-    addStudentID: (state: UserInfoType, action: PayloadAction<string>) => {
+    updateStudentID: (state: UserInfoType, action: PayloadAction<string>) => {
       state.studentID = action.payload
     },
     logout: (state: UserInfoType) => {
@@ -62,5 +62,5 @@ export const userSlice = createSlice({
   },
 })
 
-export const { login, logout, addStudentID, enroll } = userSlice.actions
+export const { login, logout, updateStudentID, enroll } = userSlice.actions
 export const userReducer = userSlice.reducer

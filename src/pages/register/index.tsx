@@ -1,27 +1,19 @@
 import styled from '@emotion/styled'
 import { TextInput } from '@components/basic/InputBox'
 import { FillBtn } from '@components/basic/button/Button'
-import { ChangeEvent, useState, useEffect } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { request } from '@utils/api'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@redux/store'
-import { addStudentID } from '@redux/features/userSlice'
+import { useDispatch } from 'react-redux'
+import { updateStudentID } from '@redux/features/userSlice'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { palette, typography } from '@styles/theme'
 
 export default function StudentID() {
-  const studentID = useSelector((state: RootState) => state.userInfo.studentID)
   const [insertedStudentID, setInsertedStudentID] = useState('')
   const dispatch = useDispatch()
   const { push } = useRouter()
-
-  useEffect(() => {
-    if (studentID !== '') {
-      push('/')
-    }
-  }, [studentID, push])
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInsertedStudentID(e.target.value)
@@ -32,7 +24,7 @@ export default function StudentID() {
       studentID: insertedStudentID,
     })
     if (res) {
-      dispatch(addStudentID(insertedStudentID))
+      dispatch(updateStudentID(insertedStudentID))
       push('/')
     }
   }

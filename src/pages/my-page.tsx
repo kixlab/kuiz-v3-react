@@ -96,7 +96,9 @@ export default function Page() {
           )
         })}
       </MadeLists>
-      {registeredStudentID ? <FloatingButton onClick={onInsertStudentID}>Add Student ID</FloatingButton> : null}
+      <FloatingButton onClick={onInsertStudentID}>
+        {registeredStudentID ? 'Add Student ID' : 'Update Student ID'}
+      </FloatingButton>
       <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
     </Container>
   )
