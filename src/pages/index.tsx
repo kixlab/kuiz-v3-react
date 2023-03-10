@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FillBtn } from '@components/basic/button/Button'
 import { TextInput } from '@components/basic/InputBox'
-import { enroll, login } from '@redux/features/userSlice'
+import { updateStudentID, enroll, login } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { AsyncReturnType } from 'src/types/utils'
@@ -50,10 +50,13 @@ export default function Page({ providers }: Props) {
               solved: user.solved.map(c => c.toString()),
             })
           )
+          if (user.studentID) {
+            dispatch(updateStudentID(user.studentID))
+          }
         }
       })
     }
-  }, [dispatch, session])
+  }, [push, dispatch, session])
 
   const onSubmit = useCallback(async () => {
     const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
