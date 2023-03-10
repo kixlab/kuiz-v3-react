@@ -55,9 +55,10 @@ export default function Page() {
     }
   }, [])
 
-  const onInsertStudentID = () => {
+  const onInsertStudentID = useCallback(() => {
     push('/register')
-  }
+  }, [push])
+
   const logOut = useCallback(() => {
     signOut()
     dispatch(logout())
@@ -65,7 +66,7 @@ export default function Page() {
   }, [dispatch, push])
 
   useEffect(() => {
-    studentID === '' ? setRegisteredStudentID(true) : setRegisteredStudentID(false)
+    setRegisteredStudentID(studentID === '')
     getMadeStem()
     getMadeOption()
   }, [getMadeOption, getMadeStem, setRegisteredStudentID, studentID])
