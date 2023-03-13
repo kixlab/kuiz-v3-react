@@ -25,7 +25,7 @@ export const userSlice = createSlice({
     made: [],
     madeOptions: [],
     solved: [],
-    studentID: '',
+    studentID: undefined,
   } as UserInfoType,
   reducers: {
     login: (state: UserInfoType, action: PayloadAction<UserInfoType>) => {
