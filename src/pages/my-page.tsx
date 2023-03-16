@@ -2,20 +2,18 @@ import { StrokeBtn } from '@components/basic/button/Button'
 import { Label } from '@components/basic/Label'
 import { MadeOption } from '@components/MadeOption'
 import { MadeStem } from '@components/MadeStem'
-import styled from '@emotion/styled'
+import { Sheet } from '@components/Sheet'
 import { logout } from '@redux/features/userSlice'
+import { RootState } from '@redux/store'
 import { QStem } from '@server/db/qstem'
-import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetQstemByOptionParams, GetQstemByOptionResults } from './api/getQstemByOption'
-import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 import { LoadCreatedOptionParams, LoadCreatedOptionResults } from './api/loadCreatedOption'
-import { FloatingButton } from '@components/basic/button/Floating'
-import { RootState } from '@redux/store'
+import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 
 export default function Page() {
   const studentID = useSelector((state: RootState) => state.userInfo.studentID)
@@ -25,7 +23,6 @@ export default function Page() {
   const [madeOption, setMadeOption] = useState<
     { qid: string; stemText: string; optionText: string; isAnswer: boolean }[]
   >([])
-  const [registeredStudentID, setRegisteredStudentID] = useState(false)
 
   const getMadeStem = useCallback(() => {
     request<LoadCreatedStemDataParams, LoadCreatedStemDataResults>(`loadCreatedStemData`, {}).then(res => {
@@ -66,57 +63,41 @@ export default function Page() {
   }, [dispatch, push])
 
   useEffect(() => {
-    setRegisteredStudentID(studentID === '')
     getMadeStem()
     getMadeOption()
-  }, [getMadeOption, getMadeStem, setRegisteredStudentID, studentID])
+  }, [getMadeOption, getMadeStem, studentID])
 
   return (
-    <Container>
-      <DataLabel>
-        <Label text="My Questions" color="black" size={0} />
-      </DataLabel>
-      <MadeLists>
-        {madeStem.map(stem => {
-          return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} />
-        })}
-      </MadeLists>
-      <DataLabel>
-        <Label text="My Options" color="black" size={0} />
-      </DataLabel>
-      <MadeLists>
-        {madeOption.map((option, i) => {
-          return (
-            <MadeOption
-              key={i}
-              optionType={option.isAnswer ? 'Answer' : 'Distractor'}
-              qid={option.qid}
-              question={option.stemText}
-              option={option.optionText}
-            />
-          )
-        })}
-      </MadeLists>
-      <FloatingButton onClick={onInsertStudentID}>
-        {registeredStudentID ? 'Add Student ID' : 'Update Student ID'}
-      </FloatingButton>
+    <Sheet>
+      <Label>Student ID</Label>
+      {studentID ?? 'Not registered'}
+      <StrokeBtn onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeBtn>
+
+      {0 < madeStem.length && (
+        <Label color="black" size={0}>
+          My Questions
+        </Label>
+      )}
+      {madeStem.map(stem => {
+        return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} />
+      })}
+      {0 < madeOption.length && (
+        <Label color="black" size={0}>
+          My Options
+        </Label>
+      )}
+      {madeOption.map((option, i) => {
+        return (
+          <MadeOption
+            key={i}
+            optionType={option.isAnswer ? 'Answer' : 'Distractor'}
+            qid={option.qid}
+            question={option.stemText}
+            option={option.optionText}
+          />
+        )
+      })}
       <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
-    </Container>
+    </Sheet>
   )
 }
-
-const Container = styled.div`
-  padding: 20px;
-`
-
-const MadeLists = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 30px;
-`
-
-const DataLabel = styled.div`
-  ${typography.hLabel};
-  color: ${palette.primary.main};
-`
