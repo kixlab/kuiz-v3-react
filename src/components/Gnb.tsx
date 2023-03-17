@@ -2,13 +2,14 @@ import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
   const { data } = useSession()
+  const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
   const cid = query.cid as string | undefined
   const userImg = useSelector((state: RootState) => state.userInfo).img
 
@@ -19,6 +20,10 @@ export const Gnb = () => {
   const onClickMyPage = useCallback(() => {
     push('/my-page')
   }, [push])
+
+  const onClickAdmin = useCallback(() => {
+    push(`/admin/${cid}`)
+  }, [push, cid])
 
   return (
     <SideTab>
@@ -31,6 +36,7 @@ export const Gnb = () => {
           {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
           <MenuBtn onClick={onClickSwitchClass}>Switch Class</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+          {isAdmin && cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>
       )}
@@ -94,5 +100,3 @@ const MenuBtn = styled.button`
     border-color: ${palette.primary.main};
   }
 `
-
-const Content = styled.div``
