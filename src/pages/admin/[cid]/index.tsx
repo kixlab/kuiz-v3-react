@@ -17,18 +17,22 @@ export default function Page() {
   const [classInfo, setClassInfo] = useState<LoadClassInfoResults>()
 
   useEffect(() => {
-    !isAdmin
-      ? push('/')
-      : cid
-      ? request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
+    if (!isAdmin) {
+      push('/')
+    } else {
+      if (cid) {
+        request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
           if (res) {
             setClassInfo(res)
           }
         })
-      : null
+      }
+    }
   }, [isAdmin, push, cid, setClassInfo])
 
-  const onClick = useCallback(() => {}, [])
+  const onClick = useCallback(() => {
+    push(`/admin/${cid}/editTopics`)
+  }, [push, cid])
 
   return (
     <>
@@ -63,7 +67,6 @@ export default function Page() {
               <Col>Questions</Col>
               <Col>{classInfo?.qstems.length}</Col>
               <Col>
-                {' '}
                 <FillBtn onClick={onClick}>Detail</FillBtn>
               </Col>
             </TableRow>

@@ -10,7 +10,7 @@ export const Gnb = () => {
   const { push, query } = useRouter()
   const { data } = useSession()
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
-  const cid = query.cid as string | undefined
+  const cid = query.cid
   const userImg = useSelector((state: RootState) => state.userInfo).img
 
   const onClickSwitchClass = useCallback(() => {
@@ -22,7 +22,11 @@ export const Gnb = () => {
   }, [push])
 
   const onClickAdmin = useCallback(() => {
-    push(`/admin/${cid}`)
+    if (cid) {
+      push(`/admin/${cid}`)
+    } else {
+      alert('Please Choose a Class!')
+    }
   }, [push, cid])
 
   return (
@@ -33,10 +37,9 @@ export const Gnb = () => {
       </Logo>
       {data && (
         <Menu>
-          {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
           <MenuBtn onClick={onClickSwitchClass}>Switch Class</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-          {isAdmin && cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
+          {isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>
       )}
