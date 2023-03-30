@@ -13,13 +13,13 @@ export interface UpdateTopicInfoResults {
 }
 
 export default apiController<UpdateTopicInfoParams, UpdateTopicInfoResults>(async ({ cid, topics }) => {
-  const CourseClass = await ClassModel.findById(new Types.ObjectId(cid))
-  if (CourseClass) {
-    const updateCourseTopics = await CourseClass.updateOne({ $set: { topics: topics } })
+  const courseClass = await ClassModel.findById(new Types.ObjectId(cid))
+  if (courseClass) {
+    const updateCourseTopics = await courseClass.updateOne({ $set: { topics: topics } })
     if (updateCourseTopics) {
-      const CourseClass = await ClassModel.findById(new Types.ObjectId(cid))
+      const courseClass = await ClassModel.findById(new Types.ObjectId(cid))
       return {
-        topics: CourseClass.topics,
+        topics: courseClass.topics,
         success: true,
       }
     }
