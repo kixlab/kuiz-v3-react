@@ -9,9 +9,8 @@ export interface LoadClassInfoParams {
 export interface LoadClassInfoResults {
   name: string
   topics: string[]
-  students: Types.ObjectId[]
-  qstems: Types.ObjectId[]
-  success: boolean
+  students: number
+  qstems: number
 }
 
 export default apiController<LoadClassInfoParams, LoadClassInfoResults>(async ({ cid }) => {
@@ -20,9 +19,8 @@ export default apiController<LoadClassInfoParams, LoadClassInfoResults>(async ({
     return {
       name: CourseClass.name,
       topics: CourseClass.topics,
-      students: CourseClass.students,
-      qstems: CourseClass.qstems,
-      success: true,
+      students: CourseClass.students.length,
+      qstems: CourseClass.qstems.length,
     }
   }
   throw new Error('Class not found')

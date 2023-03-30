@@ -66,14 +66,14 @@ export default function Page() {
             </TableRow>
             <TableRow>
               <Col>Students</Col>
-              <Col>{classInfo?.students.length}</Col>
+              <Col>{classInfo?.students}</Col>
               <Col>
                 <FillButton onClick={onClickStudents}>Detail</FillButton>
               </Col>
             </TableRow>
             <TableRow>
               <Col>Questions</Col>
-              <Col>{classInfo?.qstems.length}</Col>
+              <Col>{classInfo?.qstems}</Col>
               <Col>
                 <FillButton onClick={onClickQuestions}>Detail</FillButton>
               </Col>
