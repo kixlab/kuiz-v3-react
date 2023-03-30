@@ -1,16 +1,15 @@
-import { FillBtn } from '@components/basic/button/Button'
+import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
+import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
+import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
+import { FillButton } from '@components/basic/button/Fill'
+import { SelectInput } from '@components/basic/input/Select'
 import { Label } from '@components/basic/Label'
+import { Sheet } from '@components/Sheet'
 import { TextEditor } from '@components/TextEditor'
 import styled from '@emotion/styled'
-import { palette } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
-import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { SelectInput } from '@components/basic/input/Select'
-import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
-import { Sheet } from '@components/Sheet'
 
 const BLOOMS_TAXONOMY = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
 
@@ -39,12 +38,11 @@ export default function Page() {
         qstemObj: {
           stem_text: question,
           explanation,
-          action_verb: [],
           keyword: [],
           cid,
           options: [],
           optionSets: [],
-          learning_objective: `To ${method} the concept of ${topic}`,
+          learningObjective: `To ${method} the concept of ${topic}`,
         },
       })
       if (res) {
@@ -116,7 +114,7 @@ export default function Page() {
         </Label>
         <TextEditor placeholder="Explanation of your answer" value={explanation} onChange={setExplanation} />
       </div>
-      <FillBtn onClick={submitStem}>Submit</FillBtn>
+      <FillButton onClick={submitStem}>Submit</FillButton>
     </Sheet>
   )
 }

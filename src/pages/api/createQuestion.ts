@@ -6,12 +6,11 @@ export interface CreateQStemParams {
   qstemObj: {
     stem_text: string
     explanation: string
-    action_verb: string[]
     keyword: string[]
     cid: ID
     options: ID[]
     optionSets: ID[]
-    learning_objective: string
+    learningObjective: string
   }
 }
 

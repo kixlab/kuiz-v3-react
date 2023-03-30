@@ -22,7 +22,7 @@ class OptionService {
       is_answer: isAnswer,
       explanation,
       qstem: qid,
-      keyWords: keywords,
+      keywords: keywords,
     })
     option.disjointSet = option.id
     await option.save()

@@ -29,7 +29,7 @@ export const Gnb = () => {
       {data && (
         <Menu>
           {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
-          <MenuBtn onClick={onClickSwitchClass}>Switch Class</MenuBtn>
+          <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>

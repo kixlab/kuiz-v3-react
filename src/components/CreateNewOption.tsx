@@ -1,10 +1,10 @@
-import { CategoryInput } from './CategoryInput'
 import styled from '@emotion/styled'
-import { FillBtn } from './basic/button/Button'
-import { TextInput } from './basic/input/Text'
-import { TagBtn } from './basic/button/TagButton'
-import { Label } from './basic/Label'
 import { useCallback } from 'react'
+import { FillButton } from './basic/button/Fill'
+import { TagButton } from './basic/button/Tag'
+import { TextInput } from './basic/input/Text'
+import { Label } from './basic/Label'
+import { CategoryInput } from './CategoryInput'
 
 interface Props {
   isAnswer: boolean
@@ -29,18 +29,18 @@ export const CreateNewOption = (props: Props) => {
           <Label color="blue" size={0}>
             Create New Option
           </Label>
-          <TagBtn onClick={() => props.setIsAnswer(true)} id={props.isAnswer ? 'AnsAct' : 'Ans'}>
+          <TagButton onClick={() => props.setIsAnswer(true)} id={props.isAnswer ? 'AnsAct' : 'Ans'}>
             Answer
-          </TagBtn>
-          <TagBtn onClick={() => props.setIsAnswer(false)} id={!props.isAnswer ? 'DistAct' : 'Dist'}>
+          </TagButton>
+          <TagButton onClick={() => props.setIsAnswer(false)} id={!props.isAnswer ? 'DistAct' : 'Dist'}>
             Distractor
-          </TagBtn>
+          </TagButton>
         </div>
         <Block>
           <TextInput placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested} />
           <CategoryInput getCategory={props.setKeywords} />
         </Block>
-        <FillBtn onClick={props.onSubmit}>Submit</FillBtn>
+        <FillButton onClick={props.onSubmit}>Submit</FillButton>
       </Container>
     </div>
   )

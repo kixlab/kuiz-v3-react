@@ -25,7 +25,7 @@ export interface Option extends Doc {
   disjointSet: Types.ObjectId
   liked: Types.ObjectId[]
   disliked: Types.ObjectId[]
-  keyWords: string[]
+  keywords: string[]
 }
 
 const optionSchema = new Schema<Option>({
@@ -126,7 +126,7 @@ const optionSchema = new Schema<Option>({
     ],
     default: [],
   },
-  keyWords: {
+  keywords: {
     type: [String],
     default: [],
   },

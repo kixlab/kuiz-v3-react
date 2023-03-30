@@ -37,7 +37,7 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
       uid: qinfo.authorId,
       cid,
       stem_text: qinfo.stem_text,
-      learning_objective: qinfo.authorId,
+      learningObjective: qinfo.authorId,
       explanation: qinfo.authorId,
     })
 

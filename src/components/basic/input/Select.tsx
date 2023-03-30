@@ -5,11 +5,12 @@ import { MIN_BUTTON_SIZE } from 'src/constants/ui'
 interface Props {
   children?: React.ReactNode
   options: Readonly<string[]>
-  value: string
+  value: string | null
+  placeholder?: string
   onSelect: (index: number, value: string) => void
 }
 
-export const SelectInput = ({ options, children, onSelect, value }: Props) => {
+export const SelectInput = ({ options, children, onSelect, value, placeholder }: Props) => {
   const onClickLanguage = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const i = options.findIndex(op => op === e.target.value)
@@ -21,7 +22,10 @@ export const SelectInput = ({ options, children, onSelect, value }: Props) => {
   return (
     <div>
       <Tag>{children}</Tag>
-      <Options onChange={onClickLanguage} value={value ?? undefined}>
+      <Options onChange={onClickLanguage} value={value ?? undefined} placeholder={placeholder}>
+        <option value="" disabled selected>
+          {placeholder}
+        </option>
         {options.map((option, i) => (
           <option key={i}>{option}</option>
         ))}
@@ -38,6 +42,10 @@ const Options = styled.select`
   border: 1px solid #ccc;
   outline: none;
   width: 100%;
+
+  option[value=''][disabled] {
+    display: none;
+  }
 `
 
 const Tag = styled.div`

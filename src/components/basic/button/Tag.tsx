@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export const TagBtn = (props: Props) => {
+export const TagButton = (props: Props) => {
   return (
     <TagBtnComponent onClick={props.onClick} id={props.id}>
       {props.children}
