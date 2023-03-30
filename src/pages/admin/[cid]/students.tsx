@@ -1,46 +1,34 @@
 import { Label } from '@components/basic/Label'
 import { RootState } from '@redux/store'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { request } from '@utils/api'
-import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { TABLET_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { FillBtn } from '@components/basic/button/Button'
+import { LoadUserInfoParams, LoadUserInfoResults } from '@api/admin/loadUserInfo'
+import { User } from '@server/db/user'
 
 export default function Page() {
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
   const { push, query } = useRouter()
   const cid = query.cid as string
-  const [classInfo, setClassInfo] = useState<LoadClassInfoResults>()
+  const [users, setUsers] = useState<User[]>()
 
   useEffect(() => {
     if (!isAdmin) {
       push('/')
     } else {
       if (cid) {
-        request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
+        request<LoadUserInfoParams, LoadUserInfoResults>(`admin/loadUserInfo`, { cid }).then(res => {
           if (res) {
-            setClassInfo(res)
+            setUsers(res.students)
           }
         })
       }
     }
-  }, [isAdmin, push, cid, setClassInfo])
-
-  const onClickTopics = useCallback(() => {
-    push(`/admin/${cid}/topics`)
-  }, [push, cid])
-
-  const onClickStudents = useCallback(() => {
-    push(`/admin/${cid}/students`)
-  }, [push, cid])
-
-  const onClickQuestions = useCallback(() => {
-    push(`/class/${cid}/`)
-  }, [push, cid])
+  }, [isAdmin, push, cid, setUsers])
 
   return (
     <>
@@ -50,34 +38,23 @@ export default function Page() {
         </Label>
       ) : (
         <Container>
-          <Header>{classInfo?.name}</Header>
           <Table>
             <TableHeader>
-              <Col>Information</Col>
-              <Col>Count</Col>
-              <Col>Detail</Col>
+              <Col>Name</Col>
+              <Col>Email</Col>
+              <Col>Questions Made</Col>
+              <Col>Options Made</Col>
             </TableHeader>
-            <TableRow>
-              <Col>Topics</Col>
-              <Col>{classInfo?.topics.length}</Col>
-              <Col>
-                <FillBtn onClick={onClickTopics}>Detail</FillBtn>
-              </Col>
-            </TableRow>
-            <TableRow>
-              <Col>Students</Col>
-              <Col>{classInfo?.students.length}</Col>
-              <Col>
-                <FillBtn onClick={onClickStudents}>Detail</FillBtn>
-              </Col>
-            </TableRow>
-            <TableRow>
-              <Col>Questions</Col>
-              <Col>{classInfo?.qstems.length}</Col>
-              <Col>
-                <FillBtn onClick={onClickQuestions}>Detail</FillBtn>
-              </Col>
-            </TableRow>
+            {users?.map((student: User, index: number) => {
+              return (
+                <TableRow key={index}>
+                  <Col>{student.name}</Col>
+                  <Col>{student.email}</Col>
+                  <Col>{student.made.length}</Col>
+                  <Col>{student.madeOptions.length}</Col>
+                </TableRow>
+              )
+            })}
           </Table>
         </Container>
       )}
@@ -92,12 +69,6 @@ const Container = styled.div`
   margin-right: auto;
   padding-left: 10px;
   padding-right: 10px;
-`
-
-const Header = styled.h2`
-  font-size: 26px;
-  margin: 20px 0;
-  text-align: center;
 `
 
 const Table = styled.ul`
@@ -131,7 +102,8 @@ const TableRow = styled.li`
 `
 
 const Col = styled.div`
-  flex-basis: 33%;
+  flex-basis: 20%;
+  justify-items: end;
   @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
     flex-basis: 100%;
     display: flex;
