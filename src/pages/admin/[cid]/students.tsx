@@ -40,18 +40,18 @@ export default function Page() {
         <Container>
           <Table>
             <TableHeader>
-              <Col>Name</Col>
-              <Col>Email</Col>
-              <Col>Questions Made</Col>
-              <Col>Options Made</Col>
+              <Col1>Name</Col1>
+              <Col2>Email</Col2>
+              <NumberCol>Questions Made</NumberCol>
+              <NumberCol>Options Made</NumberCol>
             </TableHeader>
             {users?.map((student: User, index: number) => {
               return (
                 <TableRow key={index}>
-                  <Col>{student.name}</Col>
-                  <Col>{student.email}</Col>
-                  <Col>{student.made.length}</Col>
-                  <Col>{student.madeOptions.length}</Col>
+                  <Col1>{student.name}</Col1>
+                  <Col2>{student.email}</Col2>
+                  <NumberCol>{student.made.length}</NumberCol>
+                  <NumberCol>{student.madeOptions.length}</NumberCol>
                 </TableRow>
               )
             })}
@@ -79,12 +79,8 @@ const Table = styled.ul`
     justify-content: space-between;
     margin-bottom: 25px;
   }
-  @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
-    li {
-      display: block;
-    }
-  }
 `
+
 const TableHeader = styled.li`
   background-color: ${palette.primary.dark};
   color: ${palette.common.white};
@@ -92,7 +88,7 @@ const TableHeader = styled.li`
   text-transform: uppercase;
   letter-spacing: 0.03em;
   @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
-    display: none;
+    font-size: 12px;
   }
 `
 
@@ -101,18 +97,29 @@ const TableRow = styled.li`
   box-shadow: 0px 0px 9px 0px ${palette.background.dark};
 `
 
-const Col = styled.div`
-  flex-basis: 20%;
-  justify-items: end;
+const Col1 = styled.div`
+  flex-basis: 15%;
   @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
-    flex-basis: 100%;
-    display: flex;
+    flex-basis: 10%;
     padding: 10px 0;
-    &:before {
-      color: ${palette.common.white};
-      padding-right: 10px;
-      flex-basis: 50%;
-      text-align: right;
-    }
+    font-size: 11px;
+  }
+`
+
+const Col2 = styled.div`
+  flex-basis: 30%;
+  @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
+    flex-basis: 25%;
+    padding: 10px 0;
+    font-size: 11px;
+  }
+`
+
+const NumberCol = styled.div`
+  flex-basis: 10%;
+  @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
+    flex-basis: 1%;
+    padding: 10px 0;
+    font-size: 11px;
   }
 `
