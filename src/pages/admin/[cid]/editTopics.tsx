@@ -8,7 +8,7 @@ import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassI
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { TABLET_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { FillBtn } from '@components/basic/button/Button'
+import { FillBtn, TextBtnCta } from '@components/basic/button/Button'
 import { UpdateTopicInfoParams, UpdateTopicInfoResults } from '@api/admin/updateTopicInfo'
 import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
 import { CheckDialog } from '@components/Dialogs/CheckDialog'
@@ -42,7 +42,7 @@ export default function Page() {
         })
       }
     }
-  }, [isAdmin, push, cid, setClassInfo])
+  }, [isAdmin, push, cid, setClassInfo, setTopics])
 
   const updateDataBaseTopics = useCallback(
     (topics: string[]) => {
@@ -83,35 +83,44 @@ export default function Page() {
 
   const modalSubmit = useCallback(
     (res = '') => {
-      setModalOpen(false)
-      setCheckDelete(false)
       if (modalState === 'Update' && res.trim().length > 0 && typeof currentIndex === 'number') {
-        setTopics((previousState: string[]) => {
-          previousState[currentIndex] = res
-          updateDataBaseTopics(previousState)
-          return previousState
-        })
+        setModalOpen(false)
+        const updatedTopicList = [...topics]
+        updatedTopicList[currentIndex] = res
+        setTopics(updatedTopicList)
+        updateDataBaseTopics(updatedTopicList)
         setCurrentIndex(null)
         setModalState(null)
+        return
       } else if (modalState === 'Create' && res.trim().length > 0) {
-        setTopics((previousState: string[]) => {
-          previousState.push(res)
-          updateDataBaseTopics(previousState)
-          return previousState
-        })
-      } else {
-        if (typeof currentIndex === 'number') {
-          setTopics((previousState: string[]) => {
-            previousState.splice(currentIndex, 1)
-            updateDataBaseTopics(previousState)
-            return previousState
-          })
-          setCurrentIndex(null)
-          setModalState(null)
-        }
+        setModalOpen(false)
+        const updatedTopicList = [...topics, res]
+        setTopics(updatedTopicList)
+        updateDataBaseTopics(updatedTopicList)
+        setModalState(null)
+        return
+      } else if (checkDelete === true && typeof currentIndex === 'number') {
+        const updatedTopicList = [...topics]
+        updatedTopicList.splice(currentIndex, 1)
+        setTopics(updatedTopicList)
+        updateDataBaseTopics(updatedTopicList)
+        setCheckDelete(false)
+        setCurrentIndex(null)
+        setModalState(null)
+        return
       }
     },
-    [setModalOpen, modalState, setTopics, currentIndex, updateDataBaseTopics]
+    [
+      setModalOpen,
+      modalState,
+      currentIndex,
+      setTopics,
+      setCurrentIndex,
+      setModalState,
+      checkDelete,
+      topics,
+      updateDataBaseTopics,
+    ]
   )
 
   return (
@@ -150,10 +159,10 @@ export default function Page() {
                 <TableRow key={index}>
                   <Col>{topic}</Col>
                   <Col>
-                    <FillBtn onClick={() => onUpdateTopic(index)}>Update</FillBtn>
+                    <TextBtnCta onClick={() => onUpdateTopic(index)}>Update</TextBtnCta>
                   </Col>
                   <Col>
-                    <FillBtn onClick={() => onDeleteTopic(index)}>Delete</FillBtn>
+                    <TextBtnCta onClick={() => onDeleteTopic(index)}>Delete</TextBtnCta>
                   </Col>
                 </TableRow>
               )
