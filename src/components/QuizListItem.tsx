@@ -56,10 +56,6 @@ const Item = styled.div`
   text-overflow: ellipsis;
   max-height: 2.6em;
   text-align: center;
-
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    display: none;
-  }
 `
 
 const QuizText = styled.div`

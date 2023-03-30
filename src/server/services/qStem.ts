@@ -7,12 +7,11 @@ interface QStemData {
   uid: string
   stem_text: string
   explanation: string
-  action_verb?: string[]
   keyword?: string[]
   cid: string
   options?: string[]
   optionSets?: string[]
-  learning_objective: string
+  learningObjective: string
 }
 
 class QStemService {
@@ -20,23 +19,21 @@ class QStemService {
     uid,
     stem_text,
     explanation,
-    action_verb = [],
     keyword = [],
     cid,
     options = [],
     optionSets = [],
-    learning_objective,
+    learningObjective,
   }: QStemData) {
     const qStem = new QStemModel({
       author: uid,
       stem_text,
       explanation,
-      action_verb,
       keyword,
       class: cid,
       options,
       optionSets,
-      learning_objective,
+      learningObjective,
     })
     await qStem.save()
 

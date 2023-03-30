@@ -1,6 +1,6 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
-import { OptionBtn } from '@components/basic/button/OptionButton'
+import { OptionButton } from '@components/basic/button/Option'
 import { Label } from '@components/basic/Label'
 import { CreateNewOption } from '@components/CreateNewOption'
 import styled from '@emotion/styled'
@@ -77,7 +77,7 @@ export default function Page() {
         <Label color="blue" size={0}>
           Topic
         </Label>
-        <SectionText>{qinfo?.learning_objective}</SectionText>
+        <SectionText>{qinfo?.learningObjective}</SectionText>
       </div>
       <div>
         <Label color="blue" size={0}>
@@ -95,16 +95,16 @@ export default function Page() {
 
       <div>
         {ansList.map((item, i) => (
-          <OptionBtn key={i} state={true} selected={false}>
+          <OptionButton key={i} state={true} selected={false}>
             <div>✅</div>
             {item?.option_text}
-          </OptionBtn>
+          </OptionButton>
         ))}
         {disList.map((item, i) => (
-          <OptionBtn key={i} state={true} selected={false}>
+          <OptionButton key={i} state={true} selected={false}>
             <div>❌</div>
             {item?.option_text}
-          </OptionBtn>
+          </OptionButton>
         ))}
       </div>
       <DividerLine />

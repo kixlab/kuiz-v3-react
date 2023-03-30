@@ -1,7 +1,8 @@
+import { FillButton } from '@components/basic/button/Fill'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
-import { typography, palette } from '@styles/theme'
+import { palette, typography } from '@styles/theme'
 import { useState } from 'react'
-import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
 
@@ -21,10 +22,10 @@ export const InputDialog = (props: Props) => {
         </Label>
         <TextAreaInput onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
         <BtnRow>
-          <FillBtn onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
+          <FillButton onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
             Report
-          </FillBtn>
-          <StrokeBtn onClick={() => setInputMsg(props.toggleModal)}>Cancel</StrokeBtn>
+          </FillButton>
+          <StrokeButton onClick={() => setInputMsg(props.toggleModal)}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )
