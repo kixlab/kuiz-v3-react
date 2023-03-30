@@ -9,19 +9,19 @@ export interface UpdateTopicInfoParams {
 
 export interface UpdateTopicInfoResults {
   topics: string[]
-  success: boolean
 }
 
 export default apiController<UpdateTopicInfoParams, UpdateTopicInfoResults>(async ({ cid, topics }) => {
   const courseClass = await ClassModel.findById(new Types.ObjectId(cid))
   if (courseClass) {
     const updateCourseTopics = await courseClass.updateOne({ $set: { topics: topics } })
-    if (updateCourseTopics) {
+    if (updateCourseTopics.acknowledged) {
       const courseClass = await ClassModel.findById(new Types.ObjectId(cid))
       return {
         topics: courseClass.topics,
-        success: true,
       }
+    } else {
+      throw new Error('Topic update was unsuccessful')
     }
   }
   throw new Error('Class not found')
