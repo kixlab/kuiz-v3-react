@@ -8,7 +8,7 @@ import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassI
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { TABLET_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { FillBtn } from '@components/basic/button/Button'
+import { FillButton } from '@components/basic/button/Fill'
 
 export default function Page() {
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
@@ -61,21 +61,21 @@ export default function Page() {
               <Col>Topics</Col>
               <Col>{classInfo?.topics.length}</Col>
               <Col>
-                <FillBtn onClick={onClickTopics}>Detail</FillBtn>
+                <FillButton onClick={onClickTopics}>Detail</FillButton>
               </Col>
             </TableRow>
             <TableRow>
               <Col>Students</Col>
               <Col>{classInfo?.students.length}</Col>
               <Col>
-                <FillBtn onClick={onClickStudents}>Detail</FillBtn>
+                <FillButton onClick={onClickStudents}>Detail</FillButton>
               </Col>
             </TableRow>
             <TableRow>
               <Col>Questions</Col>
               <Col>{classInfo?.qstems.length}</Col>
               <Col>
-                <FillBtn onClick={onClickQuestions}>Detail</FillBtn>
+                <FillButton onClick={onClickQuestions}>Detail</FillButton>
               </Col>
             </TableRow>
           </Table>

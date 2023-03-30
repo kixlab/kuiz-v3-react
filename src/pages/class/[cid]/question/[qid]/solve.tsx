@@ -1,6 +1,9 @@
 import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
-import { FillBtn, StrokeBtn } from '@components/basic/button/Button'
-import { OptionBtn } from '@components/basic/button/OptionButton'
+import { LoadQuestionDetailParams, LoadQuestionDetailResults } from '@api/loadQuestionDetail'
+import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
+import { FillButton } from '@components/basic/button/Fill'
+import { OptionButton } from '@components/basic/button/Option'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { InputDialog } from '@components/Dialogs/InputDialog'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
@@ -9,8 +12,6 @@ import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { LoadProblemDetailParams, LoadProblemDetailResults } from '@api/loadProblemDetail'
-import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
@@ -38,7 +39,7 @@ export default function Page() {
 
   const getQinfo = useCallback(
     async (qid: string) => {
-      const res = await request<LoadProblemDetailParams, LoadProblemDetailResults>(`loadProblemDetail`, {
+      const res = await request<LoadQuestionDetailParams, LoadQuestionDetailResults>(`loadQuestionDetail`, {
         qid,
       })
       if (res) {
@@ -116,7 +117,7 @@ export default function Page() {
       <div>
         {optionSet?.map((e, i) => {
           return (
-            <OptionBtn
+            <OptionButton
               onClick={() => {
                 setSelected(i)
                 setIsSolved(true)
@@ -127,12 +128,12 @@ export default function Page() {
               isAnswer={showAnswer && answer === i ? true : false}
             >
               {e.option_text}
-            </OptionBtn>
+            </OptionButton>
           )
         })}
       </div>
       <BtnDisplay>
-        <FillBtn
+        <FillButton
           onClick={() => {
             checkAnswer()
             setShowAnswer(true)
@@ -140,9 +141,9 @@ export default function Page() {
           disabled={selected == -1}
         >
           Submit
-        </FillBtn>
-        <StrokeBtn onClick={shuffleOptions}>Shuffle Options</StrokeBtn>
-        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
+        </FillButton>
+        <StrokeButton onClick={shuffleOptions}>Shuffle Options</StrokeButton>
+        <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
     </QuestionBox>

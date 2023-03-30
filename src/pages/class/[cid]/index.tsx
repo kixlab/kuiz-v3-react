@@ -1,5 +1,7 @@
-import { LoadProblemListParams, LoadProblemListResults } from '@api/loadProblemList'
+import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
+import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
 import { FloatingButton } from '@components/basic/button/Floating'
+import { SelectInput } from '@components/basic/input/Select'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
 import { Sheet } from '@components/Sheet'
@@ -12,19 +14,9 @@ import { useCallback, useEffect, useState } from 'react'
 export default function Page() {
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
+  const topic = query.topic as string | undefined
   const [questionList, setQuestionList] = useState<QStem[]>([])
-
-  useEffect(() => {
-    if (cid) {
-      request<LoadProblemListParams, LoadProblemListResults>(`loadProblemList`, {
-        cid,
-      }).then(res => {
-        if (res) {
-          setQuestionList(res.problemList.reverse())
-        }
-      })
-    }
-  }, [cid, setQuestionList])
+  const [topics, setTopics] = useState<string[]>([])
 
   const onSolve = useCallback(
     (qid: string) => () => {
@@ -44,8 +36,45 @@ export default function Page() {
     push(`/class/${cid}/question/create`)
   }, [cid, push])
 
+  const onSelectTopic = useCallback(
+    (i: number) => {
+      const t = topics[i]
+      push(`/class/${cid}?topic=${t}`, undefined, { shallow: true })
+    },
+    [cid, push, topics]
+  )
+
+  useEffect(() => {
+    if (cid) {
+      request<LoadQuestionListParams, LoadQuestionListResults>(`loadQuestionList`, {
+        cid,
+        topic,
+      }).then(res => {
+        if (res) {
+          setQuestionList(res.problemList.reverse())
+        }
+      })
+    }
+  }, [cid, setQuestionList, topic])
+
+  useEffect(() => {
+    if (cid) {
+      request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, {
+        cid,
+      }).then(res => {
+        if (res) {
+          setTopics(res.topics)
+        }
+      })
+    }
+  }, [cid])
+
   return (
     <>
+      <FilterContainer>
+        <SelectInput options={topics} value={topic ?? null} onSelect={onSelectTopic} placeholder={'Select topic'} />
+      </FilterContainer>
+
       <Sheet padding={0} gap={8}>
         <QuizListHeader />
         {questionList.map((question, i) => (
@@ -63,3 +92,9 @@ export default function Page() {
     </>
   )
 }
+
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+`

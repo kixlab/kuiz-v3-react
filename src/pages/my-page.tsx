@@ -1,4 +1,4 @@
-import { StrokeBtn } from '@components/basic/button/Button'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { Label } from '@components/basic/Label'
 import { MadeOption } from '@components/MadeOption'
 import { MadeStem } from '@components/MadeStem'
@@ -71,7 +71,7 @@ export default function Page() {
     <Sheet>
       <Label>Student ID</Label>
       {studentID ?? 'Not registered'}
-      <StrokeBtn onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeBtn>
+      <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
 
       {0 < madeStem.length && (
         <Label color="black" size={0}>
@@ -97,7 +97,7 @@ export default function Page() {
           />
         )
       })}
-      <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
+      <StrokeButton onClick={logOut}>Log out</StrokeButton>
     </Sheet>
   )
 }

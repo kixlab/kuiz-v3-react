@@ -8,10 +8,11 @@ import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassI
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { TABLET_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { FillBtn, TextBtnCta } from '@components/basic/button/Button'
 import { UpdateTopicInfoParams, UpdateTopicInfoResults } from '@api/admin/updateTopicInfo'
 import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
 import { CheckDialog } from '@components/Dialogs/CheckDialog'
+import { FillButton } from '@components/basic/button/Fill'
+import { TextButton } from '@components/basic/button/Text'
 
 export default function Page() {
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
@@ -83,8 +84,8 @@ export default function Page() {
 
   const modalSubmit = useCallback(
     (res = '') => {
+      setModalOpen(false)
       if (modalState === 'Update' && res.trim().length > 0 && typeof currentIndex === 'number') {
-        setModalOpen(false)
         const updatedTopicList = [...topics]
         updatedTopicList[currentIndex] = res
         setTopics(updatedTopicList)
@@ -93,7 +94,6 @@ export default function Page() {
         setModalState(null)
         return
       } else if (modalState === 'Create' && res.trim().length > 0) {
-        setModalOpen(false)
         const updatedTopicList = [...topics, res]
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
@@ -159,16 +159,20 @@ export default function Page() {
                 <TableRow key={index}>
                   <Col>{topic}</Col>
                   <Col>
-                    <TextBtnCta onClick={() => onUpdateTopic(index)}>Update</TextBtnCta>
+                    <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
+                      Update
+                    </TextButton>
                   </Col>
                   <Col>
-                    <TextBtnCta onClick={() => onDeleteTopic(index)}>Delete</TextBtnCta>
+                    <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
+                      Delete
+                    </TextButton>
                   </Col>
                 </TableRow>
               )
             })}
           </Table>
-          <FillBtn onClick={onAddNewTopic}>Add New Topic</FillBtn>
+          <FillButton onClick={onAddNewTopic}>Add New Topic</FillButton>
         </Container>
       )}
     </>

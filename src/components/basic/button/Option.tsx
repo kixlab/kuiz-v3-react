@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export const OptionBtn = (props: Props) => {
+export const OptionButton = (props: Props) => {
   return (
     <OptionBtnComponent
       onClick={props.onClick}

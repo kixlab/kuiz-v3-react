@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import { useState } from 'react'
 import { css } from '@emotion/react'
 import { CheckDialog } from './Dialogs/CheckDialog'
-import { TextBtn, TextBtnCta } from './basic/button/Button'
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { palette, typography } from '@styles/theme'
+import { TextButton } from './basic/button/Text'
 
 interface Props {
   question: string
@@ -34,7 +34,9 @@ export const MadeStem = (props: Props) => {
         </QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextBtn onClick={toggleModal}>Delete</TextBtn>
+        <TextButton onClick={toggleModal} color={palette.grey[400]}>
+          Delete
+        </TextButton>
         <CheckDialog
           title="Delete the stem"
           btnName="Delete"
@@ -43,7 +45,12 @@ export const MadeStem = (props: Props) => {
           toggleModal={toggleModal}
           cancelModal={closeModal}
         />
-        <TextBtnCta onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
+        <TextButton
+          onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}
+          color={palette.grey[400]}
+        >
+          View
+        </TextButton>
       </RowFlex>
     </StemBox>
   )

@@ -30,7 +30,7 @@ export const palette = {
     500: '#bdbdbd',
     600: '#f1f1f1',
   },
-}
+} as const
 
 export const typography = {
   logo: css`

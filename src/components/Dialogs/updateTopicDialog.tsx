@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { typography, palette } from '@styles/theme'
 import { useState } from 'react'
-import { FillBtn, StrokeBtn } from '../basic/button/Button'
+import { FillButton } from '@components/basic/button/Fill'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
 
@@ -25,8 +26,8 @@ export const UpdateTopicDialog = (props: Props) => {
           placeholder={props.state === 'Update' ? props.initialText : 'Add Topic'}
         />
         <BtnRow>
-          <FillBtn onClick={() => props.submit(inputMsg)}>Insert</FillBtn>
-          <StrokeBtn onClick={() => props.submit('')}>Cancel</StrokeBtn>
+          <FillButton onClick={() => props.submit(inputMsg)}>Insert</FillButton>
+          <StrokeButton onClick={() => props.submit('')}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )

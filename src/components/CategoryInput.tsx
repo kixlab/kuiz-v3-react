@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { TextBtnCta } from './basic/button/Button'
+import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { TextButton } from './basic/button/Text'
 
 interface Props {
   getCategory: (cats: string[]) => void
@@ -55,7 +55,9 @@ export const CategoryInput = ({ getCategory }: Props) => {
           onChange={e => (inputRef.current = e.target.value)}
           placeholder="Select categories for your option or add your own"
         />
-        <TextBtnCta onClick={addElement}>Add</TextBtnCta>
+        <TextButton onClick={addElement} color={palette.grey[400]}>
+          Add
+        </TextButton>
       </CatBox>
       <Categories>
         {categories.map((e, idx) => {

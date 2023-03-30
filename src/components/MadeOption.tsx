@@ -1,11 +1,10 @@
-import styled from '@emotion/styled'
-import { useState } from 'react'
 import { css } from '@emotion/react'
-import { CheckDialog } from './Dialogs/CheckDialog'
-import { TextBtn, TextBtnCta } from './basic/button/Button'
-import { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
+import { TextButton } from './basic/button/Text'
+import { CheckDialog } from './Dialogs/CheckDialog'
 
 interface Props {
   qid: string
@@ -37,7 +36,9 @@ export const MadeOption = (props: Props) => {
         <QuestionLabel>Q. {props.question}</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextBtn onClick={toggleModal}>Delete</TextBtn>
+        <TextButton onClick={toggleModal} color={palette.grey[400]}>
+          Delete
+        </TextButton>
         <CheckDialog
           title="Delete the stem"
           btnName="Delete"
@@ -46,7 +47,12 @@ export const MadeOption = (props: Props) => {
           toggleModal={toggleModal}
           cancelModal={closeModal}
         />
-        <TextBtnCta onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
+        <TextButton
+          onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}
+          color={palette.primary.dark}
+        >
+          View
+        </TextButton>
       </RowFlex>
     </OptionBox>
   )

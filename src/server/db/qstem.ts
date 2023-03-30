@@ -4,9 +4,8 @@ import { Doc } from 'src/types/common'
 export interface QStem extends Doc {
   author: Types.ObjectId
   stem_text: string
-  action_verb: string[]
   keyword: string[]
-  learning_objective: string
+  learningObjective: string
   material: string
   class: Types.ObjectId
   options: Types.ObjectId[]
@@ -26,15 +25,11 @@ const QstemSchema = new Schema<QStem>(
       type: String,
       required: true,
     },
-    action_verb: {
-      type: [String],
-      default: [],
-    },
     keyword: {
       type: [String],
       default: [],
     },
-    learning_objective: {
+    learningObjective: {
       type: String,
       default: '',
     },

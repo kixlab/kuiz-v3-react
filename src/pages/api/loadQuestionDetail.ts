@@ -4,16 +4,16 @@ import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
 
-export interface LoadProblemDetailParams {
+export interface LoadQuestionDetailParams {
   qid: ID
 }
 
-export interface LoadProblemDetailResults {
+export interface LoadQuestionDetailResults {
   qinfo: QStem
   options: Option[]
 }
 
-export default apiController<LoadProblemDetailParams, LoadProblemDetailResults>(async ({ qid }) => {
+export default apiController<LoadQuestionDetailParams, LoadQuestionDetailResults>(async ({ qid }) => {
   const qStem = await QStemModel.findById(new Types.ObjectId(qid))
 
   if (qStem) {

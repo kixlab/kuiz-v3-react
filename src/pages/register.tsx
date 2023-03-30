@@ -25,7 +25,7 @@ export default function StudentID() {
     })
     if (res) {
       dispatch(updateStudentID(insertedStudentID))
-      push('/')
+      push('/my-page')
     }
   }
   return (

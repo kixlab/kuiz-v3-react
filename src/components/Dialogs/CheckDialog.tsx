@@ -1,7 +1,8 @@
-import { Modal } from './Modal'
+import { FillButton } from '@components/basic/button/Fill'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
-import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
+import { Modal } from './Modal'
 
 interface Props {
   title: string
@@ -21,8 +22,8 @@ export const CheckDialog = ({ title, message, modalState, btnName, toggleModal, 
         </Label>
         <div>{message}</div>
         <BtnRow>
-          <FillBtn onClick={toggleModal}>{btnName}</FillBtn>
-          <StrokeBtn onClick={cancelModal}>Cancel</StrokeBtn>
+          <FillButton onClick={toggleModal}>{btnName}</FillButton>
+          <StrokeButton onClick={cancelModal}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )

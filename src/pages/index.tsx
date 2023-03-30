@@ -1,5 +1,5 @@
 import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
-import { FillBtn } from '@components/basic/button/Button'
+import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
@@ -95,7 +95,7 @@ export default function Page({ providers }: Props) {
           ))}
           <InputSection>
             <TextInput placeholder="Enter class code" onChange={detectChange} />
-            <FillBtn onClick={onSubmit}>Enter</FillBtn>
+            <FillButton onClick={onSubmit}>Enter</FillButton>
           </InputSection>
         </Sheet>
       ) : (
@@ -134,9 +134,9 @@ export default function Page({ providers }: Props) {
           </IntroBox>
           {providers &&
             Object.values(providers).map(provider => (
-              <FillBtn key={provider.id} onClick={signInCallback(provider)}>
+              <FillButton key={provider.id} onClick={signInCallback(provider)}>
                 Sign In With {provider.name}
-              </FillBtn>
+              </FillButton>
             ))}
         </>
       )}
