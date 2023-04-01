@@ -37,7 +37,6 @@ export const Gnb = () => {
       </Logo>
       {data && (
         <Menu>
-          {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
           <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
           {isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
