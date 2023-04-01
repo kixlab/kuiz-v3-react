@@ -29,22 +29,40 @@ export const Gnb = () => {
     }
   }, [push, cid])
 
-  return (
-    <SideTab>
-      <Logo>
-        <LogoIcon src={'/logo.svg'} />
-        KUIZ
-      </Logo>
-      {data && (
-        <Menu>
-          <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
-          <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-          {isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
-          <ProfileImg src={userImg}></ProfileImg>
-        </Menu>
-      )}
-    </SideTab>
-  )
+  if (isAdmin) {
+    return (
+      <SideTab>
+        <Logo>
+          <LogoIcon src={'/logo.svg'} />
+          KUIZ
+        </Logo>
+        {data && (
+          <Menu>
+            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
+            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+            <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>
+            <ProfileImg src={userImg}></ProfileImg>
+          </Menu>
+        )}
+      </SideTab>
+    )
+  } else {
+    return (
+      <SideTab>
+        <Logo>
+          <LogoIcon src={'/logo.svg'} />
+          KUIZ
+        </Logo>
+        {data && (
+          <Menu>
+            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
+            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+            <ProfileImg src={userImg}></ProfileImg>
+          </Menu>
+        )}
+      </SideTab>
+    )
+  }
 }
 
 const SideTab = styled.div`
