@@ -108,12 +108,8 @@ const Table = styled.ul`
     justify-content: space-between;
     margin-bottom: 25px;
   }
-  @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
-    li {
-      display: block;
-    }
-  }
 `
+
 const TableHeader = styled.li`
   background-color: ${palette.primary.dark};
   color: ${palette.common.white};
@@ -121,7 +117,7 @@ const TableHeader = styled.li`
   text-transform: uppercase;
   letter-spacing: 0.03em;
   @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
-    display: none;
+    font-size: 12px;
   }
 `
 
@@ -132,6 +128,7 @@ const TableRow = styled.li`
 
 const Col = styled.div`
   flex-basis: 33%;
+  align-items: center;
   @media all and (max-width: ${TABLET_WIDTH_THRESHOLD}px) {
     flex-basis: 100%;
     display: flex;

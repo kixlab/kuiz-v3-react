@@ -15,6 +15,7 @@ export default function Page() {
   const { push, query } = useRouter()
   const cid = query.cid as string
   const [users, setUsers] = useState<User[]>()
+  const [className, setClassName] = useState('')
 
   useEffect(() => {
     if (!isAdmin) {
@@ -24,6 +25,7 @@ export default function Page() {
         request<LoadUserInfoParams, LoadUserInfoResults>(`admin/loadUserInfo`, { cid }).then(res => {
           if (res) {
             setUsers(res.students)
+            setClassName(res.className)
           }
         })
       }
@@ -38,6 +40,7 @@ export default function Page() {
         </Label>
       ) : (
         <Container>
+          <Header>{className}</Header>
           <Table>
             <TableHeader>
               <Col1>Name</Col1>
@@ -69,6 +72,12 @@ const Container = styled.div`
   margin-right: auto;
   padding-left: 10px;
   padding-right: 10px;
+`
+
+const Header = styled.h2`
+  font-size: 26px;
+  margin: 20px 0;
+  text-align: center;
 `
 
 const Table = styled.ul`
