@@ -10,7 +10,7 @@ interface Props {
   modalState: boolean
   btnName: string
   toggleModal: () => void
-  cancelModal?: () => void
+  cancelModal: () => void
 }
 
 export const CheckDialog = ({ title, message, modalState, btnName, toggleModal, cancelModal }: Props) => {
