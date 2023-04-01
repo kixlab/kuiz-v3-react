@@ -22,10 +22,6 @@ export const MadeOption = (props: Props) => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
 
-  const closeModal = useCallback(() => {
-    setIsOpenModal(!isOpenModal)
-  }, [setIsOpenModal, isOpenModal])
-
   return (
     <OptionBox>
       <RowFlex>
@@ -45,7 +41,6 @@ export const MadeOption = (props: Props) => {
           message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
           toggleModal={toggleModal}
-          cancelModal={closeModal}
         />
         <TextButton
           onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}
