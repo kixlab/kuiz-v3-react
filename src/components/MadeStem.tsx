@@ -39,6 +39,7 @@ export const MadeStem = (props: Props) => {
           message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
           toggleModal={toggleModal}
+          cancelModal={toggleModal}
         />
         <TextButton
           onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}

@@ -18,6 +18,9 @@ export function GlobalDialog() {
       toggleModal={() => {
         dispatch(removeError())
       }}
+      cancelModal={() => {
+        dispatch(removeError())
+      }}
     />
   )
 }

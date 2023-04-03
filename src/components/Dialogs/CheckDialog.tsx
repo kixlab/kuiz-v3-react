@@ -10,9 +10,10 @@ interface Props {
   modalState: boolean
   btnName: string
   toggleModal: () => void
+  cancelModal: () => void
 }
 
-export const CheckDialog = ({ title, message, modalState, btnName, toggleModal }: Props) => {
+export const CheckDialog = ({ title, message, modalState, btnName, toggleModal, cancelModal }: Props) => {
   if (modalState) {
     return (
       <Modal>
@@ -22,7 +23,7 @@ export const CheckDialog = ({ title, message, modalState, btnName, toggleModal }
         <div>{message}</div>
         <BtnRow>
           <FillButton onClick={toggleModal}>{btnName}</FillButton>
-          <StrokeButton onClick={toggleModal}>Cancel</StrokeButton>
+          <StrokeButton onClick={cancelModal}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )

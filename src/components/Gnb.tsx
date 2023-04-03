@@ -2,14 +2,15 @@ import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
   const { data } = useSession()
-  const cid = query.cid as string | undefined
+  const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
+  const cid = query.cid
   const userImg = useSelector((state: RootState) => state.userInfo).img
 
   const onClickSwitchClass = useCallback(() => {
@@ -20,22 +21,48 @@ export const Gnb = () => {
     push('/my-page')
   }, [push])
 
-  return (
-    <SideTab>
-      <Logo>
-        <LogoIcon src={'/logo.svg'} />
-        KUIZ
-      </Logo>
-      {data && (
-        <Menu>
-          {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
-          <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
-          <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-          <ProfileImg src={userImg}></ProfileImg>
-        </Menu>
-      )}
-    </SideTab>
-  )
+  const onClickAdmin = useCallback(() => {
+    if (cid) {
+      push(`/admin/${cid}`)
+    } else {
+      alert('Please Choose a Class!')
+    }
+  }, [push, cid])
+
+  if (isAdmin) {
+    return (
+      <SideTab>
+        <Logo>
+          <LogoIcon src={'/logo.svg'} />
+          KUIZ
+        </Logo>
+        {data && (
+          <Menu>
+            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
+            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+            <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>
+            <ProfileImg src={userImg}></ProfileImg>
+          </Menu>
+        )}
+      </SideTab>
+    )
+  } else {
+    return (
+      <SideTab>
+        <Logo>
+          <LogoIcon src={'/logo.svg'} />
+          KUIZ
+        </Logo>
+        {data && (
+          <Menu>
+            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
+            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+            <ProfileImg src={userImg}></ProfileImg>
+          </Menu>
+        )}
+      </SideTab>
+    )
+  }
 }
 
 const SideTab = styled.div`
@@ -94,5 +121,3 @@ const MenuBtn = styled.button`
     border-color: ${palette.primary.main};
   }
 `
-
-const Content = styled.div``
