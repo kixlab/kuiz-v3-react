@@ -10,26 +10,30 @@ interface Props {
   qid: string
   option: string
   question: string
+  cid: string
   optionType: 'Answer' | 'Distractor'
 }
 
-export const MadeOption = (props: Props) => {
-  const { push, query } = useRouter()
-  const cid = query.cid as string | undefined
+export const MadeOption = ({ qid, option, question, cid, optionType }: Props) => {
+  const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
 
+  const viewOption = useCallback(() => {
+    push('/class/' + cid + '/question/' + qid + '/solve')
+  }, [cid, push, qid])
+
   return (
     <OptionBox>
       <RowFlex>
-        <Tag id={props.optionType}>{props.optionType}</Tag>
-        <OptionLabel>{props.option}</OptionLabel>
+        <QuestionLabel>Q. {question}</QuestionLabel>
       </RowFlex>
       <RowFlex>
-        <QuestionLabel>Q. {props.question}</QuestionLabel>
+        <Tag id={optionType}>{optionType}</Tag>
+        <OptionLabel>{option}</OptionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
         <TextButton onClick={toggleModal} color={palette.grey[400]}>
@@ -43,10 +47,7 @@ export const MadeOption = (props: Props) => {
           toggleModal={toggleModal}
           cancelModal={toggleModal}
         />
-        <TextButton
-          onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}
-          color={palette.primary.dark}
-        >
+        <TextButton onClick={viewOption} color={palette.primary.dark}>
           View
         </TextButton>
       </RowFlex>
@@ -55,9 +56,11 @@ export const MadeOption = (props: Props) => {
 }
 
 const OptionBox = styled.div`
-  background-color: white;
-  padding: 20px 20px 0px 20px;
+  padding: 12px;
   border-radius: 8px;
+  border: 1px solid #323232;
+  display: grid;
+  gap: 12px;
 `
 
 const RowFlex = styled.div<{ id?: 'EditBtns' }>`
@@ -65,7 +68,6 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   flex-direction: row;
   gap: 12px;
   align-items: center;
-  padding-bottom: 16px;
   font-family: 'inter-m';
   ${props =>
     props.id === 'EditBtns' &&
@@ -97,7 +99,4 @@ const OptionLabel = styled.div`
 
 const QuestionLabel = styled.div`
   ${typography.b02};
-  display: flex;
-  gap: 6px;
-  color: ${palette.grey[400]};
 `

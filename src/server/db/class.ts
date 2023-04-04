@@ -5,11 +5,7 @@ export interface Class extends Doc {
   code: string
   students: Types.ObjectId[]
   qstems: Types.ObjectId[]
-  topics: {
-    topic: string
-    optionsGoal: number
-    questionsGoal: number
-  }[]
+  topics: Types.ObjectId[]
   name: string
 }
 
@@ -41,9 +37,8 @@ const ClassSchema = new Schema<Class>({
   topics: {
     type: [
       {
-        topic: String,
-        optionsGoal: Number,
-        questionsGoal: Number,
+        type: Schema.Types.ObjectId,
+        ref: 'Topic',
       },
     ],
     default: [],

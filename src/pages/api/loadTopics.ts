@@ -1,4 +1,4 @@
-import { Class, ClassModel } from '@server/db/class'
+import { Topic, TopicModel } from '@server/db/topic'
 import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
@@ -8,19 +8,12 @@ export interface LoadTopicsParams {
 }
 
 export interface LoadTopicsResults {
-  topics: string[]
+  topics: Topic[]
 }
 
 export default apiController<LoadTopicsParams, LoadTopicsResults>(async ({ cid }) => {
-  const targetClass: Class | null = await ClassModel.findById(new Types.ObjectId(cid))
-  if (targetClass) {
-    const topics: string[] = []
-    targetClass.topics.forEach((topicWithGoals: { topic: string; optionsGoal: number; questionsGoal: number }) => {
-      topics.push(topicWithGoals.topic)
-    })
-    return {
-      topics,
-    }
+  const topics = await TopicModel.find({ class: new Types.ObjectId(cid) })
+  return {
+    topics,
   }
-  throw new Error('Class not found')
 })

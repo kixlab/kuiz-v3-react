@@ -20,6 +20,7 @@ export const GlobalStyles = css`
   }
   body {
     background-color: #e6eaef;
+    font-family: sans-serif;
   }
   @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     body {
