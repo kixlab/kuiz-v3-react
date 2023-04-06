@@ -29,7 +29,11 @@ export default function Page() {
 
   //create update modal data
   const [modalOpen, setModalOpen] = useState(false)
-  const [initialModalText, setInitialModalText] = useState('')
+  const [initialModalText, setInitialModalText] = useState<{
+    topic: string
+    optionsGoal: number | undefined
+    questionsGoal: number | undefined
+  } | null>()
   const [modalState, setModalState] = useState<'Update' | 'Create' | null>(null)
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
 
@@ -73,7 +77,7 @@ export default function Page() {
   const onUpdateTopic = useCallback(
     (index: number) => {
       setModalState('Update')
-      setInitialModalText(topics[index].topic)
+      setInitialModalText(topics[index])
       setModalOpen(true)
       setCurrentIndex(index)
     },
@@ -83,7 +87,7 @@ export default function Page() {
   const onDeleteTopic = useCallback(
     (index: number) => {
       setCurrentIndex(index)
-      setInitialModalText(topics[index].topic)
+      setInitialModalText(topics[index])
       setCheckDelete(true)
     },
     [setCurrentIndex, setInitialModalText, topics, setCheckDelete]
@@ -95,23 +99,39 @@ export default function Page() {
   }, [setModalOpen, setModalState])
 
   const modalSubmit = useCallback(
-    (res = '') => {
+    (res = '', optionWeight = 0, questionWeight = 0) => {
       setModalOpen(false)
-      if (modalState === 'Update' && res.trim().length > 0 && typeof currentIndex === 'number') {
+      if (
+        checkDelete === false &&
+        modalState === 'Update' &&
+        (res.trim().length > 0 ||
+          initialModalText?.optionsGoal !== optionWeight ||
+          initialModalText?.questionsGoal !== questionWeight) &&
+        typeof currentIndex === 'number'
+      ) {
         const updatedTopicList = [...topics]
-        updatedTopicList[currentIndex].topic = res
+        if (res !== '') {
+          updatedTopicList[currentIndex].topic = res
+        }
+        if (optionWeight >= 0) {
+          updatedTopicList[currentIndex].optionsGoal = optionWeight
+        }
+        if (questionWeight >= 0) {
+          updatedTopicList[currentIndex].questionsGoal = questionWeight
+        }
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
         setCurrentIndex(null)
         setModalState(null)
+        setInitialModalText(null)
         return
-      } else if (modalState === 'Create' && res.trim().length > 0) {
+      } else if (modalState === 'Create' && res.trim().length > 0 && optionWeight >= 0 && questionWeight >= 0) {
         const updatedTopicList = [
           ...topics,
           {
             topic: res,
-            optionsGoal: 0,
-            questionsGoal: 0,
+            optionsGoal: optionWeight,
+            questionsGoal: questionWeight,
           },
         ]
         setTopics(updatedTopicList)
@@ -139,6 +159,7 @@ export default function Page() {
       checkDelete,
       topics,
       updateDataBaseTopics,
+      initialModalText,
     ]
   )
 
@@ -152,13 +173,15 @@ export default function Page() {
         <Container>
           <UpdateTopicDialog
             modalState={modalOpen}
-            initialText={initialModalText}
+            initialText={initialModalText?.topic}
+            initialOptionWeight={modalState === 'Update' ? initialModalText?.optionsGoal : undefined}
+            initialQuestionWeight={modalState === 'Update' ? initialModalText?.questionsGoal : undefined}
             state={modalState}
             submit={modalSubmit}
           />
           <CheckDialog
             title="Delete Topic"
-            message={`Are you sure you want to delete "${initialModalText}"`}
+            message={`Are you sure you want to delete "${initialModalText?.topic}"`}
             modalState={checkDelete}
             btnName="Yes"
             toggleModal={modalSubmit}

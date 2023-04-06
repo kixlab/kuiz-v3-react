@@ -9,12 +9,16 @@ import { Modal } from './Modal'
 interface Props {
   modalState: boolean
   initialText?: string
+  initialOptionWeight?: number
+  initialQuestionWeight?: number
   state: 'Update' | 'Create' | null
-  submit: (input: string) => void
+  submit: (updatedTopic: string, updatedOptionWeight: number, updatedQuestionWeight: number) => void
 }
 
 export const UpdateTopicDialog = (props: Props) => {
   const [inputMsg, setInputMsg] = useState('')
+  const [optionsWeight, setOptionWeight] = useState(props.initialOptionWeight ?? 0)
+  const [questionWeight, setQuestionWeight] = useState(props.initialQuestionWeight ?? 0)
   if (props.modalState) {
     return (
       <Modal>
@@ -25,9 +29,33 @@ export const UpdateTopicDialog = (props: Props) => {
           onChange={e => setInputMsg(e.target.value)}
           placeholder={props.state === 'Update' ? props.initialText : 'Add Topic'}
         />
+        <WeightWrapper>
+          <div>
+            <Label color="black" size={1}>
+              Option weight
+            </Label>
+            <NumberInput
+              type="number"
+              min={0}
+              defaultValue={props.initialOptionWeight ?? 0}
+              onChange={e => setOptionWeight(parseInt(e.target.value))}
+            />
+          </div>
+          <div>
+            <Label color="black" size={1}>
+              Question weight
+            </Label>
+            <NumberInput
+              type="number"
+              min={0}
+              defaultValue={props.initialQuestionWeight ?? 0}
+              onChange={e => setQuestionWeight(parseInt(e.target.value))}
+            />
+          </div>
+        </WeightWrapper>
         <BtnRow>
-          <FillButton onClick={() => props.submit(inputMsg)}>Insert</FillButton>
-          <StrokeButton onClick={() => props.submit('')}>Cancel</StrokeButton>
+          <FillButton onClick={() => props.submit(inputMsg, optionsWeight, questionWeight)}>Insert</FillButton>
+          <StrokeButton onClick={() => props.submit('', -1, -1)}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )
@@ -49,6 +77,27 @@ const TextAreaInput = styled.textarea`
   &::placeholder {
     color: ${palette.grey[500]};
   }
+  &:focus {
+    outline: none;
+    border-color: ${palette.grey[200]};
+  }
+`
+
+const WeightWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+`
+
+const NumberInput = styled.input`
+  width: 100%;
+  padding: 16px;
+  margin: 5px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  border: 1px solid ${palette.grey[500]};
   &:focus {
     outline: none;
     border-color: ${palette.grey[200]};
