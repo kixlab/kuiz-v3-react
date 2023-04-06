@@ -8,7 +8,11 @@ export interface LoadClassInfoParams {
 
 export interface LoadClassInfoResults {
   name: string
-  topics: string[]
+  topics: {
+    topic: string
+    optionsGoal: number
+    questionsGoal: number
+  }[]
   students: number
   qstems: number
 }

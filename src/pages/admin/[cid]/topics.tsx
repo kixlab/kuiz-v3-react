@@ -19,7 +19,13 @@ export default function Page() {
   const { push, query } = useRouter()
   const cid = query.cid as string
   const [classInfo, setClassInfo] = useState<LoadClassInfoResults>()
-  const [topics, setTopics] = useState<string[]>([])
+  const [topics, setTopics] = useState<
+    {
+      topic: string
+      optionsGoal: number
+      questionsGoal: number
+    }[]
+  >([])
 
   //create update modal data
   const [modalOpen, setModalOpen] = useState(false)
@@ -46,7 +52,13 @@ export default function Page() {
   }, [isAdmin, push, cid, setClassInfo, setTopics])
 
   const updateDataBaseTopics = useCallback(
-    (topics: string[]) => {
+    (
+      topics: {
+        topic: string
+        optionsGoal: number
+        questionsGoal: number
+      }[]
+    ) => {
       if (cid) {
         request<UpdateTopicInfoParams, UpdateTopicInfoResults>(`admin/updateTopicInfo`, { cid, topics }).then(res => {
           if (res) {
@@ -61,7 +73,7 @@ export default function Page() {
   const onUpdateTopic = useCallback(
     (index: number) => {
       setModalState('Update')
-      setInitialModalText(topics[index])
+      setInitialModalText(topics[index].topic)
       setModalOpen(true)
       setCurrentIndex(index)
     },
@@ -71,7 +83,7 @@ export default function Page() {
   const onDeleteTopic = useCallback(
     (index: number) => {
       setCurrentIndex(index)
-      setInitialModalText(topics[index])
+      setInitialModalText(topics[index].topic)
       setCheckDelete(true)
     },
     [setCurrentIndex, setInitialModalText, topics, setCheckDelete]
@@ -87,14 +99,21 @@ export default function Page() {
       setModalOpen(false)
       if (modalState === 'Update' && res.trim().length > 0 && typeof currentIndex === 'number') {
         const updatedTopicList = [...topics]
-        updatedTopicList[currentIndex] = res
+        updatedTopicList[currentIndex].topic = res
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
         setCurrentIndex(null)
         setModalState(null)
         return
       } else if (modalState === 'Create' && res.trim().length > 0) {
-        const updatedTopicList = [...topics, res]
+        const updatedTopicList = [
+          ...topics,
+          {
+            topic: res,
+            optionsGoal: 0,
+            questionsGoal: 0,
+          },
+        ]
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
         setModalState(null)
@@ -154,23 +173,32 @@ export default function Page() {
               <Col>Update</Col>
               <Col>Delete</Col>
             </TableHeader>
-            {topics?.map((topic: string, index: number) => {
-              return (
-                <TableRow key={index}>
-                  <Col>{topic}</Col>
-                  <Col>
-                    <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
-                      Update
-                    </TextButton>
-                  </Col>
-                  <Col>
-                    <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
-                      Delete
-                    </TextButton>
-                  </Col>
-                </TableRow>
-              )
-            })}
+            {topics?.map(
+              (
+                topicsWithGoals: {
+                  topic: string
+                  optionsGoal: number
+                  questionsGoal: number
+                },
+                index: number
+              ) => {
+                return (
+                  <TableRow key={index}>
+                    <Col>{topicsWithGoals.topic}</Col>
+                    <Col>
+                      <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
+                        Update
+                      </TextButton>
+                    </Col>
+                    <Col>
+                      <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
+                        Delete
+                      </TextButton>
+                    </Col>
+                  </TableRow>
+                )
+              }
+            )}
           </Table>
           <FillButton onClick={onAddNewTopic}>Add New Topic</FillButton>
         </Container>

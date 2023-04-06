@@ -14,8 +14,12 @@ export interface LoadTopicsResults {
 export default apiController<LoadTopicsParams, LoadTopicsResults>(async ({ cid }) => {
   const targetClass: Class | null = await ClassModel.findById(new Types.ObjectId(cid))
   if (targetClass) {
+    const topics = <string[]>[]
+    targetClass.topics.forEach((topicWithGoals: { topic: string; optionsGoal: number; questionsGoal: number }) => {
+      topics.push(topicWithGoals.topic)
+    })
     return {
-      topics: targetClass.topics,
+      topics,
     }
   }
   throw new Error('Class not found')

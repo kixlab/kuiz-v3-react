@@ -38,10 +38,6 @@ export default function Page() {
     push(`/admin/${cid}/students`)
   }, [push, cid])
 
-  const onClickGoals = useCallback(() => {
-    push(`/admin/${cid}/goals`)
-  }, [push, cid])
-
   const onClickQuestions = useCallback(() => {
     push(`/class/${cid}/`)
   }, [push, cid])
@@ -73,13 +69,6 @@ export default function Page() {
               <Col>{classInfo?.students}</Col>
               <Col>
                 <FillButton onClick={onClickStudents}>Detail</FillButton>
-              </Col>
-            </TableRow>
-            <TableRow>
-              <Col>Goals</Col>
-              <Col>TBD</Col>
-              <Col>
-                <FillButton onClick={onClickGoals}>Detail</FillButton>
               </Col>
             </TableRow>
             <TableRow>
