@@ -11,6 +11,7 @@ export interface CreateOptionParams {
     explanation: string
     class: ID
     qstem: ID
+    learningObjective: string
     keywords: string[]
   }
   similarOptions: ID[]
@@ -28,6 +29,7 @@ export default apiController<CreateOptionParams, CreateOptionResults>(async ({ o
     isAnswer: optionData.is_answer,
     optionText: optionData.option_text,
     explanation: optionData.explanation,
+    learningObjective: optionData.learningObjective,
     keywords: optionData.keywords,
   })
 

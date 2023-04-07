@@ -1,4 +1,5 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
+import { getQuestionTopicParams, getQuestionTopicResults } from '@api/getQuestionTopic'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { OptionButton } from '@components/basic/button/Option'
 import { Label } from '@components/basic/Label'
@@ -19,6 +20,7 @@ export default function Page() {
   const [disList, setDistList] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
   const [similarOptions, setSimilarOptions] = useState<string[]>([])
+  const [learningObjective, setLearningObjective] = useState('')
 
   // My option values
   const [option, setOption] = useState('')
@@ -39,6 +41,14 @@ export default function Page() {
           setQinfo(res.qinfo)
         }
       })
+      request<getQuestionTopicParams, getQuestionTopicResults>(`getQuestionTopic`, {
+        qid,
+      }).then(res => {
+        if (res) {
+          setLearningObjective(res.learningObjective)
+          console.log(res.learningObjective)
+        }
+      })
     }
   }, [push, qid, setAnsList, setDistList, setQinfo])
 
@@ -50,6 +60,7 @@ export default function Page() {
         explanation: '',
         class: cid,
         qstem: qid,
+        learningObjective,
         keywords,
       }
 
@@ -69,7 +80,7 @@ export default function Page() {
       })
       push('/class/' + cid)
     }
-  }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions])
+  }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions, learningObjective])
 
   return (
     <QuestionBox>

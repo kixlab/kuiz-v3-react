@@ -53,6 +53,7 @@ export default function Page() {
             explanation,
             class: cid,
             qstem: res.data,
+            learningObjective: `To ${method} the concept of ${topic}`,
             keywords: [],
           },
           similarOptions: [],

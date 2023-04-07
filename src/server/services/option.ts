@@ -10,11 +10,21 @@ interface OptionData {
   optionText: string
   isAnswer: boolean
   explanation?: string
+  learningObjective: string
   keywords?: string[]
 }
 
 class OptionService {
-  async create({ uid, qid, cid, optionText, isAnswer, explanation = '', keywords = [] }: OptionData) {
+  async create({
+    uid,
+    qid,
+    cid,
+    optionText,
+    isAnswer,
+    explanation = '',
+    learningObjective,
+    keywords = [],
+  }: OptionData) {
     const option = new OptionModel({
       author: uid,
       class: cid,
@@ -22,6 +32,7 @@ class OptionService {
       is_answer: isAnswer,
       explanation,
       qstem: qid,
+      learningObjective: learningObjective,
       keywords: keywords,
     })
     option.disjointSet = option.id

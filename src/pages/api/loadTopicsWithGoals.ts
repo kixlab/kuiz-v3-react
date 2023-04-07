@@ -3,20 +3,30 @@ import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
 
-export interface LoadTopicsParams {
+export interface LoadTopicsWithGoalsParams {
   cid: ID
 }
 
-export interface LoadTopicsResults {
-  topics: string[]
+export interface LoadTopicsWithGoalsResults {
+  topics: {
+    topic: string
+    optionsGoal: number
+    questionsGoal: number
+  }[]
 }
 
-export default apiController<LoadTopicsParams, LoadTopicsResults>(async ({ cid }) => {
+export default apiController<LoadTopicsWithGoalsParams, LoadTopicsWithGoalsResults>(async ({ cid }) => {
   const targetClass: Class | null = await ClassModel.findById(new Types.ObjectId(cid))
   if (targetClass) {
-    const topics: string[] = []
+    const topics = <
+      {
+        topic: string
+        optionsGoal: number
+        questionsGoal: number
+      }[]
+    >[]
     targetClass.topics.forEach((topicWithGoals: { topic: string; optionsGoal: number; questionsGoal: number }) => {
-      topics.push(topicWithGoals.topic)
+      topics.push(topicWithGoals)
     })
     return {
       topics,
