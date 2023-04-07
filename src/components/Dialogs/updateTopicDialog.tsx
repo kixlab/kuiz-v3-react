@@ -32,7 +32,7 @@ export const UpdateTopicDialog = (props: Props) => {
         <WeightWrapper>
           <div>
             <Label color="black" size={1}>
-              Option weight
+              Options Required
             </Label>
             <NumberInput
               type="number"
@@ -43,7 +43,7 @@ export const UpdateTopicDialog = (props: Props) => {
           </div>
           <div>
             <Label color="black" size={1}>
-              Question weight
+              Questions Required
             </Label>
             <NumberInput
               type="number"

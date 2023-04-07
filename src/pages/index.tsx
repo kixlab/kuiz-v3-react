@@ -3,7 +3,7 @@ import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
-import { enroll, login, updateStudentID } from '@redux/features/userSlice'
+import { enroll, login, updateDocumentation, updateStudentID } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
@@ -13,6 +13,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
+import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
+import { AllowDocumentationParams, AllowDocumentationResults } from '@api/allowDocumentation'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -24,6 +26,7 @@ export default function Page({ providers }: Props) {
   const dispatch = useDispatch()
   const classes = useSelector((state: RootState) => state.userInfo.classes)
   const [code, setCode] = useState('')
+  const [askForDocumentation, setAskForDocumentation] = useState(false)
 
   const detectChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +55,11 @@ export default function Page({ providers }: Props) {
           )
           if (user.studentID) {
             dispatch(updateStudentID(user.studentID))
+          }
+          if (typeof user.allowDocumentation == 'boolean') {
+            dispatch(updateDocumentation(user.allowDocumentation))
+          } else {
+            setAskForDocumentation(true)
           }
         }
       })
@@ -82,22 +90,38 @@ export default function Page({ providers }: Props) {
     [query.callbackUrl]
   )
 
+  const onUpdateAllowDocumentation = useCallback(
+    async (allowDocumentation: boolean) => {
+      const res = await request<AllowDocumentationParams, AllowDocumentationResults>(`allowDocumentation`, {
+        allowDocumentation: allowDocumentation,
+      })
+      if (res) {
+        dispatch(updateDocumentation(res.res))
+        setAskForDocumentation(false)
+      }
+    },
+    [dispatch]
+  )
+
   return (
     <>
       {session ? (
-        <Sheet>
-          <Header>Choose a Class or Enroll in a new Class</Header>
-          {classes.map(({ cid, name }, i) => (
-            <ClassButton key={i} onClick={onClassEnter(cid)}>
-              {name}
-              {/* ({code}) */}
-            </ClassButton>
-          ))}
-          <InputSection>
-            <TextInput placeholder="Enter class code" onChange={detectChange} />
-            <FillButton onClick={onSubmit}>Enter</FillButton>
-          </InputSection>
-        </Sheet>
+        <>
+          <UpdateAllowDocumentationDialog modalState={askForDocumentation} submit={onUpdateAllowDocumentation} />
+          <Sheet>
+            <Header>Choose a Class or Enroll in a new Class</Header>
+            {classes.map(({ cid, name }, i) => (
+              <ClassButton key={i} onClick={onClassEnter(cid)}>
+                {name}
+                {/* ({code}) */}
+              </ClassButton>
+            ))}
+            <InputSection>
+              <TextInput placeholder="Enter class code" onChange={detectChange} />
+              <FillButton onClick={onSubmit}>Enter</FillButton>
+            </InputSection>
+          </Sheet>
+        </>
       ) : (
         <>
           <IntroBox>
