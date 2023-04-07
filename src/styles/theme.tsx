@@ -86,17 +86,11 @@ export const typography = {
   `,
   b03b: css`
     font-family: 'inter-m';
-    font-size: 14px;
-    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-      font-size: 14px;
-    }
+    font-size: 1rem;
   `,
   button: css`
     font-family: 'inter-m';
-    font-size: 14px;
-    @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-      font-size: 14px;
-    }
+    font-size: 1rem;
   `,
   smallbutton: css`
     font-family: 'inter-m';

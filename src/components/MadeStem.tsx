@@ -10,11 +10,11 @@ import { TextButton } from './basic/button/Text'
 interface Props {
   question: string
   qid: string
+  cid: string
 }
 
-export const MadeStem = (props: Props) => {
-  const { push, query } = useRouter()
-  const cid = query.cid as string | undefined
+export const MadeStem = ({ question, cid, qid }: Props) => {
+  const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const toggleModal = useCallback(() => {
@@ -24,10 +24,7 @@ export const MadeStem = (props: Props) => {
   return (
     <StemBox>
       <RowFlex>
-        <QuestionLabel>
-          <div style={{ color: `${palette.grey[400]}` }}>Q.</div>
-          {props.question}
-        </QuestionLabel>
+        <QuestionLabel>Q. {question}</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
         <TextButton onClick={toggleModal} color={palette.grey[400]}>
@@ -41,10 +38,7 @@ export const MadeStem = (props: Props) => {
           toggleModal={toggleModal}
           cancelModal={toggleModal}
         />
-        <TextButton
-          onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}
-          color={palette.grey[400]}
-        >
+        <TextButton onClick={() => push('/' + cid + '/question/' + qid + '/createOption')} color={palette.grey[400]}>
           View
         </TextButton>
       </RowFlex>
@@ -53,16 +47,17 @@ export const MadeStem = (props: Props) => {
 }
 
 const StemBox = styled.div`
-  background-color: white;
-  padding: 20px 20px 0px 20px;
+  padding: 12px;
   border-radius: 8px;
+  border: 1px solid #323232;
+  display: grid;
+  gap: 12px;
 `
 
 const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   display: flex;
   flex-direction: row;
   gap: 12px;
-  padding-bottom: 16px;
   ${props =>
     props.id === 'EditBtns' &&
     css`
@@ -71,7 +66,4 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
 `
 const QuestionLabel = styled.div`
   ${typography.b01};
-  color: ${palette.grey[200]};
-  display: flex;
-  gap: 6px;
 `

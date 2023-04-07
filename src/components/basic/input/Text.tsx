@@ -3,11 +3,14 @@ import { typography, palette } from '@styles/theme'
 
 interface Props {
   placeholder: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  value?: string
+  onChange: (v: string) => void
 }
 
-export const TextInput = (props: Props) => {
-  return <TextInputComponent type="text" placeholder={props.placeholder} onChange={props.onChange} />
+export const TextInput = ({ placeholder, value = '', onChange }: Props) => {
+  return (
+    <TextInputComponent type="text" placeholder={placeholder} onChange={e => onChange(e.target.value)} value={value} />
+  )
 }
 
 const TextInputComponent = styled.input`

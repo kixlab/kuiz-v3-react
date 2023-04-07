@@ -1,166 +1,102 @@
+import { CreateTopicParams, CreateTopicResults } from '@api/admin/createTopic'
+import { DeleteTopicParams, DeleteTopicResults } from '@api/admin/deleteTopic'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
+import { UpdateTopicParams, UpdateTopicResults } from '@api/admin/updateTopic'
+import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
 import { Label } from '@components/basic/Label'
+import { FillButton } from '@components/basic/button/Fill'
+import { TextButton } from '@components/basic/button/Text'
+import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
+import { Topic } from '@server/db/topic'
+import { palette, typography } from '@styles/theme'
+import { request } from '@utils/api'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { request } from '@utils/api'
-import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
-import styled from '@emotion/styled'
-import { palette, typography } from '@styles/theme'
 import { TABLET_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { UpdateTopicInfoParams, UpdateTopicInfoResults } from '@api/admin/updateTopicInfo'
-import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
-import { CheckDialog } from '@components/Dialogs/CheckDialog'
-import { FillButton } from '@components/basic/button/Fill'
-import { TextButton } from '@components/basic/button/Text'
 
 export default function Page() {
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
   const { push, query } = useRouter()
   const cid = query.cid as string
   const [classInfo, setClassInfo] = useState<LoadClassInfoResults>()
-  const [topics, setTopics] = useState<
-    {
-      topic: string
-      optionsGoal: number
-      questionsGoal: number
-    }[]
-  >([])
-
-  //create update modal data
+  const [topics, setTopics] = useState<Topic[]>([])
   const [modalOpen, setModalOpen] = useState(false)
-  const [initialModalText, setInitialModalText] = useState<{
-    topic: string
-    optionsGoal: number | undefined
-    questionsGoal: number | undefined
-  } | null>()
-  const [modalState, setModalState] = useState<'Update' | 'Create' | null>(null)
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
 
-  //delete modal data
-  const [checkDelete, setCheckDelete] = useState(false)
-
   useEffect(() => {
-    if (!isAdmin) {
-      push('/')
-    } else {
-      if (cid) {
-        request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
-          if (res) {
-            setClassInfo(res)
-            setTopics(res.topics)
-          }
-        })
-      }
+    if (cid) {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
+        if (res) {
+          setClassInfo(res)
+          setTopics(res.topics)
+        }
+      })
     }
-  }, [isAdmin, push, cid, setClassInfo, setTopics])
-
-  const updateDataBaseTopics = useCallback(
-    (
-      topics: {
-        topic: string
-        optionsGoal: number
-        questionsGoal: number
-      }[]
-    ) => {
-      if (cid) {
-        request<UpdateTopicInfoParams, UpdateTopicInfoResults>(`admin/updateTopicInfo`, { cid, topics }).then(res => {
-          if (res) {
-            setTopics(res.topics)
-          }
-        })
-      }
-    },
-    [cid]
-  )
+  }, [push, cid, setClassInfo, setTopics])
 
   const onUpdateTopic = useCallback(
     (index: number) => {
-      setModalState('Update')
-      setInitialModalText(topics[index])
       setModalOpen(true)
       setCurrentIndex(index)
     },
-    [setModalOpen, setModalState, setInitialModalText, topics]
+    [setModalOpen]
   )
 
   const onDeleteTopic = useCallback(
-    (index: number) => {
-      setCurrentIndex(index)
-      setInitialModalText(topics[index])
-      setCheckDelete(true)
+    async (index: number) => {
+      if (confirm(`Are you sure you want to delete "${topics[index].label}"`)) {
+        const res = await request<DeleteTopicParams, DeleteTopicResults>('admin/deleteTopic', {
+          tid: topics[index]._id,
+        })
+        if (res) {
+          const updatedTopicList = [...topics]
+          updatedTopicList.splice(index, 1)
+          setTopics(updatedTopicList)
+        }
+      }
     },
-    [setCurrentIndex, setInitialModalText, topics, setCheckDelete]
+    [topics]
   )
 
   const onAddNewTopic = useCallback(() => {
-    setModalState('Create')
     setModalOpen(true)
-  }, [setModalOpen, setModalState])
+    setCurrentIndex(null)
+  }, [setModalOpen])
 
   const modalSubmit = useCallback(
-    (res = '', optionWeight = 0, questionWeight = 0) => {
+    async (label: string, requiredOptionNumber: number, requiredQuestionNumber: number) => {
       setModalOpen(false)
-      if (
-        checkDelete === false &&
-        modalState === 'Update' &&
-        (res.trim().length > 0 ||
-          initialModalText?.optionsGoal !== optionWeight ||
-          initialModalText?.questionsGoal !== questionWeight) &&
-        typeof currentIndex === 'number'
-      ) {
-        const updatedTopicList = [...topics]
-        if (res !== '') {
-          updatedTopicList[currentIndex].topic = res
+      if (currentIndex !== null) {
+        const updatedTopic = {
+          ...topics[currentIndex],
+          label,
+          requiredOptionNumber,
+          requiredQuestionNumber,
         }
-        if (optionWeight >= 0) {
-          updatedTopicList[currentIndex].optionsGoal = optionWeight
+        const res = await request<UpdateTopicParams, UpdateTopicResults>('admin/updateTopic', {
+          topic: updatedTopic,
+        })
+        if (res) {
+          const updatedTopicList = [...topics]
+          updatedTopicList[currentIndex] = updatedTopic
+          setTopics(updatedTopicList)
         }
-        if (questionWeight >= 0) {
-          updatedTopicList[currentIndex].questionsGoal = questionWeight
+      } else {
+        const res = await request<CreateTopicParams, CreateTopicResults>('admin/createTopic', {
+          cid,
+          label,
+          requiredOptionNumber,
+          requiredQuestionNumber,
+        })
+        if (res) {
+          setTopics([...topics, res.topic])
         }
-        setTopics(updatedTopicList)
-        updateDataBaseTopics(updatedTopicList)
-        setCurrentIndex(null)
-        setModalState(null)
-        setInitialModalText(null)
-        return
-      } else if (modalState === 'Create' && res.trim().length > 0 && optionWeight >= 0 && questionWeight >= 0) {
-        const updatedTopicList = [
-          ...topics,
-          {
-            topic: res,
-            optionsGoal: optionWeight,
-            questionsGoal: questionWeight,
-          },
-        ]
-        setTopics(updatedTopicList)
-        updateDataBaseTopics(updatedTopicList)
-        setModalState(null)
-        return
-      } else if (checkDelete === true && typeof currentIndex === 'number') {
-        const updatedTopicList = [...topics]
-        updatedTopicList.splice(currentIndex, 1)
-        setTopics(updatedTopicList)
-        updateDataBaseTopics(updatedTopicList)
-        setCheckDelete(false)
-        setCurrentIndex(null)
-        setModalState(null)
-        return
       }
     },
-    [
-      setModalOpen,
-      modalState,
-      currentIndex,
-      setTopics,
-      setCurrentIndex,
-      setModalState,
-      checkDelete,
-      topics,
-      updateDataBaseTopics,
-      initialModalText,
-    ]
+    [currentIndex, topics, cid]
   )
 
   return (
@@ -170,61 +106,37 @@ export default function Page() {
           403 Forbidden
         </Label>
       ) : (
-        <Container>
-          <UpdateTopicDialog
-            modalState={modalOpen}
-            initialText={initialModalText?.topic}
-            initialOptionWeight={modalState === 'Update' ? initialModalText?.optionsGoal : undefined}
-            initialQuestionWeight={modalState === 'Update' ? initialModalText?.questionsGoal : undefined}
-            state={modalState}
-            submit={modalSubmit}
-          />
-          <CheckDialog
-            title="Delete Topic"
-            message={`Are you sure you want to delete "${initialModalText?.topic}"`}
-            modalState={checkDelete}
-            btnName="Yes"
-            toggleModal={modalSubmit}
-            cancelModal={() => {
-              setCheckDelete(!checkDelete)
-            }}
-          />
-          <Header>{classInfo?.name}</Header>
-          <Table>
-            <TableHeader>
-              <Col>Topic</Col>
-              <Col>Update</Col>
-              <Col>Delete</Col>
-            </TableHeader>
-            {topics?.map(
-              (
-                topicsWithGoals: {
-                  topic: string
-                  optionsGoal: number
-                  questionsGoal: number
-                },
-                index: number
-              ) => {
+        <>
+          <Head>
+            <title>{classInfo?.name}</title>
+          </Head>
+          <Container>
+            {modalOpen && <UpdateTopicDialog submit={modalSubmit} cancel={() => setModalOpen(false)} />}
+            <Table>
+              <TableHeader>
+                <Col>Topic</Col>
+                <Col>Update</Col>
+                <Col>Delete</Col>
+              </TableHeader>
+              {topics.map((topic, index) => {
                 return (
                   <TableRow key={index}>
-                    <Col>{topicsWithGoals.topic}</Col>
-                    <Col>
-                      <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
-                        Update
-                      </TextButton>
-                    </Col>
-                    <Col>
-                      <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
-                        Delete
-                      </TextButton>
-                    </Col>
+                    <Col>{topic.label}</Col>
+                    <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
+                      Update
+                    </TextButton>
+                    <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
+                      Delete
+                    </TextButton>
                   </TableRow>
                 )
-              }
-            )}
-          </Table>
-          <FillButton onClick={onAddNewTopic}>Add New Topic</FillButton>
-        </Container>
+              })}
+            </Table>
+            <FillButton onClick={onAddNewTopic} marginTop={20}>
+              Add New Topic
+            </FillButton>
+          </Container>
+        </>
       )}
     </>
   )
@@ -241,18 +153,10 @@ const Container = styled.div`
 
 const Table = styled.ul`
   li {
-    border-radius: 3px;
-    padding: 25px 30px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 25px;
   }
-`
-
-const Header = styled.h2`
-  font-size: 26px;
-  margin: 20px 0;
-  text-align: center;
 `
 
 const TableHeader = styled.li`
@@ -268,7 +172,7 @@ const TableHeader = styled.li`
 
 const TableRow = styled.li`
   background-color: ${palette.common.white};
-  box-shadow: 0px 0px 9px 0px ${palette.background.dark};
+  /* box-shadow: 0px 0px 9px 0px ${palette.background.dark}; */
 `
 
 const Col = styled.div`

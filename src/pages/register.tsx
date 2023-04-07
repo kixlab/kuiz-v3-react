@@ -15,10 +15,6 @@ export default function StudentID() {
   const dispatch = useDispatch()
   const { push } = useRouter()
 
-  const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInsertedStudentID(e.target.value)
-  }
-
   const onSubmit = async () => {
     const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
       studentID: insertedStudentID,
@@ -32,7 +28,7 @@ export default function StudentID() {
     <Sheet>
       <Header>Please Enter Your Student ID</Header>
       <InputSection>
-        <TextInput placeholder="Enter Student ID" onChange={inputChange} />
+        <TextInput placeholder="Enter Student ID" onChange={setInsertedStudentID} />
         <FillButton onClick={onSubmit}>Submit</FillButton>
       </InputSection>
     </Sheet>

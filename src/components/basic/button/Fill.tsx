@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { MIN_BUTTON_SIZE } from 'src/constants/ui'
+import { View } from '../View'
 
 interface Props {
   children: React.ReactNode
@@ -8,13 +9,13 @@ interface Props {
   disabled?: boolean
 }
 
-export const FillButton = (props: Props) => {
+export const FillButton = View<Props>(({ children, onClick, disabled, ...props }) => {
   return (
-    <Fill onClick={props.onClick} disabled={props.disabled}>
-      {props.children}
+    <Fill onClick={onClick} disabled={disabled} {...props}>
+      {children}
     </Fill>
   )
-}
+})
 
 const Fill = styled.button`
   ${typography.button};

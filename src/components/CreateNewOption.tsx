@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { useCallback } from 'react'
+import { CategoryInput } from './CategoryInput'
+import { Label } from './basic/Label'
 import { FillButton } from './basic/button/Fill'
 import { TagButton } from './basic/button/Tag'
 import { TextInput } from './basic/input/Text'
-import { Label } from './basic/Label'
-import { CategoryInput } from './CategoryInput'
 
 interface Props {
   isAnswer: boolean
@@ -15,13 +14,6 @@ interface Props {
 }
 
 export const CreateNewOption = (props: Props) => {
-  const updateSuggested = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      props.setOption(e.target.value)
-    },
-    [props]
-  )
-
   return (
     <div>
       <Container>
@@ -37,7 +29,7 @@ export const CreateNewOption = (props: Props) => {
           </TagButton>
         </div>
         <Block>
-          <TextInput placeholder="Suggest an answer or distractor for this question" onChange={updateSuggested} />
+          <TextInput placeholder="Suggest an answer or distractor for this question" onChange={props.setOption} />
           <CategoryInput getCategory={props.setKeywords} />
         </Block>
         <FillButton onClick={props.onSubmit}>Submit</FillButton>

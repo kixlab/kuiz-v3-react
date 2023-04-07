@@ -14,8 +14,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <SessionProvider session={pageProps.session}>
-        <Global styles={GlobalStyles} />
         <Global styles={ResetStyles} />
+        <Global styles={GlobalStyles} />
         <Gnb />
         <Content>
           <Component {...pageProps} />
