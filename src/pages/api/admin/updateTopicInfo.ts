@@ -4,11 +4,19 @@ import { Types } from 'mongoose'
 
 export interface UpdateTopicInfoParams {
   cid: string
-  topics: string[]
+  topics: {
+    topic: string
+    optionsGoal: number
+    questionsGoal: number
+  }[]
 }
 
 export interface UpdateTopicInfoResults {
-  topics: string[]
+  topics: {
+    topic: string
+    optionsGoal: number
+    questionsGoal: number
+  }[]
 }
 
 export default apiController<UpdateTopicInfoParams, UpdateTopicInfoResults>(async ({ cid, topics }) => {

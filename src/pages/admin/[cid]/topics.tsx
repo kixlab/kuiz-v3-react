@@ -19,11 +19,21 @@ export default function Page() {
   const { push, query } = useRouter()
   const cid = query.cid as string
   const [classInfo, setClassInfo] = useState<LoadClassInfoResults>()
-  const [topics, setTopics] = useState<string[]>([])
+  const [topics, setTopics] = useState<
+    {
+      topic: string
+      optionsGoal: number
+      questionsGoal: number
+    }[]
+  >([])
 
   //create update modal data
   const [modalOpen, setModalOpen] = useState(false)
-  const [initialModalText, setInitialModalText] = useState('')
+  const [initialModalText, setInitialModalText] = useState<{
+    topic: string
+    optionsGoal: number | undefined
+    questionsGoal: number | undefined
+  } | null>()
   const [modalState, setModalState] = useState<'Update' | 'Create' | null>(null)
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
 
@@ -46,7 +56,13 @@ export default function Page() {
   }, [isAdmin, push, cid, setClassInfo, setTopics])
 
   const updateDataBaseTopics = useCallback(
-    (topics: string[]) => {
+    (
+      topics: {
+        topic: string
+        optionsGoal: number
+        questionsGoal: number
+      }[]
+    ) => {
       if (cid) {
         request<UpdateTopicInfoParams, UpdateTopicInfoResults>(`admin/updateTopicInfo`, { cid, topics }).then(res => {
           if (res) {
@@ -83,18 +99,41 @@ export default function Page() {
   }, [setModalOpen, setModalState])
 
   const modalSubmit = useCallback(
-    (res = '') => {
+    (res = '', optionWeight = 0, questionWeight = 0) => {
       setModalOpen(false)
-      if (modalState === 'Update' && res.trim().length > 0 && typeof currentIndex === 'number') {
+      if (
+        checkDelete === false &&
+        modalState === 'Update' &&
+        (res.trim().length > 0 ||
+          initialModalText?.optionsGoal !== optionWeight ||
+          initialModalText?.questionsGoal !== questionWeight) &&
+        typeof currentIndex === 'number'
+      ) {
         const updatedTopicList = [...topics]
-        updatedTopicList[currentIndex] = res
+        if (res !== '') {
+          updatedTopicList[currentIndex].topic = res
+        }
+        if (optionWeight >= 0) {
+          updatedTopicList[currentIndex].optionsGoal = optionWeight
+        }
+        if (questionWeight >= 0) {
+          updatedTopicList[currentIndex].questionsGoal = questionWeight
+        }
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
         setCurrentIndex(null)
         setModalState(null)
+        setInitialModalText(null)
         return
-      } else if (modalState === 'Create' && res.trim().length > 0) {
-        const updatedTopicList = [...topics, res]
+      } else if (modalState === 'Create' && res.trim().length > 0 && optionWeight >= 0 && questionWeight >= 0) {
+        const updatedTopicList = [
+          ...topics,
+          {
+            topic: res,
+            optionsGoal: optionWeight,
+            questionsGoal: questionWeight,
+          },
+        ]
         setTopics(updatedTopicList)
         updateDataBaseTopics(updatedTopicList)
         setModalState(null)
@@ -120,6 +159,7 @@ export default function Page() {
       checkDelete,
       topics,
       updateDataBaseTopics,
+      initialModalText,
     ]
   )
 
@@ -133,13 +173,15 @@ export default function Page() {
         <Container>
           <UpdateTopicDialog
             modalState={modalOpen}
-            initialText={initialModalText}
+            initialText={initialModalText?.topic}
+            initialOptionWeight={modalState === 'Update' ? initialModalText?.optionsGoal : undefined}
+            initialQuestionWeight={modalState === 'Update' ? initialModalText?.questionsGoal : undefined}
             state={modalState}
             submit={modalSubmit}
           />
           <CheckDialog
             title="Delete Topic"
-            message={`Are you sure you want to delete "${initialModalText}"`}
+            message={`Are you sure you want to delete "${initialModalText?.topic}"`}
             modalState={checkDelete}
             btnName="Yes"
             toggleModal={modalSubmit}
@@ -154,23 +196,32 @@ export default function Page() {
               <Col>Update</Col>
               <Col>Delete</Col>
             </TableHeader>
-            {topics?.map((topic: string, index: number) => {
-              return (
-                <TableRow key={index}>
-                  <Col>{topic}</Col>
-                  <Col>
-                    <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
-                      Update
-                    </TextButton>
-                  </Col>
-                  <Col>
-                    <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
-                      Delete
-                    </TextButton>
-                  </Col>
-                </TableRow>
-              )
-            })}
+            {topics?.map(
+              (
+                topicsWithGoals: {
+                  topic: string
+                  optionsGoal: number
+                  questionsGoal: number
+                },
+                index: number
+              ) => {
+                return (
+                  <TableRow key={index}>
+                    <Col>{topicsWithGoals.topic}</Col>
+                    <Col>
+                      <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
+                        Update
+                      </TextButton>
+                    </Col>
+                    <Col>
+                      <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
+                        Delete
+                      </TextButton>
+                    </Col>
+                  </TableRow>
+                )
+              }
+            )}
           </Table>
           <FillButton onClick={onAddNewTopic}>Add New Topic</FillButton>
         </Container>

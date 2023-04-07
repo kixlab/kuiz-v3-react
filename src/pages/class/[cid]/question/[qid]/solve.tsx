@@ -13,6 +13,7 @@ import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
+import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 
 export default function Page() {
   const { query } = useRouter()
@@ -26,6 +27,7 @@ export default function Page() {
   const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [contributors, setContributors] = useState<GetContributorsResults>()
 
   const getMultipleRandom = useCallback((arr: LoadClusterResults['cluster'], num: number) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random())
@@ -42,6 +44,18 @@ export default function Page() {
       const res = await request<LoadQuestionDetailParams, LoadQuestionDetailResults>(`loadQuestionDetail`, {
         qid,
       })
+
+      const uniqueContributors = new Set()
+      uniqueContributors.add(res?.qinfo.author)
+      res?.options.forEach(option => uniqueContributors.add(option.author))
+
+      const contributorData = await request<GetContributorsParams, GetContributorsResults>(`getContributors`, {
+        uids: Array.from(uniqueContributors) as string[],
+      })
+      if (contributorData) {
+        setContributors(contributorData)
+      }
+
       if (res) {
         const res2 = await request<LoadClusterParams, LoadClusterResults>(`loadCluster`, {
           qid,
@@ -113,6 +127,15 @@ export default function Page() {
 
   return (
     <QuestionBox>
+      <ContributorsWrapper>
+        <Label>Contributors</Label>
+        <ContributorsImage>
+          {contributors?.userData?.map(
+            (contributor, index: number) =>
+              contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
+          )}
+        </ContributorsImage>
+      </ContributorsWrapper>
       <Label>Q. {qinfo?.stem_text}</Label>
       <div>
         {optionSet?.map((e, i) => {
@@ -175,4 +198,23 @@ const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
+`
+
+const ContributorsWrapper = styled.div`
+  border-bottom: 1px solid #9aa0a6;
+`
+
+const ContributorsImage = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin: 10px 0;
+`
+
+const ProfileImg = styled.img`
+  border-radius: 50%;
+  display: flex;
+  width: 28px;
+  height: 28px;
+  margin: 3px;
 `
