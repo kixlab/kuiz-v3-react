@@ -17,8 +17,8 @@ const Stroke = styled.button`
   width: 100%;
   padding: 12px;
   border-radius: 6px;
-  border: 1px solid ${palette.grey[500]};
-  color: ${palette.grey[200]};
+  border: 1px solid ${palette.grey500};
+  color: ${palette.grey200};
   background-color: ${palette.common.white};
   cursor: pointer;
   &:hover {

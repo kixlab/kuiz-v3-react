@@ -1,9 +1,14 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { getQuestionTopicParams, getQuestionTopicResults } from '@api/getQuestionTopic'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
+import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
+import { TagButton } from '@components/basic/button/Tag'
+import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
 import { CreateNewOption } from '@components/CreateNewOption'
+import { Divider } from '@components/Divider'
+import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
@@ -83,70 +88,63 @@ export default function Page() {
   }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions, learningObjective])
 
   return (
-    <QuestionBox>
-      <div>
-        <Label color="blue" size={0}>
-          Topic
-        </Label>
-        <SectionText>{qinfo?.learningObjective}</SectionText>
-      </div>
-      <div>
-        <Label color="blue" size={0}>
-          Explanation
-        </Label>
-        <SectionText>{qinfo?.explanation}</SectionText>
-      </div>
-      <DividerLine />
-      <div>
-        <Label color="blue" size={0}>
-          Question
-        </Label>
-        <SectionText>Q. {qinfo?.stem_text}</SectionText>
-      </div>
+    <Sheet gap={0}>
+      <Label color={'primaryMain'} size={0} marginBottom={8}>
+        Topic
+      </Label>
+      <TextInput value={qinfo?.learningObjective ?? ''} disabled marginBottom={20} />
+      <Label color={'primaryMain'} size={0} marginBottom={8}>
+        Explanation
+      </Label>
+      <TextInput value={qinfo?.explanation ?? ''} disabled marginBottom={20} />
+      <Label color={'primaryMain'} size={0} marginBottom={8}>
+        Question
+      </Label>
+      <TextInput value={qinfo?.stem_text ?? ''} disabled marginBottom={20} />
+      <Label color={'primaryMain'} size={0} marginBottom={8}>
+        Options
+      </Label>
+      {ansList.map((item, i) => (
+        <OptionButton key={i} state={true} selected={false}>
+          <div>✅</div>
+          {item?.option_text}
+        </OptionButton>
+      ))}
+      {disList.map((item, i) => (
+        <OptionButton key={i} state={true} selected={false}>
+          <div>❌</div>
+          {item?.option_text}
+        </OptionButton>
+      ))}
+      <Divider marginVertical={20} />
 
-      <div>
-        {ansList.map((item, i) => (
-          <OptionButton key={i} state={true} selected={false}>
-            <div>✅</div>
-            {item?.option_text}
-          </OptionButton>
-        ))}
-        {disList.map((item, i) => (
-          <OptionButton key={i} state={true} selected={false}>
-            <div>❌</div>
-            {item?.option_text}
-          </OptionButton>
-        ))}
-      </div>
-      <DividerLine />
-      <CreateNewOption
-        isAnswer={isAnswer}
-        setIsAnswer={setIsAnswer}
-        setOption={setOption}
-        setKeywords={setKeywords}
-        onSubmit={submit}
+      <Label color={'primaryMain'} size={0} marginBottom={8}>
+        Add an Option
+      </Label>
+      <OptionTypeSelect>
+        <TagButton onClick={() => setIsAnswer(true)} id={isAnswer ? 'AnsAct' : 'Ans'}>
+          Answer
+        </TagButton>
+        <TagButton onClick={() => setIsAnswer(false)} id={!isAnswer ? 'DistAct' : 'Dist'}>
+          Distractor
+        </TagButton>
+      </OptionTypeSelect>
+
+      <TextInput
+        placeholder="Suggest an answer or distractor for this question"
+        onChange={setOption}
+        value={option}
+        marginTop={8}
+        marginBottom={20}
       />
-    </QuestionBox>
+
+      <FillButton onClick={submit}>Submit</FillButton>
+    </Sheet>
   )
 }
 
-const QuestionBox = styled.div`
-  border-radius: 8px;
-  background-color: white;
-  margin: 40px 0 40px 0;
-  padding: 30px;
-  display: flex;
-  gap: 28px;
-  flex-direction: column;
-`
-
-const DividerLine = styled.hr`
-  width: 100%;
-  border: 0;
-  height: 1px;
-  background-color: #dbdbdb;
-`
-
-const SectionText = styled.div`
-  ${typography.b02};
+const OptionTypeSelect = styled.div`
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
 `

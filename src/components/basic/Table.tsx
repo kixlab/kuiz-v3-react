@@ -41,7 +41,7 @@ const TableHeader = styled.thead`
 
   td {
     padding: 8px;
-    background-color: ${palette.primary.dark};
+    background-color: ${palette.primaryDark};
 
     :first-of-type {
       border-top-left-radius: 8px;

@@ -15,26 +15,24 @@ interface Props {
 
 export const CreateNewOption = (props: Props) => {
   return (
-    <div>
-      <Container>
-        <div>
-          <Label color="blue" size={0}>
-            Create New Option
-          </Label>
-          <TagButton onClick={() => props.setIsAnswer(true)} id={props.isAnswer ? 'AnsAct' : 'Ans'}>
-            Answer
-          </TagButton>
-          <TagButton onClick={() => props.setIsAnswer(false)} id={!props.isAnswer ? 'DistAct' : 'Dist'}>
-            Distractor
-          </TagButton>
-        </div>
-        <Block>
-          <TextInput placeholder="Suggest an answer or distractor for this question" onChange={props.setOption} />
-          <CategoryInput getCategory={props.setKeywords} />
-        </Block>
-        <FillButton onClick={props.onSubmit}>Submit</FillButton>
-      </Container>
-    </div>
+    <Container>
+      <div>
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
+          Create New Option
+        </Label>
+        <TagButton onClick={() => props.setIsAnswer(true)} id={props.isAnswer ? 'AnsAct' : 'Ans'}>
+          Answer
+        </TagButton>
+        <TagButton onClick={() => props.setIsAnswer(false)} id={!props.isAnswer ? 'DistAct' : 'Dist'}>
+          Distractor
+        </TagButton>
+      </div>
+      <Block>
+        <TextInput placeholder="Suggest an answer or distractor for this question" onChange={props.setOption} />
+        <CategoryInput getCategory={props.setKeywords} />
+      </Block>
+      <FillButton onClick={props.onSubmit}>Submit</FillButton>
+    </Container>
   )
 }
 

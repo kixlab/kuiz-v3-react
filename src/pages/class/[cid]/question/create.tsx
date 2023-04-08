@@ -3,9 +3,9 @@ import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
 import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
+import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
 import { Sheet } from '@components/Sheet'
-import { TextEditor } from '@components/TextEditor'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
 import { request } from '@utils/api'
@@ -95,7 +95,7 @@ export default function Page() {
         <title>Create Question | {className}</title>
       </Head>
       <Sheet gap={0}>
-        <Label color="blue" size={0} marginBottom={8}>
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
           Learning Objective
         </Label>
         <TopicContainer>
@@ -104,25 +104,36 @@ export default function Page() {
           <SelectInput options={topics} value={topic} onSelect={onSelectTopic} placeholder="topic" />
         </TopicContainer>
 
-        <Label color="blue" size={0} marginBottom={8}>
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
           Question
         </Label>
-        <TextEditor placeholder="(e.g., )" value={question} onChange={setQuestion} marginBottom={20} />
+        <TextInput
+          placeholder="E.g. What benefits do keyboard shortcuts provide users?"
+          value={question}
+          onChange={setQuestion}
+          marginBottom={20}
+        />
 
-        <Label color="blue" size={0} marginBottom={8}>
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation
         </Label>
-        <TextEditor
-          placeholder="Explanation of your answer"
+        <TextInput
+          placeholder="Provide an explanation for the question and the intent behind the question."
           value={explanation}
           onChange={setExplanation}
           marginBottom={20}
         />
 
-        <Label color="blue" size={0} marginBottom={8}>
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
           Answer
         </Label>
-        <TextEditor placeholder="Answer of your question" value={answer} onChange={setAnswer} marginBottom={20} />
+        <TextInput
+          placeholder="Suggest one correct answer for the question"
+          value={answer}
+          onChange={setAnswer}
+          marginBottom={20}
+        />
+
         <FillButton onClick={submitStem}>Submit</FillButton>
       </Sheet>
     </>

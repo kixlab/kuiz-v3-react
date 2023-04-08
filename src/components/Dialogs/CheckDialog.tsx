@@ -17,9 +17,7 @@ export const CheckDialog = ({ title, message, modalState, btnName, toggleModal, 
   if (modalState) {
     return (
       <Modal>
-        <Label color="black" size={1}>
-          {title}
-        </Label>
+        <Label size={1}>{title}</Label>
         <div>{message}</div>
         <BtnRow>
           <FillButton onClick={toggleModal}>{btnName}</FillButton>

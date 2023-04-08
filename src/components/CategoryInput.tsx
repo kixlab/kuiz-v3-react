@@ -55,7 +55,7 @@ export const CategoryInput = ({ getCategory }: Props) => {
           onChange={e => (inputRef.current = e.target.value)}
           placeholder="Select categories for your option or add your own"
         />
-        <TextButton onClick={addElement} color={palette.grey[400]}>
+        <TextButton onClick={addElement} color={palette.grey400}>
           Add
         </TextButton>
       </CatBox>
@@ -117,7 +117,7 @@ const Category = styled.div<{ selected: boolean }>`
   padding: 0px 16px 0px 16px;
   border-radius: 20px;
   background-color: ${palette.background.main};
-  color: ${palette.grey[200]};
+  color: ${palette.grey200};
   cursor: pointer;
   &:hover {
     background-color: ${palette.background.dark};
@@ -137,7 +137,7 @@ const CategoryLabel = styled.div`
 
 const DeleteIcon = styled.div`
   padding: 8px 0px 10px 0px;
-  color: ${palette.primary.dark};
+  color: ${palette.primaryDark};
   :hover {
     color: ${palette.common.white};
   }

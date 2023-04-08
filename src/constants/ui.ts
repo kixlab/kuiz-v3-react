@@ -1,3 +1,4 @@
 export const MIN_BUTTON_SIZE = 48
 export const TABLET_WIDTH_THRESHOLD = 767
 export const MOBILE_WIDTH_THRESHOLD = 599
+export const CONTENT_MAX_WIDTH = 800
