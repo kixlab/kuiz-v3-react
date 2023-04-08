@@ -33,7 +33,8 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
   })
 
   if (qOptions) {
-    qOptionsNumber = qOptions.length
+    const filteredOptions = qOptions.filter(option => option.author.toString() !== user.id)
+    qOptionsNumber = filteredOptions.length
   }
 
   return {
