@@ -1,9 +1,12 @@
+import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
 import styled from '@emotion/styled'
+import { login, updateStudentID } from '@redux/features/userSlice'
 import { palette, typography } from '@styles/theme'
+import { request } from '@utils/api'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 
 export const Gnb = () => {
@@ -12,6 +15,7 @@ export const Gnb = () => {
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
   const cid = query.cid
   const userImg = useSelector((state: RootState) => state.userInfo).img
+  const dispatch = useDispatch()
 
   const onClickSwitchClass = useCallback(() => {
     push('/')
@@ -22,12 +26,34 @@ export const Gnb = () => {
   }, [push])
 
   const onClickAdmin = useCallback(() => {
-    if (cid) {
-      push(`/admin/${cid}`)
-    } else {
-      alert('Please Choose a Class!')
-    }
+    push(`/admin/${cid}`)
   }, [push, cid])
+
+  useEffect(() => {
+    if (data) {
+      request<LoadUserInfoParams, LoadUserInfoResults>('loadUserInfo', {}).then(res => {
+        if (res) {
+          const { user, classes } = res
+          dispatch(
+            login({
+              name: user.name,
+              email: user.email,
+              img: user.imageUrl,
+              classes,
+              isLoggedIn: true,
+              isAdmin: user.isAdmin,
+              made: user.made.map(c => c.toString()),
+              madeOptions: user.madeOptions.map(c => c.toString()),
+              solved: user.solved.map(c => c.toString()),
+            })
+          )
+          if (user.studentID) {
+            dispatch(updateStudentID(user.studentID))
+          }
+        }
+      })
+    }
+  }, [push, dispatch, data])
 
   if (isAdmin) {
     return (
@@ -40,7 +66,7 @@ export const Gnb = () => {
           <Menu>
             <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
             <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-            <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>
+            {cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
             <ProfileImg src={userImg}></ProfileImg>
           </Menu>
         )}

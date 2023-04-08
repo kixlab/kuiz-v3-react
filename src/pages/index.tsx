@@ -1,7 +1,6 @@
-import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
+import { Sheet } from '@components/Sheet'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
-import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { enroll, login, updateDocumentation, updateStudentID } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
@@ -9,12 +8,14 @@ import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { ClientSafeProvider, getProviders, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
 import { AllowDocumentationParams, AllowDocumentationResults } from '@api/allowDocumentation'
+import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
+import Head from 'next/head'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -29,8 +30,8 @@ export default function Page({ providers }: Props) {
   const [askForDocumentation, setAskForDocumentation] = useState(false)
 
   const detectChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCode(e.target.value)
+    (v: string) => {
+      setCode(v.toLowerCase())
     },
     [setCode]
   )
@@ -68,10 +69,10 @@ export default function Page({ providers }: Props) {
 
   const onSubmit = useCallback(async () => {
     const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
-      code: code,
+      code,
     })
     if (res?.cid) {
-      dispatch(enroll({ name: res.name, cid: res.cid }))
+      dispatch(enroll({ name: res.name, cid: res.cid, code }))
     }
   }, [code, dispatch])
 
@@ -105,6 +106,9 @@ export default function Page({ providers }: Props) {
 
   return (
     <>
+      <Head>
+        <title>KUIZ</title>
+      </Head>
       {session ? (
         <>
           <UpdateAllowDocumentationDialog modalState={askForDocumentation} submit={onUpdateAllowDocumentation} />
