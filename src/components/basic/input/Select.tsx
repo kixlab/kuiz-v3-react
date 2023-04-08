@@ -43,7 +43,6 @@ const Options = styled.select`
   outline: none;
   width: 100%;
   font-size: inherit;
-
   option[value=''][disabled] {
     display: none;
   }
