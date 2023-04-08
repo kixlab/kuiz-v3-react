@@ -25,6 +25,7 @@ export interface Option extends Doc {
   disjointSet: Types.ObjectId
   liked: Types.ObjectId[]
   disliked: Types.ObjectId[]
+  learningObjective: string
   keywords: string[]
 }
 
@@ -125,6 +126,10 @@ const optionSchema = new Schema<Option>({
       },
     ],
     default: [],
+  },
+  learningObjective: {
+    type: String,
+    default: '',
   },
   keywords: {
     type: [String],

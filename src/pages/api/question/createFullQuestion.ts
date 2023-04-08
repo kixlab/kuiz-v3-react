@@ -16,6 +16,7 @@ export interface CreateFullQuestionParams {
   }
   cid: ID
   explanation: string
+  learningObjective: string
 }
 
 export interface CreateFullQuestionResults {
@@ -23,7 +24,7 @@ export interface CreateFullQuestionResults {
 }
 
 export default apiController<CreateFullQuestionParams, CreateFullQuestionResults>(
-  async ({ optionList, qinfo, cid, explanation }) => {
+  async ({ optionList, qinfo, cid, explanation, learningObjective }) => {
     /*
     logic
     - 불러올 것 : option List(어떤 index가 정답인지에 대한 정보), question Info(author, qstem HTML, qstem string, class), 
@@ -48,6 +49,7 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
           cid: new Types.ObjectId(cid),
           qid: question.id,
           isAnswer: is_answer,
+          learningObjective: learningObjective,
           optionText: option_text,
         })
         return option.id

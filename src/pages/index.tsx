@@ -1,18 +1,18 @@
-import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
+import { Sheet } from '@components/Sheet'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
-import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
-import { enroll, login, updateStudentID } from '@redux/features/userSlice'
+import { enroll } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { ClientSafeProvider, getProviders, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
+import Head from 'next/head'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -26,44 +26,18 @@ export default function Page({ providers }: Props) {
   const [code, setCode] = useState('')
 
   const detectChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCode(e.target.value)
+    (v: string) => {
+      setCode(v.toLowerCase())
     },
     [setCode]
   )
 
-  useEffect(() => {
-    if (session) {
-      request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
-        if (res) {
-          const { user, classes } = res
-          dispatch(
-            login({
-              name: user.name,
-              email: user.email,
-              img: user.imageUrl,
-              classes,
-              isLoggedIn: true,
-              isAdmin: user.isAdmin,
-              made: user.made.map(c => c.toString()),
-              madeOptions: user.madeOptions.map(c => c.toString()),
-              solved: user.solved.map(c => c.toString()),
-            })
-          )
-          if (user.studentID) {
-            dispatch(updateStudentID(user.studentID))
-          }
-        }
-      })
-    }
-  }, [push, dispatch, session])
-
   const onSubmit = useCallback(async () => {
     const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
-      code: code,
+      code,
     })
     if (res?.cid) {
-      dispatch(enroll({ name: res.name, cid: res.cid }))
+      dispatch(enroll({ name: res.name, cid: res.cid, code }))
     }
   }, [code, dispatch])
 
@@ -84,17 +58,19 @@ export default function Page({ providers }: Props) {
 
   return (
     <>
+      <Head>
+        <title>KUIZ</title>
+      </Head>
       {session ? (
         <Sheet>
           <Header>Choose a Class or Enroll in a new Class</Header>
-          {classes.map(({ cid, name }, i) => (
+          {classes.map(({ cid, name, code }, i) => (
             <ClassButton key={i} onClick={onClassEnter(cid)}>
-              {name}
-              {/* ({code}) */}
+              {name} ({code.toUpperCase()})
             </ClassButton>
           ))}
           <InputSection>
-            <TextInput placeholder="Enter class code" onChange={detectChange} />
+            <TextInput placeholder="Enter class code" onChange={detectChange} value={code} />
             <FillButton onClick={onSubmit}>Enter</FillButton>
           </InputSection>
         </Sheet>

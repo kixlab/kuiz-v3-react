@@ -6,7 +6,7 @@ interface UserInfoType {
   img?: string
   isLoggedIn: boolean
   isAdmin: boolean
-  classes: { name: string; cid: string }[]
+  classes: { name: string; cid: string; code: string }[]
   made: string[]
   madeOptions: string[]
   solved: string[]
@@ -54,7 +54,7 @@ export const userSlice = createSlice({
       state.solved = []
       state.studentID = ''
     },
-    enroll: (state: UserInfoType, action: PayloadAction<{ name: string; cid: string }>) => {
+    enroll: (state: UserInfoType, action: PayloadAction<UserInfoType['classes'][number]>) => {
       if (state.isLoggedIn) {
         state.classes.push(action.payload)
       }
