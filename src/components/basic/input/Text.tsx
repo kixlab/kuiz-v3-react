@@ -7,9 +7,14 @@ interface Props {
   onChange: (v: string) => void
 }
 
-export const TextInput = ({ placeholder, value = '', onChange }: Props) => {
+export const TextInput = ({ placeholder, value, onChange }: Props) => {
   return (
-    <TextInputComponent type="text" placeholder={placeholder} onChange={e => onChange(e.target.value)} value={value} />
+    <TextInputComponent
+      type="text"
+      placeholder={placeholder}
+      onChange={e => onChange(e.target.value)}
+      value={value ? value : undefined}
+    />
   )
 }
 

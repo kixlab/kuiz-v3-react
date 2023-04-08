@@ -17,6 +17,8 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
   let qStemsNumber = 0
   let qOptionsNumber = 0
 
+  const generatedQStems: string[] = []
+
   const qStems = await QStemModel.find({
     class: { $eq: cid },
     learningObjective: { $regex: topic, $options: 'i' },
@@ -25,7 +27,11 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
 
   if (qStems) {
     qStemsNumber = qStems.length
+    qStems.forEach(qStem => {
+      generatedQStems.push(qStem._id.toString())
+    })
   }
+
   const qOptions = await OptionModel.find({
     class: { $eq: cid },
     learningObjective: { $regex: topic, $options: 'i' },
@@ -33,7 +39,7 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
   })
 
   if (qOptions) {
-    const filteredOptions = qOptions.filter(option => option.author.toString() !== user.id)
+    const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
     qOptionsNumber = filteredOptions.length
   }
 

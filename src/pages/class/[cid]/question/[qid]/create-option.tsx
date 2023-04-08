@@ -46,7 +46,6 @@ export default function Page() {
       }).then(res => {
         if (res) {
           setLearningObjective(res.learningObjective)
-          console.log(res.learningObjective)
         }
       })
     }
