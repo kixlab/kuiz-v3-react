@@ -124,7 +124,7 @@ export default function Page({ providers }: Props) {
             )}
           </OnBoardingBox>
           <Sheet gap={0}>
-            <Label>
+            <Label marginBottom={8}>
               Choose a Class or Enroll in a new Class <Required />
             </Label>
             {classes.map(({ cid, name, code }, i) => (
@@ -196,6 +196,9 @@ const ClassButton = styled.button`
   cursor: pointer;
   &:hover {
     border-color: ${palette.primaryMain};
+  }
+  :not(:last-of-type) {
+    margin-bottom: 8px;
   }
 `
 

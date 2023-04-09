@@ -5,6 +5,7 @@ import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
+import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
@@ -96,7 +97,7 @@ export default function Page() {
       </Head>
       <Sheet gap={0}>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Learning Objective
+          Learning Objective <Required />
         </Label>
         <TopicContainer>
           To <SelectInput options={BLOOMS_TAXONOMY} value={method} onSelect={onSelectMethod} />
@@ -105,7 +106,7 @@ export default function Page() {
         </TopicContainer>
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Question
+          Question <Required />
         </Label>
         <TextInput
           placeholder="E.g. What benefits do keyboard shortcuts provide users?"
@@ -115,7 +116,7 @@ export default function Page() {
         />
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Explanation
+          Explanation <Required />
         </Label>
         <TextInput
           placeholder="Provide an explanation for the question and the intent behind the question."
@@ -125,7 +126,7 @@ export default function Page() {
         />
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Answer
+          Answer <Required />
         </Label>
         <TextInput
           placeholder="Suggest one correct answer for the question"

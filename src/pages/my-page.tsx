@@ -15,6 +15,7 @@ import { GetQstemByOptionParams, GetQstemByOptionResults } from './api/getQstemB
 import { LoadCreatedOptionParams, LoadCreatedOptionResults } from './api/loadCreatedOption'
 import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 import Head from 'next/head'
+import { Required } from '@components/Required'
 
 export default function Page() {
   const studentID = useSelector((state: RootState) => state.userInfo.studentID)
@@ -75,7 +76,9 @@ export default function Page() {
         <title>My Page</title>
       </Head>
       <Sheet>
-        <Label>Student ID</Label>
+        <Label>
+          Student ID <Required />
+        </Label>
         {studentID ?? 'Not registered'}
         <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
 
