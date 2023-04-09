@@ -24,7 +24,6 @@ export default function Page() {
   const [ansVisible, setAnsVisible] = useState(true)
   const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
-  const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
   const [contributors, setContributors] = useState<GetContributorsResults>()
@@ -101,7 +100,6 @@ export default function Page() {
   const shuffleOptions = useCallback(() => {
     if (qid) {
       getQinfo(qid)
-      setIsSolved(false)
       setSelected(-1)
       setAnsVisible(false)
       setShowAnswer(false)
@@ -139,12 +137,12 @@ export default function Page() {
             <OptionButton
               onClick={() => {
                 setSelected(i)
-                setIsSolved(true)
               }}
-              state={isSolved}
+              state={0 <= selected}
               selected={selected === i}
               key={i}
-              isAnswer={showAnswer && answer === i ? true : false}
+              isAnswer={showAnswer && answer === i}
+              marginBottom={8}
             >
               {e.option_text}
             </OptionButton>
