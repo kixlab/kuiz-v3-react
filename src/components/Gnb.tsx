@@ -56,7 +56,9 @@ export const Gnb = () => {
 
   return (
     <SideTab>
-      <Logo />
+      <LogoContainer href={cid ? `/class/${cid}/` : ''}>
+        <Logo />
+      </LogoContainer>
       {data && (
         <Menu>
           <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
@@ -116,4 +118,7 @@ const MenuBtn = styled.button`
     color: ${palette.primaryMain};
     border-color: ${palette.primaryMain};
   }
+`
+const LogoContainer = styled.a`
+  text-decoration: None;
 `
