@@ -45,12 +45,8 @@ export default function Page() {
         qid,
       })
 
-      const uniqueContributors = new Set()
-      uniqueContributors.add(res?.qinfo.author)
-      res?.options.forEach(option => uniqueContributors.add(option.author))
-
       const contributorData = await request<GetContributorsParams, GetContributorsResults>(`getContributors`, {
-        uids: Array.from(uniqueContributors) as string[],
+        qid,
       })
       if (contributorData) {
         setContributors(contributorData)
