@@ -2,7 +2,7 @@ import { Sheet } from '@components/Sheet'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import styled from '@emotion/styled'
-import { enroll, updateDocumentation } from '@redux/features/userSlice'
+import { enroll, updateDataCollectionConsentState } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
@@ -13,7 +13,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import Head from 'next/head'
-import { AllowDocumentationParams, AllowDocumentationResults } from '@api/allowDocumentation'
+import {
+  UpdateDataCollectionConsentStateParams,
+  UpdateDataCollectionConsentStateResults,
+} from '@api/updateDataCollectionConsentState'
 import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
 
 interface Props {
@@ -26,11 +29,11 @@ export default function Page({ providers }: Props) {
   const dispatch = useDispatch()
   const classes = useSelector((state: RootState) => state.userInfo.classes)
   const [code, setCode] = useState('')
-  const gotConsentInfo = useSelector((state: RootState) => state.userInfo.allowDocumentation)
-  const [askForDocumentation, setAskForDocumentation] = useState(gotConsentInfo === undefined)
+  const gotConsentInfo = useSelector((state: RootState) => state.userInfo.dataCollectionConsentState)
+  const [askForDataCollectionConsentState, setAskForDataCollectionConsentState] = useState(gotConsentInfo === undefined)
 
   useEffect(() => {
-    setAskForDocumentation(gotConsentInfo === undefined)
+    setAskForDataCollectionConsentState(gotConsentInfo === undefined)
   }, [gotConsentInfo])
 
   const detectChange = useCallback(
@@ -64,14 +67,17 @@ export default function Page({ providers }: Props) {
     [query.callbackUrl]
   )
 
-  const onUpdateAllowDocumentation = useCallback(
-    async (allowDocumentation: boolean) => {
-      const res = await request<AllowDocumentationParams, AllowDocumentationResults>(`allowDocumentation`, {
-        allowDocumentation: allowDocumentation,
-      })
+  const onUpdateDataCollectionConsentState = useCallback(
+    async (dataCollectionConsentState: boolean) => {
+      const res = await request<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
+        `updateDataCollectionConsentState`,
+        {
+          dataCollectionConsentState: dataCollectionConsentState,
+        }
+      )
       if (res) {
-        dispatch(updateDocumentation(res.res))
-        setAskForDocumentation(false)
+        dispatch(updateDataCollectionConsentState(res.res))
+        setAskForDataCollectionConsentState(false)
       }
     },
     [dispatch]
@@ -84,7 +90,10 @@ export default function Page({ providers }: Props) {
       </Head>
       {session ? (
         <>
-          <UpdateAllowDocumentationDialog modalState={askForDocumentation} submit={onUpdateAllowDocumentation} />
+          <UpdateAllowDocumentationDialog
+            modalState={askForDataCollectionConsentState}
+            submit={onUpdateDataCollectionConsentState}
+          />
           <Sheet>
             <Header>Choose a Class or Enroll in a new Class</Header>
             {classes.map(({ cid, name, code }, i) => (

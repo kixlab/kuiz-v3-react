@@ -11,7 +11,7 @@ interface UserInfoType {
   madeOptions: string[]
   solved: string[]
   studentID?: string
-  allowDocumentation?: boolean
+  dataCollectionConsentState?: boolean
 }
 
 export const userSlice = createSlice({
@@ -27,7 +27,7 @@ export const userSlice = createSlice({
     madeOptions: [],
     solved: [],
     studentID: undefined,
-    allowDocumentation: undefined,
+    dataCollectionConsentState: undefined,
   } as UserInfoType,
   reducers: {
     login: (state: UserInfoType, action: PayloadAction<UserInfoType>) => {
@@ -40,13 +40,13 @@ export const userSlice = createSlice({
       state.made = action.payload.made
       state.madeOptions = action.payload.madeOptions
       state.solved = action.payload.solved
-      state.allowDocumentation = action.payload.allowDocumentation
+      state.dataCollectionConsentState = action.payload.dataCollectionConsentState
     },
     updateStudentID: (state: UserInfoType, action: PayloadAction<string>) => {
       state.studentID = action.payload
     },
-    updateDocumentation: (state: UserInfoType, action: PayloadAction<boolean>) => {
-      state.allowDocumentation = action.payload
+    updateDataCollectionConsentState: (state: UserInfoType, action: PayloadAction<boolean>) => {
+      state.dataCollectionConsentState = action.payload
     },
     logout: (state: UserInfoType) => {
       state.name = ''
@@ -59,7 +59,7 @@ export const userSlice = createSlice({
       state.madeOptions = []
       state.solved = []
       state.studentID = undefined
-      state.allowDocumentation = undefined
+      state.dataCollectionConsentState = undefined
     },
     enroll: (state: UserInfoType, action: PayloadAction<UserInfoType['classes'][number]>) => {
       if (state.isLoggedIn) {
@@ -69,5 +69,5 @@ export const userSlice = createSlice({
   },
 })
 
-export const { login, logout, updateStudentID, updateDocumentation, enroll } = userSlice.actions
+export const { login, logout, updateStudentID, updateDataCollectionConsentState, enroll } = userSlice.actions
 export const userReducer = userSlice.reducer
