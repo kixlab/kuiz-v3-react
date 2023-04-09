@@ -10,7 +10,7 @@ interface Props {
 export const ProgressBar = View<Props>(({ percentage, children, ...props }) => {
   return (
     <Container {...props}>
-      <Progress percentage={Math.max(percentage, 3)} />
+      <Progress percentage={Math.max(Math.min(percentage, 100), 3)} />
       <Label>{children}</Label>
     </Container>
   )

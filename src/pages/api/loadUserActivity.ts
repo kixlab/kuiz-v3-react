@@ -29,10 +29,16 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
   //   })
   // }
 
+  const questionsOfTopic: QStem[] =
+    (await QStemModel.find({
+      class: { $eq: cid },
+      learningObjective: { $regex: topic, $options: 'i' },
+    })) ?? []
+
   const qOptions =
     (await OptionModel.find({
       class: { $eq: cid },
-      qstem: { $in: qStems.map(qStem => qStem._id) },
+      qstem: { $in: questionsOfTopic.map(qStem => qStem._id) },
       author: user.id,
     })) ?? []
 
