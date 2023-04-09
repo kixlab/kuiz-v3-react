@@ -7,7 +7,7 @@ import { ResetStyles } from '@styles/resetStyle'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
-import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
+import { CONTENT_MAX_WIDTH, MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { GlobalStyles } from 'src/styles/globalStyle'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
 const Content = styled.div`
   padding-top: 40px;
   padding-bottom: 60px;
-  max-width: 800px;
+  max-width: ${CONTENT_MAX_WIDTH}px;
   margin: 0 auto;
   @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     margin: 16px auto 16px auto;

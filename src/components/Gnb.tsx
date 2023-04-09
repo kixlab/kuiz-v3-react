@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
@@ -55,40 +56,22 @@ export const Gnb = () => {
     }
   }, [push, dispatch, data])
 
-  if (isAdmin) {
-    return (
-      <SideTab>
-        <Logo>
-          <LogoIcon src={'/logo.svg'} />
-          KUIZ
-        </Logo>
-        {data && (
-          <Menu>
-            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
-            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-            {cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
-            <ProfileImg src={userImg}></ProfileImg>
-          </Menu>
-        )}
-      </SideTab>
-    )
-  } else {
-    return (
-      <SideTab>
-        <Logo>
-          <LogoIcon src={'/logo.svg'} />
-          KUIZ
-        </Logo>
-        {data && (
-          <Menu>
-            <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
-            <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-            <ProfileImg src={userImg}></ProfileImg>
-          </Menu>
-        )}
-      </SideTab>
-    )
-  }
+  return (
+    <SideTab>
+      <Logo>
+        <LogoIcon src={'/logo.svg'} />
+        KUIZ
+      </Logo>
+      {data && (
+        <Menu>
+          <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
+          <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+          {cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
+          <ProfileImg src={userImg}></ProfileImg>
+        </Menu>
+      )}
+    </SideTab>
+  )
 }
 
 const SideTab = styled.div`
@@ -103,6 +86,10 @@ const SideTab = styled.div`
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
   z-index: 100;
+
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
+    padding: 0 8px;
+  }
 `
 
 const Logo = styled.div`
@@ -130,7 +117,7 @@ const Menu = styled.div`
   flex-direction: row;
   gap: 16px;
   align-items: center;
-  color: ${palette.grey[200]};
+  color: ${palette.grey200};
 `
 
 const MenuBtn = styled.button`
@@ -143,7 +130,7 @@ const MenuBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${palette.primary.main};
-    border-color: ${palette.primary.main};
+    color: ${palette.primaryMain};
+    border-color: ${palette.primaryMain};
   }
 `

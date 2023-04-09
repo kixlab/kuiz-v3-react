@@ -36,7 +36,7 @@ export const MadeOption = ({ qid, option, question, cid, optionType }: Props) =>
         <OptionLabel>{option}</OptionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextButton onClick={toggleModal} color={palette.grey[400]}>
+        <TextButton onClick={toggleModal} color={palette.grey400}>
           Delete
         </TextButton>
         <CheckDialog
@@ -47,7 +47,7 @@ export const MadeOption = ({ qid, option, question, cid, optionType }: Props) =>
           toggleModal={toggleModal}
           cancelModal={toggleModal}
         />
-        <TextButton onClick={viewOption} color={palette.primary.dark}>
+        <TextButton onClick={viewOption} color={palette.primaryDark}>
           View
         </TextButton>
       </RowFlex>

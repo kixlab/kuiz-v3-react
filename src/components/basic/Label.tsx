@@ -5,11 +5,11 @@ import { View } from './View'
 
 interface Props {
   children: React.ReactNode
-  color?: 'black' | 'blue'
+  color?: 'primaryMain' | 'grey200' | 'white'
   size?: number
 }
 
-export const Label = View<Props>(({ children, color = 'black', size = 0, ...props }) => {
+export const Label = View<Props>(({ children, color = 'grey200', size = 0, ...props }) => {
   return (
     <LabelComponent {...props} color={color} size={size}>
       {children}
@@ -17,7 +17,7 @@ export const Label = View<Props>(({ children, color = 'black', size = 0, ...prop
   )
 })
 
-const LabelComponent = styled.div<{ color: string; size: number }>`
+const LabelComponent = styled.div<{ color: 'primaryMain' | 'grey200' | 'white'; size: number }>`
   ${({ color, size }) => css`
     ${size === 0
       ? css`
@@ -26,12 +26,6 @@ const LabelComponent = styled.div<{ color: string; size: number }>`
       : css`
           ${typography.hStem}
         `}
-    ${color === 'blue'
-      ? css`
-          color: ${palette.primary.main};
-        `
-      : css`
-          color: ${palette.grey[200]};
-        `}
+    color: ${palette[color]};
   `}
 `

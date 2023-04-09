@@ -7,20 +7,20 @@ import { updateStudentID } from '@redux/features/userSlice'
 import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 export default function StudentID() {
-  const [insertedStudentID, setInsertedStudentID] = useState('')
+  const [sid, setSid] = useState('')
   const dispatch = useDispatch()
   const { push } = useRouter()
 
   const onSubmit = async () => {
     const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      studentID: insertedStudentID,
+      studentID: sid,
     })
     if (res) {
-      dispatch(updateStudentID(insertedStudentID))
+      dispatch(updateStudentID(sid))
       push('/my-page')
     }
   }
@@ -28,7 +28,7 @@ export default function StudentID() {
     <Sheet>
       <Header>Please Enter Your Student ID</Header>
       <InputSection>
-        <TextInput placeholder="Enter Student ID" onChange={setInsertedStudentID} />
+        <TextInput placeholder="Enter Student ID" value={sid} onChange={setSid} />
         <FillButton onClick={onSubmit}>Submit</FillButton>
       </InputSection>
     </Sheet>

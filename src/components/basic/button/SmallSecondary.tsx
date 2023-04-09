@@ -18,11 +18,11 @@ const Container = styled.button`
   padding: 8px 12px;
   border-radius: 4px;
   ${typography.overline};
-  background-color: ${palette.grey[600]};
+  background-color: ${palette.grey600};
   color: black;
 
   &:hover {
-    background-color: ${palette.grey[500]};
+    background-color: ${palette.grey500};
     cursor: pointer;
   }
 `

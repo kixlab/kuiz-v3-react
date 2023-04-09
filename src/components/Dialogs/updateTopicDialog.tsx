@@ -21,15 +21,11 @@ export const UpdateTopicDialog = (props: Props) => {
       <TextInput value={inputMsg} onChange={setInputMsg} placeholder={'Update or add a topic'} />
       <WeightWrapper>
         <div>
-          <Label color="black" size={1}>
-            Option weight
-          </Label>
+          <Label size={1}>Option weight</Label>
           <NumberInput type="number" min={0} onChange={e => setOptionWeight(parseInt(e.target.value))} />
         </div>
         <div>
-          <Label color="black" size={1}>
-            Question weight
-          </Label>
+          <Label size={1}>Question weight</Label>
           <NumberInput type="number" min={0} onChange={e => setQuestionWeight(parseInt(e.target.value))} />
         </div>
       </WeightWrapper>
@@ -55,10 +51,10 @@ const NumberInput = styled.input`
   margin: 5px;
   border-radius: 6px;
   box-sizing: border-box;
-  border: 1px solid ${palette.grey[500]};
+  border: 1px solid ${palette.grey500};
   &:focus {
     outline: none;
-    border-color: ${palette.grey[200]};
+    border-color: ${palette.grey200};
   }
 `
 
