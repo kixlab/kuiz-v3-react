@@ -24,13 +24,13 @@ const Fill = styled.button`
   border-radius: 6px;
   border: none;
   color: ${palette.common.white};
-  background-color: ${palette.primary.main};
+  background-color: ${palette.primaryMain};
   min-height: ${MIN_BUTTON_SIZE}px;
   cursor: pointer;
   &:hover {
-    background-color: ${palette.primary.dark};
+    background-color: ${palette.primaryDark};
   }
   &:disabled {
-    background-color: ${palette.grey[500]};
+    background-color: ${palette.grey500};
   }
 `

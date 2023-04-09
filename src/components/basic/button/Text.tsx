@@ -5,7 +5,7 @@ import { MIN_BUTTON_SIZE, MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 interface Props {
   children: React.ReactNode
   onClick?: () => void
-  color: typeof palette.primary.dark | (typeof palette.grey)[400]
+  color: typeof palette.primaryDark | typeof palette.grey400
 }
 export const TextButton = ({ onClick, children, color }: Props) => {
   return (

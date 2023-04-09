@@ -42,9 +42,7 @@ export default function Page() {
   return (
     <>
       {!isAdmin ? (
-        <Label color="black" size={0}>
-          403 Forbidden
-        </Label>
+        <Label size={0}>403 Forbidden</Label>
       ) : (
         <>
           <Head>

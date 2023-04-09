@@ -3,6 +3,8 @@ import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
 import { FloatingButton } from '@components/basic/button/Floating'
 import { SelectInput } from '@components/basic/input/Select'
+import { Label } from '@components/basic/Label'
+import { ProgressBar } from '@components/ProgressBar'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
 import { Sheet } from '@components/Sheet'
@@ -16,6 +18,8 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useWindowSize } from 'react-use'
+import { CONTENT_MAX_WIDTH } from 'src/constants/ui'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -98,26 +102,39 @@ export default function Page() {
       <Head>
         <title>Questions | {className}</title>
       </Head>
+
       <InformationContainer>
-        <UserInfoContainer>
-          <InfoText>
-            You have generated {userMadeQuestions} / {selectedTopic?.requiredQuestionNumber} Questions
-          </InfoText>
-          <InfoText>
-            You have generated {userMadeOptions} / {selectedTopic?.requiredOptionNumber} Options
-          </InfoText>
-        </UserInfoContainer>
-        <FilterContainer>
+        <div>
+          <Label color="white" marginBottom={8}>
+            Topic
+          </Label>
           <SelectInput
             options={topics.map(t => t.label)}
             value={topic ?? null}
             onSelect={onSelectTopic}
             placeholder={'Select topic'}
           />
-        </FilterContainer>
+        </div>
+        <div>
+          <Label color="white" marginBottom={8}>
+            Progress
+          </Label>
+          <Progress>
+            {userMadeQuestions} Questions{' '}
+            <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
+              {selectedTopic?.requiredQuestionNumber ?? '-'}
+            </ProgressBar>
+          </Progress>
+          <Progress>
+            {userMadeOptions} Options{' '}
+            <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
+              {selectedTopic?.requiredOptionNumber ?? '-'}
+            </ProgressBar>
+          </Progress>
+        </div>
       </InformationContainer>
 
-      <Sheet padding={0} gap={8}>
+      <Sheet padding={0} gap={0} marginTop={20}>
         <QuizListHeader />
         {questionList.map((question, i) => (
           <QuizListItem
@@ -130,37 +147,30 @@ export default function Page() {
           />
         ))}
       </Sheet>
-      <FloatingButton onClick={onCreateQuestion}>Create a New Question</FloatingButton>
+      <FloatingButton onClick={onCreateQuestion} right={`calc((100vw - ${CONTENT_MAX_WIDTH}px) / 2)`} bottom={40}>
+        Create a New Question
+      </FloatingButton>
     </>
   )
 }
 
-const FilterContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-`
-
 const InformationContainer = styled.div`
-  ${typography.b02b};
   width: calc(100% - 40px);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: ${palette.primary.dark};
+  display: grid;
+  padding: 12px 20px;
+  background-color: ${palette.primaryMain};
   color: ${palette.common.white};
   border-radius: 8px;
-  margin: 10px 0;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
 `
 
-const UserInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-content: space-around;
-`
+const Progress = styled.div`
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
 
-const InfoText = styled.div`
-  color: ${palette.common.white};
-  margin: 5px;
+  :not(:last-child) {
+    margin-bottom: 8px;
+  }
 `

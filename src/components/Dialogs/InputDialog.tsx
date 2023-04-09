@@ -17,9 +17,7 @@ export const InputDialog = (props: Props) => {
   if (props.modalState) {
     return (
       <Modal>
-        <Label color="black" size={1}>
-          Report Error
-        </Label>
+        <Label size={1}>Report Error</Label>
         <TextAreaInput onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
         <BtnRow>
           <FillButton onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
@@ -42,14 +40,14 @@ const TextAreaInput = styled.textarea`
   margin-top: 20px;
   border-radius: 6px;
   box-sizing: border-box;
-  border: 1px solid ${palette.grey[500]};
+  border: 1px solid ${palette.grey500};
   resize: vertical;
   &::placeholder {
-    color: ${palette.grey[500]};
+    color: ${palette.grey500};
   }
   &:focus {
     outline: none;
-    border-color: ${palette.grey[200]};
+    border-color: ${palette.grey200};
   }
 `
 

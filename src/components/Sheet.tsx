@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { View } from './basic/View'
 
 interface Props {
   children: React.ReactNode
@@ -7,13 +8,13 @@ interface Props {
   gap?: number
 }
 
-export function Sheet({ children, padding = 24, gap = 16 }: Props) {
+export const Sheet = View<Props>(({ children, padding = 24, gap = 16, ...props }) => {
   return (
-    <Container padding={padding} gap={gap}>
+    <Container {...props} padding={padding} gap={gap}>
       {children}
     </Container>
   )
-}
+})
 
 const Container = styled.div<{ padding: number; gap: number }>`
   ${({ padding, gap }) => css`
