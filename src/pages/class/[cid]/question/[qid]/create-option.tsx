@@ -6,6 +6,7 @@ import { RadioInput } from '@components/basic/input/Radio'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
 import { Divider } from '@components/Divider'
+import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
@@ -100,7 +101,7 @@ export default function Page() {
       <Divider marginVertical={20} />
 
       <Label color={'primaryMain'} size={0} marginBottom={8}>
-        Add an Option
+        Add an Option <Required />
       </Label>
 
       <RadioInput options={['Answer', 'Distractor']} value={isAnswer ? 0 : 1} onSelect={i => setIsAnswer(i === 0)} />
