@@ -90,8 +90,8 @@ const SideTab = styled.div`
 const ProfileImg = styled.img`
   border-radius: 50%;
   display: flex;
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
 `
 
 const Menu = styled.div`
