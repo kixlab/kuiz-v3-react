@@ -1,19 +1,20 @@
+import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
 import { LoadQuestionDetailParams, LoadQuestionDetailResults } from '@api/loadQuestionDetail'
 import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
+import { InputDialog } from '@components/Dialogs/InputDialog'
+import { Divider } from '@components/Divider'
+import { Sheet } from '@components/Sheet'
+import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
 import { StrokeButton } from '@components/basic/button/Stroke'
-import { InputDialog } from '@components/Dialogs/InputDialog'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
-import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 
 export default function Page() {
   const { query } = useRouter()
@@ -120,17 +121,20 @@ export default function Page() {
   )
 
   return (
-    <QuestionBox>
-      <ContributorsWrapper>
-        <Label>Contributors</Label>
-        <ContributorsImage>
-          {contributors?.userData?.map(
-            (contributor, index: number) =>
-              contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
-          )}
-        </ContributorsImage>
-      </ContributorsWrapper>
-      <Label>Q. {qinfo?.stem_text}</Label>
+    <Sheet gap={0}>
+      <Label color="grey200" marginBottom={8}>
+        Contributors
+      </Label>
+      <Contributors>
+        {contributors?.userData?.map(
+          (contributor, index: number) =>
+            contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
+        )}
+      </Contributors>
+      <Divider marginVertical={20} />
+      <Label color="grey200" marginBottom={16}>
+        Q. {qinfo?.stem_text}
+      </Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
@@ -163,46 +167,22 @@ export default function Page() {
         <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
-    </QuestionBox>
+    </Sheet>
   )
 }
-
-const QuestionBox = styled.div`
-  background-color: white;
-  padding: 40px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin: 30px;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    margin: 30px 0 30px 0;
-  }
-`
-
-const Label = styled.div`
-  ${typography.hStem};
-  padding: 8px 0 0 0;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    padding: 0px;
-  }
-`
 
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
+  margin-top: 20px;
 `
 
-const ContributorsWrapper = styled.div`
-  border-bottom: 1px solid #9aa0a6;
-`
-
-const ContributorsImage = styled.div`
+const Contributors = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  margin: 10px 0;
+  gap: 4px;
 `
 
 const ProfileImg = styled.img`
