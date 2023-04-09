@@ -102,7 +102,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Questions | {className}</title>
+        <title>{`Questions | ${className}`}</title>
       </Head>
 
       <InformationContainer>

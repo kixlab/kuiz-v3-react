@@ -92,7 +92,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Create Question | {className}</title>
+        <title>{`Create Question | ${className}`}</title>
       </Head>
       <Sheet gap={0}>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
