@@ -8,7 +8,7 @@ import { InputDialog } from '@components/Dialogs/InputDialog'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
-import { palette, typography } from '@styles/theme'
+import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
@@ -197,7 +197,7 @@ const BtnDisplay = styled.div`
 `
 
 const ContributorsWrapper = styled.div`
-  border-bottom: 1px solid ${palette.grey[500]};
+  border-bottom: 1px solid #9aa0a6;
 `
 
 const ContributorsImage = styled.div`
