@@ -1,5 +1,6 @@
 import { Option } from '@server/db/option'
 import { optionService } from '@server/services/option'
+import { profanityFilterService } from '@server/services/profanityFilter'
 import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
 import { ID } from 'src/types/common'
@@ -8,10 +9,8 @@ export interface CreateOptionParams {
   optionData: {
     option_text: string
     is_answer: boolean
-    explanation: string
     class: ID
     qstem: ID
-    learningObjective: string
     keywords: string[]
   }
   similarOptions: ID[]
@@ -27,14 +26,12 @@ export default apiController<CreateOptionParams, CreateOptionResults>(async ({ o
     cid: new Types.ObjectId(optionData.class),
     qid: new Types.ObjectId(optionData.qstem),
     isAnswer: optionData.is_answer,
-    optionText: optionData.option_text,
-    explanation: optionData.explanation,
-    learningObjective: optionData.learningObjective,
+    optionText: await profanityFilterService.filter(optionData.option_text),
     keywords: optionData.keywords,
   })
 
   for await (const similarOption of similarOptions) {
-    optionService.unionOption(new Types.ObjectId(similarOption), option.id)
+    optionService.unionOption(new Types.ObjectId(similarOption), new Types.ObjectId(option._id))
   }
 
   return {
