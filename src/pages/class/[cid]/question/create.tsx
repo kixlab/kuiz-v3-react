@@ -54,10 +54,8 @@ export default function Page() {
           optionData: {
             option_text: answer,
             is_answer: true,
-            explanation,
             class: cid,
             qstem: res.data,
-            learningObjective: `To ${method} the concept of ${topic}`,
             keywords: [],
           },
           similarOptions: [],
