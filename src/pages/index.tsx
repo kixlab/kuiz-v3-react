@@ -2,20 +2,19 @@ import { Sheet } from '@components/Sheet'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import styled from '@emotion/styled'
-import { enroll, login, updateDocumentation, updateStudentID } from '@redux/features/userSlice'
+import { enroll, updateDocumentation } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { ClientSafeProvider, getProviders, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
-import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
-import { AllowDocumentationParams, AllowDocumentationResults } from '@api/allowDocumentation'
-import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
 import Head from 'next/head'
+import { AllowDocumentationParams, AllowDocumentationResults } from '@api/allowDocumentation'
+import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -27,7 +26,8 @@ export default function Page({ providers }: Props) {
   const dispatch = useDispatch()
   const classes = useSelector((state: RootState) => state.userInfo.classes)
   const [code, setCode] = useState('')
-  const [askForDocumentation, setAskForDocumentation] = useState(false)
+  const gotConsentInfo = useSelector((state: RootState) => state.userInfo.allowDocumentation)
+  const [askForDocumentation, setAskForDocumentation] = useState(gotConsentInfo === undefined)
 
   const detectChange = useCallback(
     (v: string) => {
@@ -35,37 +35,6 @@ export default function Page({ providers }: Props) {
     },
     [setCode]
   )
-
-  useEffect(() => {
-    if (session) {
-      request<LoadUserInfoParams, LoadUserInfoResults>('/loadUserInfo', {}).then(res => {
-        if (res) {
-          const { user, classes } = res
-          dispatch(
-            login({
-              name: user.name,
-              email: user.email,
-              img: user.imageUrl,
-              classes,
-              isLoggedIn: true,
-              isAdmin: user.isAdmin,
-              made: user.made.map(c => c.toString()),
-              madeOptions: user.madeOptions.map(c => c.toString()),
-              solved: user.solved.map(c => c.toString()),
-            })
-          )
-          if (user.studentID) {
-            dispatch(updateStudentID(user.studentID))
-          }
-          if (typeof user.allowDocumentation == 'boolean') {
-            dispatch(updateDocumentation(user.allowDocumentation))
-          } else {
-            setAskForDocumentation(true)
-          }
-        }
-      })
-    }
-  }, [push, dispatch, session])
 
   const onSubmit = useCallback(async () => {
     const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
@@ -121,7 +90,7 @@ export default function Page({ providers }: Props) {
               </ClassButton>
             ))}
             <InputSection>
-              <TextInput placeholder="Enter class code" onChange={detectChange} />
+              <TextInput placeholder="Enter class code" onChange={detectChange} value="" />
               <FillButton onClick={onSubmit}>Enter</FillButton>
             </InputSection>
           </Sheet>
