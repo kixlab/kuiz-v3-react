@@ -177,13 +177,13 @@ const ClassButton = styled.button`
   font-size: 15px;
   padding: 16px;
   border-radius: 6px;
-  background: ${palette.primary.light};
+  background: ${palette.primaryLight};
   width: 100%;
   box-sizing: border-box;
   border: 2px solid transparent;
   cursor: pointer;
   &:hover {
-    border-color: ${palette.primary.main};
+    border-color: ${palette.primaryMain};
   }
 `
 

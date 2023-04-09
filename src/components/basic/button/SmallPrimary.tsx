@@ -18,11 +18,11 @@ const Container = styled.button`
   padding: 8px 12px;
   border-radius: 4px;
   ${typography.overline};
-  background-color: ${palette.primary.light};
-  color: ${palette.primary.dark};
+  background-color: ${palette.primaryLight};
+  color: ${palette.primaryDark};
 
   &:hover {
-    background-color: ${palette.primary.main};
+    background-color: ${palette.primaryMain};
     color: white;
     cursor: pointer;
   }

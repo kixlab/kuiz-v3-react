@@ -21,7 +21,7 @@ const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }
   display: inline-block;
   padding: 8px 12px 8px 12px;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 2px solid ${palette.common.transparent};
   cursor: pointer;
   ${props =>
@@ -29,7 +29,6 @@ const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }
     css`
       border-color: ${palette.tags.answer};
       color: ${palette.tags.answer};
-      margin-right: 8px;
     `}
 
   ${props =>
@@ -37,7 +36,6 @@ const TagBtnComponent = styled.div<{ id: 'Ans' | 'AnsAct' | 'Dist' | 'DistAct' }
     css`
       background-color: ${palette.tags.answer};
       color: white;
-      margin-right: 8px;
     `}
 
     ${props =>

@@ -38,10 +38,9 @@ const Container = styled.div`
   grid-template-columns: auto 100px 100px 100px;
   column-gap: 8px;
   background-color: white;
-  padding: 4px 20px;
+  padding: 8px 20px;
   ${typography.b02};
   text-align: center;
-  border-bottom: 1px solid #dbdbdb;
 
   @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     grid-template-columns: auto 0 0 100px;

@@ -102,9 +102,7 @@ export default function Page() {
   return (
     <>
       {!isAdmin ? (
-        <Label color="black" size={0}>
-          403 Forbidden
-        </Label>
+        <Label size={0}>403 Forbidden</Label>
       ) : (
         <>
           <Head>
@@ -122,10 +120,10 @@ export default function Page() {
                 return (
                   <TableRow key={index}>
                     <Col>{topic.label}</Col>
-                    <TextButton color={palette.primary.dark} onClick={() => onUpdateTopic(index)}>
+                    <TextButton color={palette.primaryDark} onClick={() => onUpdateTopic(index)}>
                       Update
                     </TextButton>
-                    <TextButton color={palette.primary.dark} onClick={() => onDeleteTopic(index)}>
+                    <TextButton color={palette.primaryDark} onClick={() => onDeleteTopic(index)}>
                       Delete
                     </TextButton>
                   </TableRow>
@@ -160,7 +158,7 @@ const Table = styled.ul`
 `
 
 const TableHeader = styled.li`
-  background-color: ${palette.primary.dark};
+  background-color: ${palette.primaryDark};
   color: ${palette.common.white};
   font-size: 14px;
   text-transform: uppercase;
