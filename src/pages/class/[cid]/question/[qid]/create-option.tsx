@@ -3,12 +3,11 @@ import { getQuestionTopicParams, getQuestionTopicResults } from '@api/getQuestio
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
-import { TagButton } from '@components/basic/button/Tag'
+import { RadioInput } from '@components/basic/input/Radio'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
 import { Divider } from '@components/Divider'
 import { Sheet } from '@components/Sheet'
-import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
 import { request } from '@utils/api'
@@ -60,10 +59,8 @@ export default function Page() {
       const optionData = {
         option_text: option,
         is_answer: isAnswer,
-        explanation: '',
         class: cid,
         qstem: qid,
-        learningObjective,
         keywords,
       }
 
@@ -83,7 +80,7 @@ export default function Page() {
       })
       push('/class/' + cid)
     }
-  }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions, learningObjective])
+  }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions])
 
   return (
     <Sheet gap={0}>
@@ -100,49 +97,43 @@ export default function Page() {
       </Label>
       <TextInput value={qinfo?.stem_text ?? ''} disabled marginBottom={20} />
       <Label color={'primaryMain'} size={0} marginBottom={8}>
-        Options
+        ✅ Answers
       </Label>
       {ansList.map((item, i) => (
-        <OptionButton key={i} state={true} selected={false}>
-          <div>✅</div>
+        <OptionButton key={i} state={true} selected={false} marginBottom={8}>
           {item?.option_text}
         </OptionButton>
       ))}
-      {disList.map((item, i) => (
-        <OptionButton key={i} state={true} selected={false}>
-          <div>❌</div>
-          {item?.option_text}
-        </OptionButton>
-      ))}
+      {0 < disList.length && (
+        <>
+          <Label color={'primaryMain'} size={0} marginBottom={8} marginTop={12}>
+            ❌ Distractors
+          </Label>
+          {disList.map((item, i) => (
+            <OptionButton key={i} state={true} selected={false} marginBottom={i < disList.length - 1 ? 8 : 0}>
+              {item?.option_text}
+            </OptionButton>
+          ))}
+        </>
+      )}
       <Divider marginVertical={20} />
 
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         Add an Option
       </Label>
-      <OptionTypeSelect>
-        <TagButton onClick={() => setIsAnswer(true)} id={isAnswer ? 'AnsAct' : 'Ans'}>
-          Answer
-        </TagButton>
-        <TagButton onClick={() => setIsAnswer(false)} id={!isAnswer ? 'DistAct' : 'Dist'}>
-          Distractor
-        </TagButton>
-      </OptionTypeSelect>
+
+      <RadioInput options={['Answer', 'Distractor']} value={isAnswer ? 0 : 1} onSelect={i => setIsAnswer(i === 0)} />
 
       <TextInput
         placeholder="Suggest an answer or distractor for this question"
         onChange={setOption}
         value={option}
         marginTop={8}
-        marginBottom={20}
       />
 
-      <FillButton onClick={submit}>Submit</FillButton>
+      <FillButton onClick={submit} marginTop={20}>
+        Submit
+      </FillButton>
     </Sheet>
   )
 }
-
-const OptionTypeSelect = styled.div`
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr 1fr;
-`

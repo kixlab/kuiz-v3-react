@@ -9,13 +9,14 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
+import { Logo } from './Logo'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
   const { data } = useSession()
   const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
   const cid = query.cid
-  const userImg = useSelector((state: RootState) => state.userInfo).img
+  const userImg = useSelector((state: RootState) => state.userInfo.img)
   const dispatch = useDispatch()
 
   const onClickSwitchClass = useCallback(() => {
@@ -43,9 +44,6 @@ export const Gnb = () => {
               classes,
               isLoggedIn: true,
               isAdmin: user.isAdmin,
-              made: user.made.map(c => c.toString()),
-              madeOptions: user.madeOptions.map(c => c.toString()),
-              solved: user.solved.map(c => c.toString()),
             })
           )
           if (user.studentID) {
@@ -61,15 +59,12 @@ export const Gnb = () => {
 
   return (
     <SideTab>
-      <Logo>
-        <LogoIcon src={'/logo.svg'} />
-        KUIZ
-      </Logo>
+      <Logo />
       {data && (
         <Menu>
           <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
-          {cid && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
+          {cid && isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>
       )}
@@ -95,23 +90,11 @@ const SideTab = styled.div`
   }
 `
 
-const Logo = styled.div`
-  ${typography.logo};
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`
-
-const LogoIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`
-
 const ProfileImg = styled.img`
   border-radius: 50%;
   display: flex;
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
 `
 
 const Menu = styled.div`
