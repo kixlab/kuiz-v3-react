@@ -37,12 +37,12 @@ export default function Page() {
           setClassInfo(res)
           setTopics(res.topics)
           const topicsName: string[] = []
-          res.topics.forEach(topic => {
+          res.topics?.forEach(topic => {
             topicsName.push(topic.label)
           })
           setStringTopics(topicsName)
           if (res.currentTopic) {
-            const defaultTopic = topics.filter(topic => topic._id === res.currentTopic)
+            const defaultTopic = res.topics.filter(topic => topic._id === res.currentTopic)
             if (defaultTopic.length > 0) {
               setCurrentTopic(defaultTopic[0].label)
             }
@@ -50,7 +50,8 @@ export default function Page() {
         }
       })
     }
-  }, [push, cid, setClassInfo, setTopics, topics])
+    //dont add 'topics' in the dependency list here it will create infinite loop
+  }, [push, cid, setClassInfo])
 
   const onUpdateTopic = useCallback(
     (index: number) => {
@@ -107,7 +108,11 @@ export default function Page() {
           requiredQuestionNumber,
         })
         if (res) {
-          setTopics([...topics, res.topic])
+          if (topics) {
+            setTopics([...topics, res.topic])
+          } else {
+            setTopics([res.topic])
+          }
         }
       }
     },
@@ -152,7 +157,7 @@ export default function Page() {
                 <Col>Update</Col>
                 <Col>Delete</Col>
               </TableHeader>
-              {topics.map((topic, index) => {
+              {topics?.map((topic, index) => {
                 return (
                   <TableRow key={index}>
                     <Col>{topic.label}</Col>
