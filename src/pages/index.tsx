@@ -17,7 +17,8 @@ import {
   UpdateDataCollectionConsentStateParams,
   UpdateDataCollectionConsentStateResults,
 } from '@api/updateDataCollectionConsentState'
-import { UpdateAllowDocumentationDialog } from '@components/Dialogs/updateAllowDocumentationDialog'
+
+import { CheckDialog } from '@components/Dialogs/CheckDialog'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -90,9 +91,14 @@ export default function Page({ providers }: Props) {
       </Head>
       {session ? (
         <>
-          <UpdateAllowDocumentationDialog
+          <CheckDialog
+            title="Research Consent"
+            message="We would like to use questions you created for research purposes would that be ok?"
             modalState={askForDataCollectionConsentState}
-            submit={onUpdateDataCollectionConsentState}
+            btnName="Yes"
+            cancelBtnName="No"
+            toggleModal={() => onUpdateDataCollectionConsentState(true)}
+            cancelModal={() => onUpdateDataCollectionConsentState(false)}
           />
           <Sheet>
             <Header>Choose a Class or Enroll in a new Class</Header>
