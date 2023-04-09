@@ -91,13 +91,21 @@ export default function Page() {
     if (cid) {
       request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, {
         cid,
-      }).then(res => {
+      }).then(async res => {
         if (res) {
           setTopics(res.topics)
+          if (topic === undefined) {
+            if (res.currentTopic) {
+              const indexOfTopic = res.topics.findIndex(topic => topic._id === res.currentTopic)
+              if (indexOfTopic != -1) {
+                push(`/class/${cid}?topic=${res.topics[indexOfTopic].label}`, undefined, { shallow: true })
+              }
+            }
+          }
         }
       })
     }
-  }, [cid])
+  }, [cid, push, topic])
 
   return (
     <>
