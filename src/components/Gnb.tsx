@@ -51,7 +51,7 @@ export const Gnb = () => {
           if (user.studentID) {
             dispatch(updateStudentID(user.studentID))
           }
-          if (typeof user.allowDocumentation == 'boolean') {
+          if (user.allowDocumentation !== undefined) {
             dispatch(updateDocumentation(user.allowDocumentation))
           }
         }
