@@ -34,7 +34,7 @@ const UserSchema = new Schema<User>({
   },
   allowDocumentation: {
     type: Boolean,
-    required: false,
+    required: true,
   },
   email: {
     type: String,
