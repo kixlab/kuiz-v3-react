@@ -1,5 +1,5 @@
 import { OptionModel } from '@server/db/option'
-import { QStemModel } from '@server/db/qstem'
+import { QStem, QStemModel } from '@server/db/qstem'
 import { apiController } from '@utils/api'
 import { ID } from 'src/types/common'
 
@@ -14,37 +14,40 @@ export interface LoadUserActivityResults {
 }
 
 export default apiController<LoadUserActivityParams, LoadUserActivityResults>(async ({ cid, topic = '' }, user) => {
-  let qStemsNumber = 0
-  let qOptionsNumber = 0
+  // const generatedQStems: string[] = []
 
-  const generatedQStems: string[] = []
+  const qStems: QStem[] =
+    (await QStemModel.find({
+      class: { $eq: cid },
+      learningObjective: { $regex: topic, $options: 'i' },
+      author: user.id,
+    })) ?? []
 
-  const qStems = await QStemModel.find({
-    class: { $eq: cid },
-    learningObjective: { $regex: topic, $options: 'i' },
-    author: user.id,
-  })
+  // if (qStems) {
+  //   qStems.forEach(qStem => {
+  //     generatedQStems.push(qStem._id)
+  //   })
+  // }
 
-  if (qStems) {
-    qStemsNumber = qStems.length
-    qStems.forEach(qStem => {
-      generatedQStems.push(qStem._id.toString())
-    })
-  }
+  const questionsOfTopic: QStem[] =
+    (await QStemModel.find({
+      class: { $eq: cid },
+      learningObjective: { $regex: topic, $options: 'i' },
+    })) ?? []
 
-  const qOptions = await OptionModel.find({
-    class: { $eq: cid },
-    learningObjective: { $regex: topic, $options: 'i' },
-    author: user.id,
-  })
+  const qOptions =
+    (await OptionModel.find({
+      class: { $eq: cid },
+      qstem: { $in: questionsOfTopic.map(qStem => qStem._id) },
+      author: user.id,
+    })) ?? []
 
-  if (qOptions) {
-    // const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
-    qOptionsNumber = qOptions.length
-  }
+  // if (qOptions) {
+  //   const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
+  // }
 
   return {
-    numberOfStems: qStemsNumber,
-    numberOfOptions: qOptionsNumber,
+    numberOfStems: qStems.length,
+    numberOfOptions: qOptions.length,
   }
 })

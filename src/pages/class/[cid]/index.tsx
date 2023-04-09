@@ -39,7 +39,7 @@ export default function Page() {
 
   const onAddOption = useCallback(
     (qid: string) => () => {
-      push(`/class/${cid}/question/${qid}/create-option`)
+      push(`/class/${cid}/question/${qid}/create-option?callbackUrl=${location.href}`)
     },
     [cid, push]
   )
