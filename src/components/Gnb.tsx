@@ -49,8 +49,8 @@ export const Gnb = () => {
           if (user.studentID) {
             dispatch(updateStudentID(user.studentID))
           }
-          if (user.allowDocumentation !== undefined) {
-            dispatch(updateDataCollectionConsentState(user.allowDocumentation))
+          if (user.dataCollectionConsentState !== undefined) {
+            dispatch(updateDataCollectionConsentState(user.dataCollectionConsentState))
           }
         }
       })

@@ -11,10 +11,10 @@ export interface UpdateDataCollectionConsentStateResults {
 export default apiController<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
   async ({ dataCollectionConsentState }, user) => {
     if (user) {
-      const updatedUser = await user.updateOne({ $set: { allowDocumentation: dataCollectionConsentState } })
+      const updatedUser = await user.updateOne({ $set: { dataCollectionConsentState: dataCollectionConsentState } })
       if (updatedUser) {
         return {
-          res: updatedUser.allowDocumentation,
+          res: updatedUser.dataCollectionConsentState,
         }
       } else {
         throw new Error('There was an error please login and try again')
