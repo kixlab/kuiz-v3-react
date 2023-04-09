@@ -4,6 +4,7 @@ import { Doc } from 'src/types/common'
 export interface User extends Doc {
   name: string
   studentID?: string
+  dataCollectionConsentState?: boolean
   email: string
   imageUrl: string
   classes: Types.ObjectId[]
@@ -30,6 +31,10 @@ const UserSchema = new Schema<User>({
   studentID: {
     type: String,
     required: false,
+  },
+  dataCollectionConsentState: {
+    type: Boolean,
+    required: true,
   },
   email: {
     type: String,

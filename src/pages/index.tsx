@@ -2,17 +2,23 @@ import { Sheet } from '@components/Sheet'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import styled from '@emotion/styled'
-import { enroll } from '@redux/features/userSlice'
+import { enroll, updateDataCollectionConsentState } from '@redux/features/userSlice'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { ClientSafeProvider, getProviders, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import Head from 'next/head'
+import {
+  UpdateDataCollectionConsentStateParams,
+  UpdateDataCollectionConsentStateResults,
+} from '@api/updateDataCollectionConsentState'
+
+import { CheckDialog } from '@components/Dialogs/CheckDialog'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -24,6 +30,12 @@ export default function Page({ providers }: Props) {
   const dispatch = useDispatch()
   const classes = useSelector((state: RootState) => state.userInfo.classes)
   const [code, setCode] = useState('')
+  const gotConsentInfo = useSelector((state: RootState) => state.userInfo.dataCollectionConsentState)
+  const [askForDataCollectionConsentState, setAskForDataCollectionConsentState] = useState(gotConsentInfo === undefined)
+
+  useEffect(() => {
+    setAskForDataCollectionConsentState(gotConsentInfo === undefined)
+  }, [gotConsentInfo])
 
   const detectChange = useCallback(
     (v: string) => {
@@ -56,24 +68,51 @@ export default function Page({ providers }: Props) {
     [query.callbackUrl]
   )
 
+  const onUpdateDataCollectionConsentState = useCallback(
+    async (dataCollectionConsentState: boolean) => {
+      const res = await request<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
+        `updateDataCollectionConsentState`,
+        {
+          dataCollectionConsentState: dataCollectionConsentState,
+        }
+      )
+      if (res) {
+        dispatch(updateDataCollectionConsentState(res.res))
+        setAskForDataCollectionConsentState(false)
+      }
+    },
+    [dispatch]
+  )
+
   return (
     <>
       <Head>
         <title>KUIZ</title>
       </Head>
       {session ? (
-        <Sheet>
-          <Header>Choose a Class or Enroll in a new Class</Header>
-          {classes.map(({ cid, name, code }, i) => (
-            <ClassButton key={i} onClick={onClassEnter(cid)}>
-              {name} ({code.toUpperCase()})
-            </ClassButton>
-          ))}
-          <InputSection>
-            <TextInput placeholder="Enter class code" onChange={detectChange} value={code} />
-            <FillButton onClick={onSubmit}>Enter</FillButton>
-          </InputSection>
-        </Sheet>
+        <>
+          <CheckDialog
+            title="Research Consent"
+            message="We would like to use questions you created for research purposes would that be ok?"
+            modalState={askForDataCollectionConsentState}
+            btnName="Yes"
+            cancelBtnName="No"
+            toggleModal={() => onUpdateDataCollectionConsentState(true)}
+            cancelModal={() => onUpdateDataCollectionConsentState(false)}
+          />
+          <Sheet>
+            <Header>Choose a Class or Enroll in a new Class</Header>
+            {classes.map(({ cid, name, code }, i) => (
+              <ClassButton key={i} onClick={onClassEnter(cid)}>
+                {name} ({code.toUpperCase()})
+              </ClassButton>
+            ))}
+            <InputSection>
+              <TextInput placeholder="Enter class code" onChange={detectChange} value="" />
+              <FillButton onClick={onSubmit}>Enter</FillButton>
+            </InputSection>
+          </Sheet>
+        </>
       ) : (
         <>
           <IntroBox>

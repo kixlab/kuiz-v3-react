@@ -1,6 +1,6 @@
 import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
 import styled from '@emotion/styled'
-import { login, updateStudentID } from '@redux/features/userSlice'
+import { login, updateStudentID, updateDataCollectionConsentState } from '@redux/features/userSlice'
 import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useSession } from 'next-auth/react'
@@ -48,6 +48,9 @@ export const Gnb = () => {
           )
           if (user.studentID) {
             dispatch(updateStudentID(user.studentID))
+          }
+          if (user.dataCollectionConsentState !== undefined) {
+            dispatch(updateDataCollectionConsentState(user.dataCollectionConsentState))
           }
         }
       })
