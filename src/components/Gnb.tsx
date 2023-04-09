@@ -58,7 +58,7 @@ export const Gnb = () => {
 
   return (
     <SideTab>
-      <Logo>
+      <Logo href={cid ? `/class/${cid}` : ''}>
         <LogoIcon src={'/logo.svg'} />
         KUIZ
       </Logo>
@@ -92,8 +92,9 @@ const SideTab = styled.div`
   }
 `
 
-const Logo = styled.div`
+const Logo = styled.a`
   ${typography.logo};
+  text-decoration: None;
   display: flex;
   align-items: center;
   gap: 8px;
