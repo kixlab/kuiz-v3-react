@@ -63,7 +63,7 @@ export default function Page() {
           similarOptions: [],
         })
 
-        push('/class/' + cid)
+        push(`/class/${cid}?topic=${topic}`)
       }
     }
   }, [question, answer, cid, explanation, method, topic, push])
