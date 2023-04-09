@@ -38,7 +38,10 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
           toggleModal={toggleModal}
           cancelModal={toggleModal}
         />
-        <TextButton onClick={() => push('/' + cid + '/question/' + qid + '/createOption')} color={palette.grey400}>
+        <TextButton
+          onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
+          color={palette.primaryDark}
+        >
           View
         </TextButton>
       </RowFlex>
