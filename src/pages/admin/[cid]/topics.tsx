@@ -2,10 +2,12 @@ import { CreateTopicParams, CreateTopicResults } from '@api/admin/createTopic'
 import { DeleteTopicParams, DeleteTopicResults } from '@api/admin/deleteTopic'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
 import { UpdateTopicParams, UpdateTopicResults } from '@api/admin/updateTopic'
+import { InsertCurrentTopicParams, InsertCurrentTopicResults } from '@api/admin/insertCurrentTopic'
 import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
 import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextButton } from '@components/basic/button/Text'
+import { SelectInput } from '@components/basic/input/Select'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
 import { Topic } from '@server/db/topic'
@@ -25,6 +27,8 @@ export default function Page() {
   const [topics, setTopics] = useState<Topic[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
+  const [currentTopic, setCurrentTopic] = useState('')
+  const [stringTopics, setStringTopics] = useState<string[]>()
 
   useEffect(() => {
     if (cid) {
@@ -32,10 +36,21 @@ export default function Page() {
         if (res) {
           setClassInfo(res)
           setTopics(res.topics)
+          const topicsName: string[] = []
+          res.topics.forEach(topic => {
+            topicsName.push(topic.label)
+          })
+          setStringTopics(topicsName)
+          if (res.currentTopic) {
+            const defaultTopic = topics.filter(topic => topic._id === res.currentTopic)
+            if (defaultTopic.length > 0) {
+              setCurrentTopic(defaultTopic[0].label)
+            }
+          }
         }
       })
     }
-  }, [push, cid, setClassInfo, setTopics])
+  }, [push, cid, setClassInfo, setTopics, topics])
 
   const onUpdateTopic = useCallback(
     (index: number) => {
@@ -98,6 +113,16 @@ export default function Page() {
     },
     [currentIndex, topics, cid]
   )
+  const onSelectTopic = useCallback(
+    (i: number, value: string) => {
+      setCurrentTopic(value)
+      request<InsertCurrentTopicParams, InsertCurrentTopicResults>(`admin/insertCurrentTopic`, {
+        cid: cid,
+        topicID: topics[i]._id,
+      })
+    },
+    [cid, topics]
+  )
 
   return (
     <>
@@ -109,6 +134,17 @@ export default function Page() {
             <title>{classInfo?.name}</title>
           </Head>
           <Container>
+            <SelectTopicContainer>
+              <TopicContainer>Choose a topic to be shown by default </TopicContainer>
+              <InputContainer>
+                <SelectInput
+                  options={stringTopics ? stringTopics : []}
+                  value={currentTopic}
+                  onSelect={onSelectTopic}
+                  placeholder="topic"
+                />
+              </InputContainer>
+            </SelectTopicContainer>
             {modalOpen && <UpdateTopicDialog submit={modalSubmit} cancel={() => setModalOpen(false)} />}
             <Table>
               <TableHeader>
@@ -187,4 +223,25 @@ const Col = styled.div`
       text-align: right;
     }
   }
+`
+const SelectTopicContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0;
+  background: ${palette.primaryMain};
+  padding: 20px;
+  border-radius: 5px;
+  color: white;
+`
+
+const InputContainer = styled.div`
+  color: ${palette.black};
+`
+
+const TopicContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  margin-bottom: 20px;
 `

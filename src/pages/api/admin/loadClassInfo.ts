@@ -2,6 +2,7 @@ import { ClassModel } from '@server/db/class'
 import { Topic } from '@server/db/topic'
 import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
+import { ID } from 'src/types/common'
 
 export interface LoadClassInfoParams {
   cid: string
@@ -12,6 +13,7 @@ export interface LoadClassInfoResults {
   topics: Topic[]
   studentsNumber: number
   qstemsNumber: number
+  currentTopic: ID
 }
 
 export default apiController<LoadClassInfoParams, LoadClassInfoResults>(async ({ cid }, user) => {
@@ -24,6 +26,7 @@ export default apiController<LoadClassInfoParams, LoadClassInfoResults>(async ({
         topics: courseClass.topics,
         studentsNumber: courseClass.students.length,
         qstemsNumber: courseClass.qstems.length,
+        currentTopic: courseClass.currentTopic,
       }
     }
     throw new Error('Class not found')
