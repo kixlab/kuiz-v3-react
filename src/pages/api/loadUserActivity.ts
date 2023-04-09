@@ -39,8 +39,8 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
   })
 
   if (qOptions) {
-    const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
-    qOptionsNumber = filteredOptions.length
+    // const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
+    qOptionsNumber = qOptions.length
   }
 
   return {
