@@ -22,9 +22,10 @@ const QuizList = styled.div`
   column-gap: 8px;
   text-align: center;
   padding: 20px;
-  background-color: ${palette.primary.dark};
+  background-color: ${palette.primaryDark};
   color: ${palette.common.white};
   border-radius: 8px 8px 0 0;
+  margin-bottom: 4px;
   @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     grid-template-columns: auto 0 0 100px;
   }

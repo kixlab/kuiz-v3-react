@@ -79,19 +79,11 @@ export default function Page() {
         {studentID ?? 'Not registered'}
         <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
 
-        {0 < myQuestions.length && (
-          <Label color="black" size={0}>
-            My Questions
-          </Label>
-        )}
+        {0 < myQuestions.length && <Label size={0}>My Questions</Label>}
         {myQuestions.map(stem => {
           return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} cid={stem.class.toString()} />
         })}
-        {0 < myOptions.length && (
-          <Label color="black" size={0}>
-            My Options
-          </Label>
-        )}
+        {0 < myOptions.length && <Label size={0}>My Options</Label>}
         {myOptions.map((option, i) => {
           return (
             <MadeOption

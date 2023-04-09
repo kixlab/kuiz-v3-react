@@ -1,30 +1,43 @@
 import styled from '@emotion/styled'
 import { typography, palette } from '@styles/theme'
+import { View } from '../View'
 
 interface Props {
-  placeholder: string
-  value?: string
-  onChange: (v: string) => void
+  placeholder?: string
+  value: string
+  onChange?: (v: string) => void
+  disabled?: boolean
 }
 
-export const TextInput = ({ placeholder, value, onChange }: Props) => {
+export const TextInput = View<Props>(({ placeholder, value, onChange, disabled = false, ...props }) => {
   return (
-    <TextInputComponent type="text" placeholder={placeholder} onChange={e => onChange(e.target.value)} value={value} />
+    <TextInputComponent
+      {...props}
+      type="text"
+      placeholder={placeholder}
+      onChange={e => onChange?.(e.target.value)}
+      value={value}
+      disabled={disabled}
+    />
   )
-}
+})
 
 const TextInputComponent = styled.input`
   ${typography.b02};
   padding: 16px;
   border-radius: 6px;
-  border: 1px solid ${palette.grey[500]};
+  border: 1px solid ${palette.grey500};
   width: 100%;
   box-sizing: border-box;
   &::placeholder {
-    color: ${palette.grey[500]};
+    color: ${palette.grey500};
   }
   &:focus {
     outline: none;
-    border-color: ${palette.grey[200]};
+    border-color: ${palette.grey200};
+  }
+  &:disabled {
+    background-color: ${palette.grey600};
+    cursor: not-allowed;
   }
 `

@@ -27,7 +27,7 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
         <QuestionLabel>Q. {question}</QuestionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextButton onClick={toggleModal} color={palette.grey[400]}>
+        <TextButton onClick={toggleModal} color={palette.grey400}>
           Delete
         </TextButton>
         <CheckDialog
@@ -40,7 +40,7 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
         />
         <TextButton
           onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
-          color={palette.primary.dark}
+          color={palette.primaryDark}
         >
           View
         </TextButton>
