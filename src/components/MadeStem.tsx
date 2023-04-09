@@ -35,15 +35,19 @@ export const MadeStem = ({ question, cid, qid, onDelete }: Props) => {
         <TextButton onClick={toggleModal} color={palette.grey400}>
           Delete
         </TextButton>
-        <CheckDialog
-          title="Delete the stem"
-          btnName="Delete"
-          message="Do you really want to delete it? You can't restore it."
-          modalState={isOpenModal}
-          toggleModal={onDeleteStem}
-          cancelModal={toggleModal}
-        />
-        <TextButton onClick={() => push('/' + cid + '/question/' + qid + '/createOption')} color={palette.grey400}>
+        {isOpenModal && (
+          <CheckDialog
+            title="Delete the stem"
+            btnName="Delete"
+            message="Do you really want to delete it? You can't restore it."
+            toggleModal={onDeleteStem}
+            cancelModal={toggleModal}
+          />
+        )}
+        <TextButton
+          onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
+          color={palette.primaryDark}
+        >
           View
         </TextButton>
       </RowFlex>

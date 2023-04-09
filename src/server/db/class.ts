@@ -7,6 +7,7 @@ export interface Class extends Doc {
   qstems: Types.ObjectId[]
   topics: Types.ObjectId[]
   name: string
+  currentTopic?: Types.ObjectId
 }
 
 const ClassSchema = new Schema<Class>({
@@ -42,6 +43,10 @@ const ClassSchema = new Schema<Class>({
       },
     ],
     default: [],
+  },
+  currentTopic: {
+    type: Schema.Types.ObjectId,
+    required: false,
   },
 })
 

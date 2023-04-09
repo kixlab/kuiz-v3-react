@@ -46,14 +46,15 @@ export const MadeOption = ({ oid, qid, option, question, cid, optionType, onDele
         <TextButton onClick={toggleModal} color={palette.grey400}>
           Delete
         </TextButton>
-        <CheckDialog
-          title="Delete the stem"
-          btnName="Delete"
-          message="Do you really want to delete it? You can't restore it."
-          modalState={isOpenModal}
-          toggleModal={onDeleteOption}
-          cancelModal={toggleModal}
-        />
+        {isOpenModal && (
+          <CheckDialog
+            title="Delete the stem"
+            btnName="Delete"
+            message="Do you really want to delete it? You can't restore it."
+            toggleModal={onDeleteOption}
+            cancelModal={toggleModal}
+          />
+        )}
         <TextButton onClick={viewOption} color={palette.primaryDark}>
           View
         </TextButton>

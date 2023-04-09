@@ -1,19 +1,20 @@
+import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
 import { LoadQuestionDetailParams, LoadQuestionDetailResults } from '@api/loadQuestionDetail'
 import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
+import { InputDialog } from '@components/Dialogs/InputDialog'
+import { Divider } from '@components/Divider'
+import { Sheet } from '@components/Sheet'
+import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
 import { StrokeButton } from '@components/basic/button/Stroke'
-import { InputDialog } from '@components/Dialogs/InputDialog'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
-import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
-import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 
 export default function Page() {
   const { query } = useRouter()
@@ -24,7 +25,6 @@ export default function Page() {
   const [ansVisible, setAnsVisible] = useState(true)
   const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
-  const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
   const [contributors, setContributors] = useState<GetContributorsResults>()
@@ -45,12 +45,8 @@ export default function Page() {
         qid,
       })
 
-      const uniqueContributors = new Set()
-      uniqueContributors.add(res?.qinfo.author)
-      res?.options.forEach(option => uniqueContributors.add(option.author))
-
       const contributorData = await request<GetContributorsParams, GetContributorsResults>(`getContributors`, {
-        uids: Array.from(uniqueContributors) as string[],
+        qid,
       })
       if (contributorData) {
         setContributors(contributorData)
@@ -105,7 +101,6 @@ export default function Page() {
   const shuffleOptions = useCallback(() => {
     if (qid) {
       getQinfo(qid)
-      setIsSolved(false)
       setSelected(-1)
       setAnsVisible(false)
       setShowAnswer(false)
@@ -126,29 +121,32 @@ export default function Page() {
   )
 
   return (
-    <QuestionBox>
-      <ContributorsWrapper>
-        <Label>Contributors</Label>
-        <ContributorsImage>
-          {contributors?.userData?.map(
-            (contributor, index: number) =>
-              contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
-          )}
-        </ContributorsImage>
-      </ContributorsWrapper>
-      <Label>Q. {qinfo?.stem_text}</Label>
+    <Sheet gap={0}>
+      <Label color="grey200" marginBottom={8}>
+        Contributors
+      </Label>
+      <Contributors>
+        {contributors?.userData?.map(
+          (contributor, index: number) =>
+            contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
+        )}
+      </Contributors>
+      <Divider marginVertical={20} />
+      <Label color="grey200" marginBottom={16}>
+        Q. {qinfo?.stem_text}
+      </Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
             <OptionButton
               onClick={() => {
                 setSelected(i)
-                setIsSolved(true)
               }}
-              state={isSolved}
+              state={0 <= selected}
               selected={selected === i}
               key={i}
-              isAnswer={showAnswer && answer === i ? true : false}
+              isAnswer={showAnswer && answer === i}
+              marginBottom={8}
             >
               {e.option_text}
             </OptionButton>
@@ -169,46 +167,22 @@ export default function Page() {
         <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
-    </QuestionBox>
+    </Sheet>
   )
 }
-
-const QuestionBox = styled.div`
-  background-color: white;
-  padding: 40px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin: 30px;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    margin: 30px 0 30px 0;
-  }
-`
-
-const Label = styled.div`
-  ${typography.hStem};
-  padding: 8px 0 0 0;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    padding: 0px;
-  }
-`
 
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
+  margin-top: 20px;
 `
 
-const ContributorsWrapper = styled.div`
-  border-bottom: 1px solid #9aa0a6;
-`
-
-const ContributorsImage = styled.div`
+const Contributors = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  margin: 10px 0;
+  gap: 4px;
 `
 
 const ProfileImg = styled.img`

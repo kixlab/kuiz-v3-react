@@ -17,12 +17,13 @@ import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loa
 import Head from 'next/head'
 import { DeleteQstemParams, DeleteQstemResults } from '@api/deleteQstem'
 import { DeleteOptionParams, DeleteOptionResults } from '@api/deleteOption'
+import { Required } from '@components/Required'
 
 export default function Page() {
   const studentID = useSelector((state: RootState) => state.userInfo.studentID)
   const { push } = useRouter()
   const dispatch = useDispatch()
-  const [myQeustions, setMyQuestions] = useState<QStem[]>([])
+  const [myQuestions, setMyQuestions] = useState<QStem[]>([])
   const [myOptions, setMyOptions] = useState<
     { oid: string; qid: string; stemText: string; optionText: string; isAnswer: boolean; cid: string }[]
   >([])
@@ -95,12 +96,14 @@ export default function Page() {
         <title>My Page</title>
       </Head>
       <Sheet>
-        <Label>Student ID</Label>
+        <Label>
+          Student ID <Required />
+        </Label>
         {studentID ?? 'Not registered'}
         <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
 
-        {0 < myQeustions.length && <Label size={0}>My Questions</Label>}
-        {myQeustions.map(stem => {
+        {0 < myQuestions.length && <Label size={0}>My Questions</Label>}
+        {myQuestions.map(stem => {
           return (
             <MadeStem
               key={stem._id}

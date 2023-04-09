@@ -5,6 +5,7 @@ import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
+import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
@@ -21,20 +22,22 @@ export default function Page() {
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
   const [topics, setTopics] = useState<string[]>([])
-  const [topic, setTopic] = useState(topics[0] ?? '')
+  const [topic, setTopic] = useState((query.topic as string | undefined) ?? '')
   const [method, setMethod] = useState(BLOOMS_TAXONOMY[0])
   const [explanation, setExplanation] = useState('')
   const [question, setQuestion] = useState('')
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
 
   const submitStem = useCallback(async () => {
-    if (question.trim().length === 0) {
-      alert('Please enter a question.')
-      return
-    }
-    if (answer.trim().length === 0) {
-      alert('Please enter an answer.')
-      return
+    const fields = [topic, explanation, question, answer]
+    const fieldNames = ['topic', 'explanation', 'question', 'answer']
+    for (let i = 0; i < fields.length; i += 1) {
+      const field = fields[i]
+      const fieldName = fieldNames[i]
+      if (field.trim().length === 0) {
+        alert(`Please enter ${fieldName}.`)
+        return
+      }
     }
 
     if (cid) {
@@ -54,16 +57,14 @@ export default function Page() {
           optionData: {
             option_text: answer,
             is_answer: true,
-            explanation,
             class: cid,
             qstem: res.data,
-            learningObjective: `To ${method} the concept of ${topic}`,
             keywords: [],
           },
           similarOptions: [],
         })
 
-        push('/class/' + cid + '/question/' + res.data + '/create-option')
+        push(`/class/${cid}?topic=${topic}`)
       }
     }
   }, [question, answer, cid, explanation, method, topic, push])
@@ -92,11 +93,11 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Create Question | {className}</title>
+        <title>{`Create Question | ${className}`}</title>
       </Head>
       <Sheet gap={0}>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Learning Objective
+          Learning Objective <Required />
         </Label>
         <TopicContainer>
           To <SelectInput options={BLOOMS_TAXONOMY} value={method} onSelect={onSelectMethod} />
@@ -105,7 +106,7 @@ export default function Page() {
         </TopicContainer>
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Question
+          Question <Required />
         </Label>
         <TextInput
           placeholder="E.g. What benefits do keyboard shortcuts provide users?"
@@ -115,7 +116,7 @@ export default function Page() {
         />
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Explanation
+          Explanation <Required />
         </Label>
         <TextInput
           placeholder="Provide an explanation for the question and the intent behind the question."
@@ -125,7 +126,7 @@ export default function Page() {
         />
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Answer
+          Answer <Required />
         </Label>
         <TextInput
           placeholder="Suggest one correct answer for the question"
