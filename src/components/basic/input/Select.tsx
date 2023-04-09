@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { ChangeEvent, useCallback } from 'react'
 import { MIN_BUTTON_SIZE } from 'src/constants/ui'
 import { View } from '../View'
-import { palette } from '@styles/theme'
 
 interface Props {
   options: Readonly<string[]>
@@ -41,7 +40,7 @@ const Options = styled.select`
   outline: none;
   font-size: inherit;
   background-color: transparent;
-  color: ${palette.black};
+  color: inherit;
   width: min-content;
 
   option[value=''][disabled] {

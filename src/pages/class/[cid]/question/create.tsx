@@ -28,13 +28,15 @@ export default function Page() {
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
 
   const submitStem = useCallback(async () => {
-    if (question.trim().length === 0) {
-      alert('Please enter a question.')
-      return
-    }
-    if (answer.trim().length === 0) {
-      alert('Please enter an answer.')
-      return
+    const fields = [topic, explanation, question, answer]
+    const fieldNames = ['topic', 'explanation', 'question', 'answer']
+    for (let i = 0; i < fields.length; i += 1) {
+      const field = fields[i]
+      const fieldName = fieldNames[i]
+      if (field.trim().length === 0) {
+        alert(`Please enter ${fieldName}.`)
+        return
+      }
     }
 
     if (cid) {
@@ -90,7 +92,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Create Question | {className}</title>
+        <title>{`Create Question | ${className}`}</title>
       </Head>
       <Sheet gap={0}>
         <Label color={'primaryMain'} size={0} marginBottom={8}>

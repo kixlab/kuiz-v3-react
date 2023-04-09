@@ -44,13 +44,11 @@ export const Gnb = () => {
               classes,
               isLoggedIn: true,
               isAdmin: user.isAdmin,
+              dataCollectionConsentState: user.dataCollectionConsentState,
             })
           )
           if (user.studentID) {
             dispatch(updateStudentID(user.studentID))
-          }
-          if (user.dataCollectionConsentState !== undefined) {
-            dispatch(updateDataCollectionConsentState(user.dataCollectionConsentState))
           }
         }
       })
@@ -59,7 +57,7 @@ export const Gnb = () => {
 
   return (
     <SideTab>
-      <LogoContainer href={cid ? `/class/${cid}/` : ''}>
+      <LogoContainer href={cid ? `/class/${cid}/` : '/'}>
         <Logo />
       </LogoContainer>
       {data && (
@@ -95,8 +93,8 @@ const SideTab = styled.div`
 const ProfileImg = styled.img`
   border-radius: 50%;
   display: flex;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
 `
 
 const Menu = styled.div`

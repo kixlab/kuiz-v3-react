@@ -8,34 +8,23 @@ import { typography } from '@styles/theme'
 interface Props {
   title: string
   message: string
-  modalState: boolean
   btnName: string
   cancelBtnName?: string
   toggleModal: () => void
   cancelModal: () => void
 }
 
-export const CheckDialog = ({
-  title,
-  message,
-  modalState,
-  btnName,
-  toggleModal,
-  cancelModal,
-  cancelBtnName = 'Cancel',
-}: Props) => {
-  if (modalState) {
-    return (
-      <Modal>
-        <Label size={1}>{title}</Label>
-        <Message>{message}</Message>
-        <BtnRow>
-          <FillButton onClick={toggleModal}>{btnName}</FillButton>
-          <StrokeButton onClick={cancelModal}>{cancelBtnName}</StrokeButton>
-        </BtnRow>
-      </Modal>
-    )
-  } else return null
+export const CheckDialog = ({ title, message, btnName, toggleModal, cancelModal, cancelBtnName = 'Cancel' }: Props) => {
+  return (
+    <Modal>
+      <Label size={1}>{title}</Label>
+      <Message>{message}</Message>
+      <BtnRow>
+        <FillButton onClick={toggleModal}>{btnName}</FillButton>
+        <StrokeButton onClick={cancelModal}>{cancelBtnName}</StrokeButton>
+      </BtnRow>
+    </Modal>
+  )
 }
 
 const BtnRow = styled.div`

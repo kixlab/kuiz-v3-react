@@ -30,14 +30,15 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
         <TextButton onClick={toggleModal} color={palette.grey400}>
           Delete
         </TextButton>
-        <CheckDialog
-          title="Delete the stem"
-          btnName="Delete"
-          message="Do you really want to delete it? You can't restore it."
-          modalState={isOpenModal}
-          toggleModal={toggleModal}
-          cancelModal={toggleModal}
-        />
+        {isOpenModal && (
+          <CheckDialog
+            title="Delete the stem"
+            btnName="Delete"
+            message="Do you really want to delete it? You can't restore it."
+            toggleModal={toggleModal}
+            cancelModal={toggleModal}
+          />
+        )}
         <TextButton
           onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
           color={palette.primaryDark}
