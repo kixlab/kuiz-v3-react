@@ -24,6 +24,7 @@ export default function StudentID() {
       push('/my-page')
     }
   }
+
   return (
     <Sheet>
       <Header>Please Enter Your Student ID</Header>

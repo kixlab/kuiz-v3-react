@@ -49,7 +49,7 @@ export const typography = {
   `,
   hLabel: css`
     font-family: 'inter-sb';
-    font-size: 17px;
+    font-size: 18px;
     @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 15px;
     }

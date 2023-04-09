@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { typography, palette } from '@styles/theme'
 import { View } from '../View'
+import { MIN_BUTTON_SIZE } from 'src/constants/ui'
 
 interface Props {
   placeholder?: string
@@ -29,6 +30,7 @@ const TextInputComponent = styled.input`
   border: 1px solid ${palette.grey500};
   width: 100%;
   box-sizing: border-box;
+  min-height: ${MIN_BUTTON_SIZE}px;
   &::placeholder {
     color: ${palette.grey500};
   }
