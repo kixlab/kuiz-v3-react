@@ -13,7 +13,7 @@ export interface LoadClassInfoResults {
   topics: Topic[]
   studentsNumber: number
   qstemsNumber: number
-  currentTopic: ID | undefined
+  currentTopic: ID | null
 }
 
 export default apiController<LoadClassInfoParams, LoadClassInfoResults>(async ({ cid }, user) => {
