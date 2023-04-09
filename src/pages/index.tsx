@@ -8,7 +8,7 @@ import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { ClientSafeProvider, getProviders, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
@@ -28,6 +28,10 @@ export default function Page({ providers }: Props) {
   const [code, setCode] = useState('')
   const gotConsentInfo = useSelector((state: RootState) => state.userInfo.allowDocumentation)
   const [askForDocumentation, setAskForDocumentation] = useState(gotConsentInfo === undefined)
+
+  useEffect(() => {
+    setAskForDocumentation(gotConsentInfo === undefined)
+  }, [gotConsentInfo])
 
   const detectChange = useCallback(
     (v: string) => {
@@ -83,10 +87,9 @@ export default function Page({ providers }: Props) {
           <UpdateAllowDocumentationDialog modalState={askForDocumentation} submit={onUpdateAllowDocumentation} />
           <Sheet>
             <Header>Choose a Class or Enroll in a new Class</Header>
-            {classes.map(({ cid, name }, i) => (
+            {classes.map(({ cid, name, code }, i) => (
               <ClassButton key={i} onClick={onClassEnter(cid)}>
-                {name}
-                {/* ({code}) */}
+                {name} ({code.toUpperCase()})
               </ClassButton>
             ))}
             <InputSection>
