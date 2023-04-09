@@ -1,7 +1,7 @@
 import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
 import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
-import { FloatingButton } from '@components/basic/button/Floating'
+import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { Label } from '@components/basic/Label'
 import { ProgressBar } from '@components/ProgressBar'
@@ -18,7 +18,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { CONTENT_MAX_WIDTH } from 'src/constants/ui'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -46,8 +45,12 @@ export default function Page() {
   )
 
   const onCreateQuestion = useCallback(() => {
-    push(`/class/${cid}/question/create`)
-  }, [cid, push])
+    if (topic) {
+      push(`/class/${cid}/question/create?topic=${topic}`)
+    } else {
+      push(`/class/${cid}/question/create`)
+    }
+  }, [cid, push, topic])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -121,15 +124,23 @@ export default function Page() {
           <Progress>
             {userMadeQuestions} Questions{' '}
             <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
-              {selectedTopic?.requiredQuestionNumber ?? '-'}
+              🎯 {selectedTopic?.requiredQuestionNumber ?? '-'}
             </ProgressBar>
           </Progress>
           <Progress>
             {userMadeOptions} Options{' '}
             <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
-              {selectedTopic?.requiredOptionNumber ?? '-'}
+              🎯 {selectedTopic?.requiredOptionNumber ?? '-'}
             </ProgressBar>
           </Progress>
+        </div>
+        <div>
+          <Label color="white" marginBottom={8}>
+            Activity
+          </Label>
+          <FillButton onClick={onCreateQuestion} fill={'primaryDark'}>
+            Create a Question
+          </FillButton>
         </div>
       </InformationContainer>
 
@@ -146,9 +157,6 @@ export default function Page() {
           />
         ))}
       </Sheet>
-      <FloatingButton onClick={onCreateQuestion} right={`calc((100vw - ${CONTENT_MAX_WIDTH}px) / 2)`} bottom={40}>
-        Create a New Question
-      </FloatingButton>
     </>
   )
 }
@@ -156,12 +164,13 @@ export default function Page() {
 const InformationContainer = styled.div`
   width: calc(100% - 40px);
   display: grid;
-  padding: 12px 20px;
+  padding: 20px;
   background-color: ${palette.primaryMain};
   color: ${palette.common.white};
   border-radius: 8px;
-  grid-template-columns: auto 1fr;
-  gap: 20px;
+  grid-template-columns: auto 1fr auto;
+  gap: 40px;
+  box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
 `
 
 const Progress = styled.div`

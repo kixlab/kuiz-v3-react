@@ -21,7 +21,7 @@ export default function Page() {
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
   const [topics, setTopics] = useState<string[]>([])
-  const [topic, setTopic] = useState(topics[0] ?? '')
+  const [topic, setTopic] = useState((query.topic as string | undefined) ?? '')
   const [method, setMethod] = useState(BLOOMS_TAXONOMY[0])
   const [explanation, setExplanation] = useState('')
   const [question, setQuestion] = useState('')
