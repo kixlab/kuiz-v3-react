@@ -18,6 +18,7 @@ export default function Page() {
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
+  const callbackUrl = query.callbackUrl as string | undefined
   const [ansList, setAnsList] = useState<Option[]>([])
   const [disList, setDistList] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
@@ -60,9 +61,13 @@ export default function Page() {
         optionData,
         similarOptions: [],
       })
-      push('/class/' + cid)
+      if (callbackUrl) {
+        push(callbackUrl)
+      } else {
+        push('/class/' + cid)
+      }
     }
-  }, [cid, isAnswer, push, option, qid])
+  }, [option, cid, qid, isAnswer, callbackUrl, push])
 
   return (
     <Sheet gap={0}>
