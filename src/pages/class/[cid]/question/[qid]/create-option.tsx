@@ -1,5 +1,4 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { getQuestionTopicParams, getQuestionTopicResults } from '@api/getQuestionTopic'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
@@ -21,13 +20,8 @@ export default function Page() {
   const [ansList, setAnsList] = useState<Option[]>([])
   const [disList, setDistList] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
-  const [similarOptions, setSimilarOptions] = useState<string[]>([])
-  const [learningObjective, setLearningObjective] = useState('')
-
-  // My option values
   const [option, setOption] = useState('')
   const [isAnswer, setIsAnswer] = useState(false)
-  const [keywords, setKeywords] = useState<string[]>([])
 
   useEffect(() => {
     if (qid) {
@@ -43,43 +37,31 @@ export default function Page() {
           setQinfo(res.qinfo)
         }
       })
-      request<getQuestionTopicParams, getQuestionTopicResults>(`getQuestionTopic`, {
-        qid,
-      }).then(res => {
-        if (res) {
-          setLearningObjective(res.learningObjective)
-        }
-      })
     }
   }, [push, qid, setAnsList, setDistList, setQinfo])
 
   const submit = useCallback(async () => {
+    if (option.trim().length === 0) {
+      alert('Please enter an option')
+      return
+    }
+
     if (cid && qid) {
       const optionData = {
         option_text: option,
         is_answer: isAnswer,
         class: cid,
         qstem: qid,
-        keywords,
-      }
-
-      if (keywords.length > 0 && option.length > 0) {
-        if (keywords.includes('Form similar to answer')) {
-          ansList.forEach(item => {
-            if (!similarOptions.includes(item._id)) {
-              setSimilarOptions([item._id, ...similarOptions])
-            }
-          })
-        }
+        keywords: [],
       }
 
       await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
         optionData,
-        similarOptions: similarOptions,
+        similarOptions: [],
       })
       push('/class/' + cid)
     }
-  }, [ansList, cid, isAnswer, keywords, push, option, qid, similarOptions])
+  }, [cid, isAnswer, push, option, qid])
 
   return (
     <Sheet gap={0}>
