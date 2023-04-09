@@ -21,12 +21,12 @@ export const UpdateTopicDialog = (props: Props) => {
       <TextInput value={inputMsg} onChange={setInputMsg} placeholder={'Update or add a topic'} />
       <WeightWrapper>
         <div>
-          <Label size={1}>Option weight</Label>
-          <NumberInput type="number" min={0} onChange={e => setOptionWeight(parseInt(e.target.value))} />
+          <Label size={1}>Set Required Number of Questions</Label>
+          <NumberInput type="number" min={0} onChange={e => setQuestionWeight(parseInt(e.target.value))} />
         </div>
         <div>
-          <Label size={1}>Question weight</Label>
-          <NumberInput type="number" min={0} onChange={e => setQuestionWeight(parseInt(e.target.value))} />
+          <Label size={1}>Set Required Number of Options</Label>
+          <NumberInput type="number" min={0} onChange={e => setOptionWeight(parseInt(e.target.value))} />
         </div>
       </WeightWrapper>
       <BtnRow>

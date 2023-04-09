@@ -8,6 +8,7 @@ interface UserInfoType {
   isAdmin: boolean
   classes: { name: string; cid: string; code: string }[]
   studentID?: string
+  dataCollectionConsentState?: boolean
 }
 
 export const userSlice = createSlice({
@@ -23,6 +24,7 @@ export const userSlice = createSlice({
     madeOptions: [],
     solved: [],
     studentID: undefined,
+    dataCollectionConsentState: undefined,
   } as UserInfoType,
   reducers: {
     login: (state: UserInfoType, action: PayloadAction<UserInfoType>) => {
@@ -35,6 +37,9 @@ export const userSlice = createSlice({
     },
     updateStudentID: (state: UserInfoType, action: PayloadAction<string>) => {
       state.studentID = action.payload
+    },
+    updateDataCollectionConsentState: (state: UserInfoType, action: PayloadAction<boolean>) => {
+      state.dataCollectionConsentState = action.payload
     },
     logout: (state: UserInfoType) => {
       state.name = ''
@@ -53,5 +58,5 @@ export const userSlice = createSlice({
   },
 })
 
-export const { login, logout, updateStudentID, enroll } = userSlice.actions
+export const { login, logout, updateStudentID, updateDataCollectionConsentState, enroll } = userSlice.actions
 export const userReducer = userSlice.reducer
