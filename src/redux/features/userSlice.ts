@@ -7,9 +7,6 @@ interface UserInfoType {
   isLoggedIn: boolean
   isAdmin: boolean
   classes: { name: string; cid: string; code: string }[]
-  made: string[]
-  madeOptions: string[]
-  solved: string[]
   studentID?: string
 }
 
@@ -35,9 +32,6 @@ export const userSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn
       state.isAdmin = action.payload.isAdmin
       state.classes = action.payload.classes
-      state.made = action.payload.made
-      state.madeOptions = action.payload.madeOptions
-      state.solved = action.payload.solved
     },
     updateStudentID: (state: UserInfoType, action: PayloadAction<string>) => {
       state.studentID = action.payload
@@ -49,9 +43,6 @@ export const userSlice = createSlice({
       state.isLoggedIn = false
       state.isAdmin = false
       state.classes = []
-      state.made = []
-      state.madeOptions = []
-      state.solved = []
       state.studentID = ''
     },
     enroll: (state: UserInfoType, action: PayloadAction<UserInfoType['classes'][number]>) => {

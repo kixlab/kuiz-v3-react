@@ -30,7 +30,6 @@ const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean; isAns
     ${typography.b02};
     background-color: ${palette.background.light};
     padding: 16px;
-    margin-bottom: 8px;
     border-radius: 6px;
     border: 1.5px solid rgba(0, 0, 0, 0);
     display: grid;

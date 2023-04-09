@@ -49,10 +49,9 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
           cid: new Types.ObjectId(cid),
           qid: question.id,
           isAnswer: is_answer,
-          learningObjective: learningObjective,
           optionText: option_text,
         })
-        return option.id
+        return option._id
       })
     )
 
