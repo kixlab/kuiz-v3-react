@@ -15,6 +15,8 @@ import { GetQstemByOptionParams, GetQstemByOptionResults } from './api/getQstemB
 import { LoadCreatedOptionParams, LoadCreatedOptionResults } from './api/loadCreatedOption'
 import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 import Head from 'next/head'
+import { DeleteQstemParams, DeleteQstemResults } from '@api/deleteQstem'
+import { DeleteOptionParams, DeleteOptionResults } from '@api/deleteOption'
 
 export default function Page() {
   const studentID = useSelector((state: RootState) => state.userInfo.studentID)
@@ -22,7 +24,7 @@ export default function Page() {
   const dispatch = useDispatch()
   const [myQeustions, setMyQuestions] = useState<QStem[]>([])
   const [myOptions, setMyOptions] = useState<
-    { qid: string; stemText: string; optionText: string; isAnswer: boolean; cid: string }[]
+    { oid: string; qid: string; stemText: string; optionText: string; isAnswer: boolean; cid: string }[]
   >([])
 
   const getMadeStem = useCallback(() => {
@@ -43,6 +45,7 @@ export default function Page() {
         const optionList = res.madeOption
         const qlist = res2.qstems
         const newOptionList = optionList.map((option, index) => ({
+          oid: option._id,
           qid: qlist[index]._id,
           stemText: qlist[index].stem_text,
           optionText: option.option_text,
@@ -53,6 +56,23 @@ export default function Page() {
       }
     }
   }, [])
+
+  const onDeleteQuestion = useCallback(
+    async (qid: string) => {
+      await request<DeleteQstemParams, DeleteQstemResults>(`deleteQstem`, { qid })
+      getMadeStem()
+      getMadeOption()
+    },
+    [getMadeOption, getMadeStem]
+  )
+
+  const onDeleteOption = useCallback(
+    async (optionID: string) => {
+      await request<DeleteOptionParams, DeleteOptionResults>(`deleteOption`, { optionID })
+      getMadeOption()
+    },
+    [getMadeOption]
+  )
 
   const onInsertStudentID = useCallback(() => {
     push('/register')
@@ -67,7 +87,7 @@ export default function Page() {
   useEffect(() => {
     getMadeStem()
     getMadeOption()
-  }, [getMadeOption, getMadeStem, studentID])
+  }, [getMadeOption, getMadeStem])
 
   return (
     <>
@@ -81,18 +101,28 @@ export default function Page() {
 
         {0 < myQeustions.length && <Label size={0}>My Questions</Label>}
         {myQeustions.map(stem => {
-          return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} cid={stem.class.toString()} />
+          return (
+            <MadeStem
+              key={stem._id}
+              qid={stem._id}
+              question={stem.stem_text}
+              cid={stem.class.toString()}
+              onDelete={onDeleteQuestion}
+            />
+          )
         })}
         {0 < myOptions.length && <Label size={0}>My Options</Label>}
         {myOptions.map((option, i) => {
           return (
             <MadeOption
               key={i}
+              oid={option.oid}
               optionType={option.isAnswer ? 'Answer' : 'Distractor'}
               qid={option.qid}
               cid={option.cid}
               question={option.stemText}
               option={option.optionText}
+              onDelete={onDeleteOption}
             />
           )
         })}

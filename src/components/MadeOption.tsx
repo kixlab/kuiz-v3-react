@@ -7,20 +7,27 @@ import { TextButton } from './basic/button/Text'
 import { CheckDialog } from './Dialogs/CheckDialog'
 
 interface Props {
+  oid: string
   qid: string
   option: string
   question: string
   cid: string
   optionType: 'Answer' | 'Distractor'
+  onDelete: (optionID: string) => void
 }
 
-export const MadeOption = ({ qid, option, question, cid, optionType }: Props) => {
+export const MadeOption = ({ oid, qid, option, question, cid, optionType, onDelete }: Props) => {
   const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
+
+  const onDeleteOption = useCallback(() => {
+    onDelete(oid)
+    setIsOpenModal(!isOpenModal)
+  }, [setIsOpenModal, isOpenModal, oid, onDelete])
 
   const viewOption = useCallback(() => {
     push('/class/' + cid + '/question/' + qid + '/solve')
@@ -44,7 +51,7 @@ export const MadeOption = ({ qid, option, question, cid, optionType }: Props) =>
           btnName="Delete"
           message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
-          toggleModal={toggleModal}
+          toggleModal={onDeleteOption}
           cancelModal={toggleModal}
         />
         <TextButton onClick={viewOption} color={palette.primaryDark}>

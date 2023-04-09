@@ -11,9 +11,10 @@ interface Props {
   question: string
   qid: string
   cid: string
+  onDelete: (qid: string) => void
 }
 
-export const MadeStem = ({ question, cid, qid }: Props) => {
+export const MadeStem = ({ question, cid, qid, onDelete }: Props) => {
   const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
@@ -21,6 +22,10 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
 
+  const onDeleteStem = useCallback(() => {
+    onDelete(qid)
+    setIsOpenModal(!isOpenModal)
+  }, [setIsOpenModal, isOpenModal, onDelete, qid])
   return (
     <StemBox>
       <RowFlex>
@@ -35,7 +40,7 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
           btnName="Delete"
           message="Do you really want to delete it? You can't restore it."
           modalState={isOpenModal}
-          toggleModal={toggleModal}
+          toggleModal={onDeleteStem}
           cancelModal={toggleModal}
         />
         <TextButton onClick={() => push('/' + cid + '/question/' + qid + '/createOption')} color={palette.grey400}>
