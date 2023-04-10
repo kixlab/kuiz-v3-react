@@ -104,7 +104,7 @@ export default function Page({ providers }: Props) {
                 <Label color="primaryMain" marginBottom={8}>
                   Research Consent
                 </Label>
-                We would like to use questions you created for research purposes.
+                We would like to use and analyze your system use data for research purposes.
                 <FillButton onClick={() => onUpdateDataCollectionConsentState(true)} marginTop={20}>
                   I give my consent
                 </FillButton>
@@ -141,19 +141,19 @@ export default function Page({ providers }: Props) {
       ) : (
         <>
           <IntroBox>
-            Hello, we are the research team from KAIST Interaction Lab (KIXLAB)
-            <br />
-            <br />
-            Thank you for showing interest in our research. We are currently examining the effects of learnersourcing in
-            Multiple-choice question (MCQ) generation tasks.
+            Hello, we are a research team from KAIST Interaction Lab (KIXLAB). We are currently examining the effects of
+            learnersourcing in Multiple-choice question (MCQ) generation tasks.
             <br />
             <br />
             To reduce the burden caused by question generation tasks, as well as allowing for training in question
             generation, we developed KUIZ, a system facilitating modular learnersourcing for multiple-choice questions.
             <br />
             <br />
+            Learnersourcing is a method of crowdsourcing that allows learners to contribute to the learning process.
+            <br />
+            <br />
             If you participate in this study, you will be given a task to create MCQ stems and options based on your
-            lecture materials
+            lecture materials.
             <br />
             <br />
             The system is currently on its pilot version, and we are currently running usability tests while validating
@@ -167,7 +167,7 @@ export default function Page({ providers }: Props) {
             process. After the experiment ends, private information and account information will be all deleted.
             <br />
             <br />
-            If you have any questions, please contact the research team (haesookim@kaist.ac.kr).
+            If you have any questions, please contact the research team (haesoo1108@gmail.com).
             <br />
             <br />
             Thank you.
