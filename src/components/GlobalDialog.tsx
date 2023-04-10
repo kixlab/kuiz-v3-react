@@ -9,15 +9,21 @@ export function GlobalDialog() {
   const errorMessage = useSelector((state: RootState) => state.error.message)
   const errorAvailable = useSelector((state: RootState) => state.error.error)
 
-  return (
-    <CheckDialog
-      title={errorTitle}
-      message={errorMessage}
-      modalState={errorAvailable}
-      btnName="Ok"
-      toggleModal={() => {
-        dispatch(removeError())
-      }}
-    />
-  )
+  if (errorAvailable) {
+    return (
+      <CheckDialog
+        title={errorTitle}
+        message={errorMessage}
+        btnName="Ok"
+        toggleModal={() => {
+          dispatch(removeError())
+        }}
+        cancelModal={() => {
+          dispatch(removeError())
+        }}
+      />
+    )
+  } else {
+    return null
+  }
 }

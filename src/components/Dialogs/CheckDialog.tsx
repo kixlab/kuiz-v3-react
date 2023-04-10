@@ -1,29 +1,30 @@
-import { Modal } from './Modal'
+import { FillButton } from '@components/basic/button/Fill'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
-import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
+import { Modal } from './Modal'
+import { typography } from '@styles/theme'
 
 interface Props {
   title: string
   message: string
-  modalState: boolean
   btnName: string
+  cancelBtnName?: string
   toggleModal: () => void
+  cancelModal: () => void
 }
 
-export const CheckDialog = (props: Props) => {
-  if (props.modalState) {
-    return (
-      <Modal>
-        <Label text={props.title} color="black" size={1} />
-        <div>{props.message}</div>
-        <BtnRow>
-          <FillBtn onClick={props.toggleModal}>{props.btnName}</FillBtn>
-          <StrokeBtn onClick={props.toggleModal}>Cancel</StrokeBtn>
-        </BtnRow>
-      </Modal>
-    )
-  } else return null
+export const CheckDialog = ({ title, message, btnName, toggleModal, cancelModal, cancelBtnName = 'Cancel' }: Props) => {
+  return (
+    <Modal>
+      <Label size={1}>{title}</Label>
+      <Message>{message}</Message>
+      <BtnRow>
+        <FillButton onClick={toggleModal}>{btnName}</FillButton>
+        <StrokeButton onClick={cancelModal}>{cancelBtnName}</StrokeButton>
+      </BtnRow>
+    </Modal>
+  )
 }
 
 const BtnRow = styled.div`
@@ -31,4 +32,8 @@ const BtnRow = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
+`
+const Message = styled.div`
+  ${typography.b02};
+  line-height: 150%;
 `

@@ -1,7 +1,8 @@
+import { FillButton } from '@components/basic/button/Fill'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
-import { typography, palette } from '@styles/theme'
+import { palette, typography } from '@styles/theme'
 import { useState } from 'react'
-import { FillBtn, StrokeBtn } from '../basic/button/Button'
 import { Label } from '../basic/Label'
 import { Modal } from './Modal'
 
@@ -16,13 +17,13 @@ export const InputDialog = (props: Props) => {
   if (props.modalState) {
     return (
       <Modal>
-        <Label text="Report Error" color="black" size={1} />
+        <Label size={1}>Report Error</Label>
         <TextAreaInput onChange={e => setInputMsg(e.target.value)} placeholder="Write down the error" />
         <BtnRow>
-          <FillBtn onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
+          <FillButton onClick={() => props.submit(inputMsg)} disabled={inputMsg == ''}>
             Report
-          </FillBtn>
-          <StrokeBtn onClick={() => setInputMsg(props.toggleModal)}>Cancel</StrokeBtn>
+          </FillButton>
+          <StrokeButton onClick={() => setInputMsg(props.toggleModal)}>Cancel</StrokeButton>
         </BtnRow>
       </Modal>
     )
@@ -39,14 +40,14 @@ const TextAreaInput = styled.textarea`
   margin-top: 20px;
   border-radius: 6px;
   box-sizing: border-box;
-  border: 1px solid ${palette.grey[500]};
+  border: 1px solid ${palette.grey500};
   resize: vertical;
   &::placeholder {
-    color: ${palette.grey[500]};
+    color: ${palette.grey500};
   }
   &:focus {
     outline: none;
-    border-color: ${palette.grey[200]};
+    border-color: ${palette.grey200};
   }
 `
 

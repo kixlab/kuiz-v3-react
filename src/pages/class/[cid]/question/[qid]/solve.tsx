@@ -1,17 +1,20 @@
+import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
-import { FillBtn, StrokeBtn } from '@components/basic/button/Button'
-import { OptionBtn } from '@components/basic/button/OptionButton'
+import { LoadQuestionDetailParams, LoadQuestionDetailResults } from '@api/loadQuestionDetail'
+import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
 import { InputDialog } from '@components/Dialogs/InputDialog'
+import { Divider } from '@components/Divider'
+import { Sheet } from '@components/Sheet'
+import { Label } from '@components/basic/Label'
+import { FillButton } from '@components/basic/button/Fill'
+import { OptionButton } from '@components/basic/button/Option'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
-import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { LoadProblemDetailParams, LoadProblemDetailResults } from '@api/loadProblemDetail'
-import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
-import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
   const { query } = useRouter()
@@ -22,9 +25,9 @@ export default function Page() {
   const [ansVisible, setAnsVisible] = useState(true)
   const [selected, setSelected] = useState<number>(-1)
   const [answer, setAnswer] = useState(0)
-  const [isSolved, setIsSolved] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [contributors, setContributors] = useState<GetContributorsResults>()
 
   const getMultipleRandom = useCallback((arr: LoadClusterResults['cluster'], num: number) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random())
@@ -38,9 +41,17 @@ export default function Page() {
 
   const getQinfo = useCallback(
     async (qid: string) => {
-      const res = await request<LoadProblemDetailParams, LoadProblemDetailResults>(`loadProblemDetail`, {
+      const res = await request<LoadQuestionDetailParams, LoadQuestionDetailResults>(`loadQuestionDetail`, {
         qid,
       })
+
+      const contributorData = await request<GetContributorsParams, GetContributorsResults>(`getContributors`, {
+        qid,
+      })
+      if (contributorData) {
+        setContributors(contributorData)
+      }
+
       if (res) {
         const res2 = await request<LoadClusterParams, LoadClusterResults>(`loadCluster`, {
           qid,
@@ -90,7 +101,6 @@ export default function Page() {
   const shuffleOptions = useCallback(() => {
     if (qid) {
       getQinfo(qid)
-      setIsSolved(false)
       setSelected(-1)
       setAnsVisible(false)
       setShowAnswer(false)
@@ -111,28 +121,40 @@ export default function Page() {
   )
 
   return (
-    <QuestionBox>
-      <Label>Q. {qinfo?.stem_text}</Label>
+    <Sheet gap={0}>
+      <Label color="grey200" marginBottom={8}>
+        Contributors
+      </Label>
+      <Contributors>
+        {contributors?.userData?.map(
+          (contributor, index: number) =>
+            contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
+        )}
+      </Contributors>
+      <Divider marginVertical={20} />
+      <Label color="grey200" marginBottom={16}>
+        Q. {qinfo?.stem_text}
+      </Label>
       <div>
         {optionSet?.map((e, i) => {
           return (
-            <OptionBtn
+            <OptionButton
               onClick={() => {
                 setSelected(i)
-                setIsSolved(true)
               }}
-              state={isSolved}
+              state={0 <= selected}
               selected={selected === i}
               key={i}
-              isAnswer={showAnswer && answer === i ? true : false}
+              isAnswer={showAnswer && answer === i}
+              marginBottom={8}
             >
               {e.option_text}
-            </OptionBtn>
+            </OptionButton>
           )
         })}
       </div>
       <BtnDisplay>
-        <FillBtn
+        <FillButton
           onClick={() => {
             checkAnswer()
             setShowAnswer(true)
@@ -140,38 +162,33 @@ export default function Page() {
           disabled={selected == -1}
         >
           Submit
-        </FillBtn>
-        <StrokeBtn onClick={shuffleOptions}>Shuffle Options</StrokeBtn>
-        <StrokeBtn onClick={toggleModal}>Report Error</StrokeBtn>
+        </FillButton>
+        <StrokeButton onClick={shuffleOptions}>Shuffle Options</StrokeButton>
+        <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
         <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
       </BtnDisplay>
-    </QuestionBox>
+    </Sheet>
   )
 }
-
-const QuestionBox = styled.div`
-  background-color: white;
-  padding: 40px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin: 30px;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    margin: 30px 0 30px 0;
-  }
-`
-
-const Label = styled.div`
-  ${typography.hStem};
-  padding: 8px 0 0 0;
-  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
-    padding: 0px;
-  }
-`
 
 const BtnDisplay = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
+  margin-top: 20px;
+`
+
+const Contributors = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 4px;
+`
+
+const ProfileImg = styled.img`
+  border-radius: 50%;
+  display: flex;
+  width: 28px;
+  height: 28px;
+  margin: 3px;
 `

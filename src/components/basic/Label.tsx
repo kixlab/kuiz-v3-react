@@ -1,24 +1,24 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { typography, palette } from '@styles/theme'
+import { View } from './View'
 
 interface Props {
-  text: string
-  color: string
-  size: number
+  children: React.ReactNode
+  color?: 'primaryMain' | 'grey200' | 'white'
+  size?: number
 }
 
-export const Label = (props: Props) => {
+export const Label = View<Props>(({ children, color = 'grey200', size = 0, ...props }) => {
   return (
-    <LabelComponent color={props.color} size={props.size}>
-      {props.text}
+    <LabelComponent {...props} color={color} size={size}>
+      {children}
     </LabelComponent>
   )
-}
+})
 
-const LabelComponent = styled.div<{ color: string; size: number }>`
+const LabelComponent = styled.div<{ color: 'primaryMain' | 'grey200' | 'white'; size: number }>`
   ${({ color, size }) => css`
-    margin-bottom: 12px;
     ${size === 0
       ? css`
           ${typography.hLabel}
@@ -26,12 +26,6 @@ const LabelComponent = styled.div<{ color: string; size: number }>`
       : css`
           ${typography.hStem}
         `}
-    ${color === 'blue'
-      ? css`
-          color: ${palette.primary.main};
-        `
-      : css`
-          color: ${palette.grey[200]};
-        `}
+    color: ${palette[color]};
   `}
 `

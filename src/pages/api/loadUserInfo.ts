@@ -6,7 +6,7 @@ export interface LoadUserInfoParams {}
 
 export interface LoadUserInfoResults {
   user: User
-  classes: { cid: string; name: string }[]
+  classes: { cid: string; name: string; code: string }[]
 }
 
 export default apiController<LoadUserInfoParams, LoadUserInfoResults>(async ({}, user) => {
@@ -14,6 +14,6 @@ export default apiController<LoadUserInfoParams, LoadUserInfoResults>(async ({},
 
   return {
     user,
-    classes: classes.map(c => ({ cid: c._id, name: c.name })),
+    classes: classes.map(c => ({ cid: c._id, name: c.name, code: c.code })),
   }
 })

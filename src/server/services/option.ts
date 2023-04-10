@@ -9,20 +9,18 @@ interface OptionData {
   cid: Types.ObjectId
   optionText: string
   isAnswer: boolean
-  explanation?: string
   keywords?: string[]
 }
 
 class OptionService {
-  async create({ uid, qid, cid, optionText, isAnswer, explanation = '', keywords = [] }: OptionData) {
+  async create({ uid, qid, cid, optionText, isAnswer, keywords = [] }: OptionData) {
     const option = new OptionModel({
       author: uid,
       class: cid,
       option_text: optionText,
       is_answer: isAnswer,
-      explanation,
       qstem: qid,
-      keyWords: keywords,
+      keywords: keywords,
     })
     option.disjointSet = option.id
     await option.save()
@@ -34,7 +32,7 @@ class OptionService {
       $addToSet: { keyword: { $each: keywords } },
     })
 
-    return option
+    return option as Option
   }
 
   async getDisjointSets(qid: Types.ObjectId): Promise<[Option, Option[]][]> {

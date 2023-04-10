@@ -6,22 +6,22 @@ import { ID } from 'src/types/common'
 export interface AddKeyWordsParams {
   qid: ID
   oid: ID
-  keyWords: string[]
+  keywords: string[]
 }
 
 export interface AddKeyWordsResults {}
 
-export default apiController<AddKeyWordsParams, AddKeyWordsResults>(async ({ qid, oid, keyWords }) => {
+export default apiController<AddKeyWordsParams, AddKeyWordsResults>(async ({ qid, oid, keywords }) => {
   const qStem = await QStemModel.findById(qid)
   const option = await OptionModel.findById(oid)
 
   if (qStem && option) {
-    for (const keyword of keyWords) {
+    for (const keyword of keywords) {
       if (!qStem.keyword.includes(keyword)) {
         qStem.keyword.push(keyword)
       }
-      if (!option.keyWords.includes(keyword)) {
-        option.keyWords.push(keyword)
+      if (!option.keywords.includes(keyword)) {
+        option.keywords.push(keyword)
       }
     }
     await qStem.save()

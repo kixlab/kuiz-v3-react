@@ -1,32 +1,35 @@
-import { StrokeBtn } from '@components/basic/button/Button'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { Label } from '@components/basic/Label'
 import { MadeOption } from '@components/MadeOption'
 import { MadeStem } from '@components/MadeStem'
-import styled from '@emotion/styled'
+import { Sheet } from '@components/Sheet'
 import { logout } from '@redux/features/userSlice'
+import { RootState } from '@redux/store'
 import { QStem } from '@server/db/qstem'
-import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GetQstemByOptionParams, GetQstemByOptionResults } from './api/getQstemByOption'
-import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
 import { LoadCreatedOptionParams, LoadCreatedOptionResults } from './api/loadCreatedOption'
+import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from './api/loadCreatedStemData'
+import Head from 'next/head'
+import { Required } from '@components/Required'
 
 export default function Page() {
+  const studentID = useSelector((state: RootState) => state.userInfo.studentID)
   const { push } = useRouter()
   const dispatch = useDispatch()
-  const [madeStem, setMadeStem] = useState<QStem[]>([])
-  const [madeOption, setMadeOption] = useState<
-    { qid: string; stemText: string; optionText: string; isAnswer: boolean }[]
+  const [myQuestions, setMyQuestions] = useState<QStem[]>([])
+  const [myOptions, setMyOptions] = useState<
+    { qid: string; stemText: string; optionText: string; isAnswer: boolean; cid: string }[]
   >([])
 
   const getMadeStem = useCallback(() => {
     request<LoadCreatedStemDataParams, LoadCreatedStemDataResults>(`loadCreatedStemData`, {}).then(res => {
       if (res) {
-        setMadeStem(res.madeStem.reverse())
+        setMyQuestions(res.madeStem.reverse())
       }
     })
   }, [])
@@ -45,11 +48,16 @@ export default function Page() {
           stemText: qlist[index].stem_text,
           optionText: option.option_text,
           isAnswer: option.is_answer,
+          cid: qlist[index].class.toString(),
         }))
-        setMadeOption(newOptionList.reverse())
+        setMyOptions(newOptionList.reverse())
       }
     }
   }, [])
+
+  const onInsertStudentID = useCallback(() => {
+    push('/register')
+  }, [push])
 
   const logOut = useCallback(() => {
     signOut()
@@ -60,51 +68,39 @@ export default function Page() {
   useEffect(() => {
     getMadeStem()
     getMadeOption()
-  }, [getMadeOption, getMadeStem])
+  }, [getMadeOption, getMadeStem, studentID])
 
   return (
-    <Container>
-      <DataLabel>
-        <Label text="My Questions" color="black" size={0} />
-      </DataLabel>
-      <MadeLists>
-        {madeStem.map(stem => {
-          return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} />
+    <>
+      <Head>
+        <title>My Page</title>
+      </Head>
+      <Sheet>
+        <Label>
+          Student ID <Required />
+        </Label>
+        {studentID ?? 'Not registered'}
+        <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
+
+        {0 < myQuestions.length && <Label size={0}>My Questions</Label>}
+        {myQuestions.map(stem => {
+          return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} cid={stem.class.toString()} />
         })}
-      </MadeLists>
-      <DataLabel>
-        <Label text="My Options" color="black" size={0} />
-      </DataLabel>
-      <MadeLists>
-        {madeOption.map((option, i) => {
+        {0 < myOptions.length && <Label size={0}>My Options</Label>}
+        {myOptions.map((option, i) => {
           return (
             <MadeOption
               key={i}
               optionType={option.isAnswer ? 'Answer' : 'Distractor'}
               qid={option.qid}
+              cid={option.cid}
               question={option.stemText}
               option={option.optionText}
             />
           )
         })}
-      </MadeLists>
-      <StrokeBtn onClick={logOut}>Log out</StrokeBtn>
-    </Container>
+        <StrokeButton onClick={logOut}>Log out</StrokeButton>
+      </Sheet>
+    </>
   )
 }
-
-const Container = styled.div`
-  padding: 20px;
-`
-
-const MadeLists = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 30px;
-`
-
-const DataLabel = styled.div`
-  ${typography.hLabel};
-  color: ${palette.primary.main};
-`

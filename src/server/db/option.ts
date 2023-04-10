@@ -4,7 +4,6 @@ import { Doc } from 'src/types/common'
 export interface Option extends Doc {
   author: Types.ObjectId
   option_text: string
-  explanation: string
   is_answer: boolean
   class: Types.ObjectId
   qstem: Types.ObjectId
@@ -25,7 +24,7 @@ export interface Option extends Doc {
   disjointSet: Types.ObjectId
   liked: Types.ObjectId[]
   disliked: Types.ObjectId[]
-  keyWords: string[]
+  keywords: string[]
 }
 
 const optionSchema = new Schema<Option>({
@@ -36,10 +35,6 @@ const optionSchema = new Schema<Option>({
   option_text: {
     type: String,
     required: true,
-    trim: true,
-  },
-  explanation: {
-    type: String,
     trim: true,
   },
   is_answer: {
@@ -126,7 +121,7 @@ const optionSchema = new Schema<Option>({
     ],
     default: [],
   },
-  keyWords: {
+  keywords: {
     type: [String],
     default: [],
   },

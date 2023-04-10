@@ -1,16 +1,23 @@
+import { LoadUserInfoParams, LoadUserInfoResults } from '@api/loadUserInfo'
 import styled from '@emotion/styled'
+import { login, updateStudentID, updateDataCollectionConsentState } from '@redux/features/userSlice'
 import { palette, typography } from '@styles/theme'
+import { request } from '@utils/api'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
+import { Logo } from './Logo'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
   const { data } = useSession()
-  const cid = query.cid as string | undefined
-  const userImg = useSelector((state: RootState) => state.userInfo).img
+  const isAdmin = useSelector((state: RootState) => state.userInfo.isAdmin)
+  const cid = query.cid
+  const userImg = useSelector((state: RootState) => state.userInfo.img)
+  const dispatch = useDispatch()
 
   const onClickSwitchClass = useCallback(() => {
     push('/')
@@ -20,17 +27,44 @@ export const Gnb = () => {
     push('/my-page')
   }, [push])
 
+  const onClickAdmin = useCallback(() => {
+    push(`/admin/${cid}`)
+  }, [push, cid])
+
+  useEffect(() => {
+    if (data) {
+      request<LoadUserInfoParams, LoadUserInfoResults>('loadUserInfo', {}).then(res => {
+        if (res) {
+          const { user, classes } = res
+          dispatch(
+            login({
+              name: user.name,
+              email: user.email,
+              img: user.imageUrl,
+              classes,
+              isLoggedIn: true,
+              isAdmin: user.isAdmin,
+              dataCollectionConsentState: user.dataCollectionConsentState,
+            })
+          )
+          if (user.studentID) {
+            dispatch(updateStudentID(user.studentID))
+          }
+        }
+      })
+    }
+  }, [push, dispatch, data])
+
   return (
     <SideTab>
-      <Logo>
-        <LogoIcon src={'/logo.svg'} />
-        KUIZ
-      </Logo>
+      <LogoContainer href={cid ? `/class/${cid}/` : '/'}>
+        <Logo />
+      </LogoContainer>
       {data && (
         <Menu>
-          {/* <MenuBtn onClick={onClickMenu('/class/' + cid)}>Question List</MenuBtn> */}
-          <MenuBtn onClick={onClickSwitchClass}>Switch Class</MenuBtn>
+          <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
           <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
+          {cid && isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>
       )}
@@ -50,25 +84,17 @@ const SideTab = styled.div`
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.16);
   box-sizing: border-box;
   z-index: 100;
-`
 
-const Logo = styled.div`
-  ${typography.logo};
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`
-
-const LogoIcon = styled.img`
-  width: 22px;
-  height: 22px;
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
+    padding: 0 8px;
+  }
 `
 
 const ProfileImg = styled.img`
   border-radius: 50%;
   display: flex;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
 `
 
 const Menu = styled.div`
@@ -77,7 +103,7 @@ const Menu = styled.div`
   flex-direction: row;
   gap: 16px;
   align-items: center;
-  color: ${palette.grey[200]};
+  color: ${palette.grey200};
 `
 
 const MenuBtn = styled.button`
@@ -90,9 +116,10 @@ const MenuBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${palette.primary.main};
-    border-color: ${palette.primary.main};
+    color: ${palette.primaryMain};
+    border-color: ${palette.primaryMain};
   }
 `
-
-const Content = styled.div``
+const LogoContainer = styled.a`
+  text-decoration: None;
+`

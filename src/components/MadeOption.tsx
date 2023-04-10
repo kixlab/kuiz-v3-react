@@ -1,56 +1,67 @@
-import styled from '@emotion/styled'
-import { useState } from 'react'
 import { css } from '@emotion/react'
-import { CheckDialog } from './Dialogs/CheckDialog'
-import { TextBtn, TextBtnCta } from './basic/button/Button'
-import { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
+import { TextButton } from './basic/button/Text'
+import { CheckDialog } from './Dialogs/CheckDialog'
 
 interface Props {
   qid: string
   option: string
   question: string
+  cid: string
   optionType: 'Answer' | 'Distractor'
 }
 
-export const MadeOption = (props: Props) => {
-  const { push, query } = useRouter()
-  const cid = query.cid as string | undefined
+export const MadeOption = ({ qid, option, question, cid, optionType }: Props) => {
+  const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
 
+  const viewOption = useCallback(() => {
+    push('/class/' + cid + '/question/' + qid + '/solve')
+  }, [cid, push, qid])
+
   return (
     <OptionBox>
       <RowFlex>
-        <Tag id={props.optionType}>{props.optionType}</Tag>
-        <OptionLabel>{props.option}</OptionLabel>
+        <QuestionLabel>Q. {question}</QuestionLabel>
       </RowFlex>
       <RowFlex>
-        <QuestionLabel>Q. {props.question}</QuestionLabel>
+        <Tag id={optionType}>{optionType}</Tag>
+        <OptionLabel>{option}</OptionLabel>
       </RowFlex>
       <RowFlex id="EditBtns">
-        <TextBtn onClick={toggleModal}>Delete</TextBtn>
-        <CheckDialog
-          title="Delete the stem"
-          btnName="Delete"
-          message="Do you really want to delete it? You can't restore it."
-          modalState={isOpenModal}
-          toggleModal={toggleModal}
-        />
-        <TextBtnCta onClick={() => push('/' + cid + '/question/' + props.qid + '/createOption')}>View</TextBtnCta>
+        <TextButton onClick={toggleModal} color={palette.grey400}>
+          Delete
+        </TextButton>
+        {isOpenModal && (
+          <CheckDialog
+            title="Delete the stem"
+            btnName="Delete"
+            message="Do you really want to delete it? You can't restore it."
+            toggleModal={toggleModal}
+            cancelModal={toggleModal}
+          />
+        )}
+        <TextButton onClick={viewOption} color={palette.primaryDark}>
+          View
+        </TextButton>
       </RowFlex>
     </OptionBox>
   )
 }
 
 const OptionBox = styled.div`
-  background-color: white;
-  padding: 20px 20px 0px 20px;
+  padding: 12px;
   border-radius: 8px;
+  border: 1px solid #323232;
+  display: grid;
+  gap: 12px;
 `
 
 const RowFlex = styled.div<{ id?: 'EditBtns' }>`
@@ -58,7 +69,6 @@ const RowFlex = styled.div<{ id?: 'EditBtns' }>`
   flex-direction: row;
   gap: 12px;
   align-items: center;
-  padding-bottom: 16px;
   font-family: 'inter-m';
   ${props =>
     props.id === 'EditBtns' &&
@@ -90,7 +100,4 @@ const OptionLabel = styled.div`
 
 const QuestionLabel = styled.div`
   ${typography.b02};
-  display: flex;
-  gap: 6px;
-  color: ${palette.grey[400]};
 `
