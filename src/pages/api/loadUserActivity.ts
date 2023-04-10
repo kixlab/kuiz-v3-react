@@ -14,20 +14,12 @@ export interface LoadUserActivityResults {
 }
 
 export default apiController<LoadUserActivityParams, LoadUserActivityResults>(async ({ cid, topic = '' }, user) => {
-  // const generatedQStems: string[] = []
-
   const qStems: QStem[] =
     (await QStemModel.find({
       class: { $eq: cid },
       learningObjective: { $regex: topic, $options: 'i' },
       author: user.id,
     })) ?? []
-
-  // if (qStems) {
-  //   qStems.forEach(qStem => {
-  //     generatedQStems.push(qStem._id)
-  //   })
-  // }
 
   const questionsOfTopic: QStem[] =
     (await QStemModel.find({
@@ -42,12 +34,8 @@ export default apiController<LoadUserActivityParams, LoadUserActivityResults>(as
       author: user.id,
     })) ?? []
 
-  // if (qOptions) {
-  //   const filteredOptions = qOptions.filter(option => !generatedQStems.includes(option.qstem.toString()))
-  // }
-
   return {
     numberOfStems: qStems.length,
-    numberOfOptions: qOptions.length,
+    numberOfOptions: qOptions.length - qStems.length,
   }
 })

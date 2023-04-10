@@ -20,19 +20,27 @@ export const SelectInput = View<Props>(({ options, onSelect, value, placeholder,
   )
 
   return (
-    <Options onChange={onClickLanguage} value={value ?? ''} placeholder={placeholder} {...props}>
-      <option value="" disabled hidden>
-        {placeholder}
-      </option>
-      {options.map((option, i) => (
-        <option key={i}>{option}</option>
-      ))}
-    </Options>
+    <Container {...props}>
+      <Options onChange={onClickLanguage} value={value ?? ''} placeholder={placeholder}>
+        <option value="" disabled hidden>
+          {placeholder}
+        </option>
+        {options.map((option, i) => (
+          <option key={i}>{option}</option>
+        ))}
+      </Options>
+      <ArrowDown />
+    </Container>
   )
 })
 
+const Container = styled.div`
+  position: relative;
+`
+
 const Options = styled.select`
-  padding: 4px 8px;
+  appearance: none;
+  padding: 4px 16px 4px 8px;
   border-radius: 8px;
   min-height: ${MIN_BUTTON_SIZE}px;
   cursor: pointer;
@@ -46,4 +54,17 @@ const Options = styled.select`
   option[value=''][disabled] {
     display: none;
   }
+`
+
+const ArrowDown = styled.div`
+  position: absolute;
+  top: calc(50% - 4 px);
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  border: 2px solid currentColor;
+  border-right: none;
+  border-top: none;
+  transform: rotate(-45deg);
 `
