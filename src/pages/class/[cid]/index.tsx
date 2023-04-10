@@ -164,6 +164,7 @@ export default function Page() {
             onAddOption={onAddOption(question._id)}
           />
         ))}
+        {questionList.length === 0 && <Empty>No questions yet. Please create one!</Empty>}
       </Sheet>
     </>
   )
@@ -189,4 +190,10 @@ const Progress = styled.div`
   :not(:last-child) {
     margin-bottom: 8px;
   }
+`
+
+const Empty = styled.div`
+  padding: 40px 20px;
+  text-align: center;
+  color: grey;
 `
