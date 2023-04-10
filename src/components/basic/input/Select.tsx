@@ -58,7 +58,7 @@ const Options = styled.select`
 
 const ArrowDown = styled.div`
   position: absolute;
-  top: calc(50% - 4 px);
+  top: calc(50% - 4px);
   right: 6px;
   width: 6px;
   height: 6px;
