@@ -39,9 +39,10 @@ export default function Page() {
           </Head>
           <Container>
             <Table
-              headers={['Name', 'Email', 'Questions Made', 'Options Made']}
+              headers={['Name', 'Student ID', 'Email', 'Questions Made', 'Options Made']}
               rows={users.map(student => [
                 student.name,
+                student.studentID ? student.studentID : 'TBD',
                 student.email,
                 student.made.length,
                 student.madeOptions.length,
