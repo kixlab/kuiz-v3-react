@@ -10,6 +10,8 @@ interface Props {
 export const Pagination = ({ numberOfPages, currentPage, URL }: Props) => {
   const hasNext = currentPage < numberOfPages
   const hasPrevious = currentPage > 1
+  const previousPage = currentPage - 1 > 0 ? currentPage - 1 : 1
+  const nextPage = currentPage + 1 <= numberOfPages ? currentPage + 1 : numberOfPages
   const pages = []
   for (let i = 1; i <= numberOfPages; i++) {
     pages.push(
@@ -26,11 +28,11 @@ export const Pagination = ({ numberOfPages, currentPage, URL }: Props) => {
             <Page href={`${URL}&page=${1}`} skipper={true} disabled={!hasPrevious} initialItem={true}>
               &#171;
             </Page>
-            <Page href={`${URL}&page=${currentPage - 1}`} skipper={true} disabled={!hasPrevious}>
+            <Page href={`${URL}&page=${previousPage}`} skipper={true} disabled={!hasPrevious}>
               &#8249;
             </Page>
             {pages}
-            <Page href={`${URL}&page=${currentPage + 1}`} skipper={true} disabled={!hasNext}>
+            <Page href={`${URL}&page=${nextPage}`} skipper={true} disabled={!hasNext}>
               &#8250;
             </Page>
             <Page href={`${URL}&page=${numberOfPages}`} skipper={true} disabled={!hasNext} finalItem={true}>
