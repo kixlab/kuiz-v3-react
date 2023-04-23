@@ -13,12 +13,38 @@ export const Pagination = ({ numberOfPages, currentPage, URL }: Props) => {
   const previousPage = currentPage - 1 > 0 ? currentPage - 1 : 1
   const nextPage = currentPage + 1 <= numberOfPages ? currentPage + 1 : numberOfPages
   const pages = []
-  for (let i = 1; i <= numberOfPages; i++) {
-    pages.push(
-      <Page href={`${URL}&page=${i}`} key={i} active={currentPage === i} disabled={currentPage === i}>
-        {i}
-      </Page>
-    )
+  if (numberOfPages <= 5) {
+    for (let i = 1; i <= numberOfPages; i++) {
+      pages.push(
+        <Page href={`${URL}&page=${i}`} key={i} active={currentPage === i} disabled={currentPage === i}>
+          {i}
+        </Page>
+      )
+    }
+  } else {
+    const start = currentPage - 1 < 1 ? currentPage : currentPage - 1
+    const end = currentPage + 1 > numberOfPages ? currentPage : currentPage + 1
+    if (start < currentPage && start > 1) {
+      pages.push(
+        <Page href={`${URL}&page=${start - 1}`} key={start - 1} disabled={false}>
+          ...
+        </Page>
+      )
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(
+        <Page href={`${URL}&page=${i}`} key={i} active={currentPage === i} disabled={currentPage === i}>
+          {i}
+        </Page>
+      )
+    }
+    if (end > currentPage && end < numberOfPages) {
+      pages.push(
+        <Page href={`${URL}&page=${end + 1}`} key={end + 1} disabled={false}>
+          ...
+        </Page>
+      )
+    }
   }
   return (
     <>
