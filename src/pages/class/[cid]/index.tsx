@@ -4,6 +4,7 @@ import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserAc
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { Label } from '@components/basic/Label'
+import { Pagination } from '@components/pagination'
 import { ProgressBar } from '@components/ProgressBar'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
@@ -166,6 +167,7 @@ export default function Page() {
         ))}
         {questionList.length === 0 && <Empty>No questions yet. Please create one!</Empty>}
       </Sheet>
+      <Pagination numberOfPages={2} currentPage={1} URL={`${cid}?topic=${topic}`} />
     </>
   )
 }
