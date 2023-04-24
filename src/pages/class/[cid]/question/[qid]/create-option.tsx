@@ -1,4 +1,5 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
+import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/getGPTDistractor'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
@@ -8,6 +9,7 @@ import { Label } from '@components/basic/Label'
 import { Divider } from '@components/Divider'
 import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
+import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
 import { request } from '@utils/api'
@@ -24,22 +26,34 @@ export default function Page() {
   const [qinfo, setQinfo] = useState<QStem>()
   const [option, setOption] = useState('')
   const [isAnswer, setIsAnswer] = useState(false)
+  const [GPTSuggestedDistractors, setGPTSuggestedDistractors] = useState<string[]>([])
 
   useEffect(() => {
     if (qid) {
       request<LoadOptionsParams, LoadOptionsResults>(`loadOptions`, {
         qid,
-      }).then(res => {
-        if (res) {
-          const ans = res.options.filter(op => op.is_answer === true)
-          const dis = res.options.filter(op => op.is_answer === false)
-
-          setAnsList(ans)
-          setDistList(dis)
-          setQinfo(res.qinfo)
-        }
       })
+        .then(res => {
+          if (res) {
+            const ans = res.options.filter(op => op.is_answer === true)
+            const dis = res.options.filter(op => op.is_answer === false)
+
+            setAnsList(ans)
+            setDistList(dis)
+            setQinfo(res.qinfo)
+          }
+        })
+        .then(
+          _ =>
+            qinfo &&
+            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
+              qStem: qinfo.stem_text,
+            }).then(res => {
+              res && setGPTSuggestedDistractors(res.distractors)
+            })
+        )
     }
+    //don't add qinfo in the dependencies of his useEffect it will create infinite loop
   }, [push, qid, setAnsList, setDistList, setQinfo])
 
   const submit = useCallback(async () => {
@@ -117,6 +131,23 @@ export default function Page() {
         value={option}
         marginTop={8}
       />
+      <Label color={'primaryMain'} size={0} marginTop={10}>
+        Suggested Distractors
+      </Label>
+      {GPTSuggestedDistractors.length !== 0 ? (
+        <DistractorsContainer>
+          {GPTSuggestedDistractors.map((item, i) => (
+            <OptionButton
+              key={i}
+              state={true}
+              selected={false}
+              marginBottom={i < GPTSuggestedDistractors.length - 1 ? 8 : 0}
+            >
+              {item}
+            </OptionButton>
+          ))}
+        </DistractorsContainer>
+      ) : null}
 
       <FillButton onClick={submit} marginTop={20}>
         Submit
@@ -124,3 +155,13 @@ export default function Page() {
     </Sheet>
   )
 }
+
+const DistractorsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 10px;
+`
