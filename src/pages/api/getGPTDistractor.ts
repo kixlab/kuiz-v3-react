@@ -12,7 +12,7 @@ export interface GetGPTDistractorsResults {
 
 export default apiController<GetGPTDistractorsParams, GetGPTDistractorsResults>(async ({ qStem }) => {
   const promptQuestion =
-    'Create 3 distractors separated with a comma for the following question; reply only with the distractors '
+    'Create 3 distractors separated by a comma for the following question; reply only with the distractors '
 
   const openAIKey = Env.OPEN_AI_KEY
   const openAI = new OpenAIApi(
@@ -24,10 +24,8 @@ export default apiController<GetGPTDistractorsParams, GetGPTDistractorsResults>(
     model: 'gpt-3.5-turbo',
     messages: [{ role: 'user', content: promptQuestion + qStem }],
   })
-
   const responseDistractors = openAIResponse.data.choices[0].message?.content
-  const distractors = responseDistractors ? responseDistractors.split(',') : []
-
+  const distractors = responseDistractors ? responseDistractors.split(', ') : []
   return {
     distractors: distractors,
   }

@@ -32,29 +32,25 @@ export default function Page() {
     if (qid) {
       request<LoadOptionsParams, LoadOptionsResults>(`loadOptions`, {
         qid,
-      })
-        .then(res => {
-          if (res) {
-            const ans = res.options.filter(op => op.is_answer === true)
-            const dis = res.options.filter(op => op.is_answer === false)
+      }).then(res => {
+        if (res) {
+          const ans = res.options.filter(op => op.is_answer === true)
+          const dis = res.options.filter(op => op.is_answer === false)
 
-            setAnsList(ans)
-            setDistList(dis)
-            setQinfo(res.qinfo)
-          }
-        })
-        .then(
-          _ =>
-            qinfo &&
-            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
-              qStem: qinfo.stem_text,
-            }).then(res => {
-              res && setGPTSuggestedDistractors(res.distractors)
-            })
-        )
+          setAnsList(ans)
+          setDistList(dis)
+          setQinfo(res.qinfo)
+
+          request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
+            qStem: res.qinfo.stem_text,
+          }).then(res => {
+            res && setGPTSuggestedDistractors(res.distractors)
+          })
+        }
+      })
     }
     //don't add qinfo in the dependencies of his useEffect it will create infinite loop
-  }, [push, qid, setAnsList, setDistList, setQinfo])
+  }, [push, qid, setAnsList, setDistList, setQinfo, setGPTSuggestedDistractors])
 
   const submit = useCallback(async () => {
     if (option.trim().length === 0) {
@@ -131,22 +127,24 @@ export default function Page() {
         value={option}
         marginTop={8}
       />
-      <Label color={'primaryMain'} size={0} marginTop={10}>
-        Suggested Distractors
-      </Label>
       {GPTSuggestedDistractors.length !== 0 ? (
-        <DistractorsContainer>
-          {GPTSuggestedDistractors.map((item, i) => (
-            <OptionButton
-              key={i}
-              state={true}
-              selected={false}
-              marginBottom={i < GPTSuggestedDistractors.length - 1 ? 8 : 0}
-            >
-              {item}
-            </OptionButton>
-          ))}
-        </DistractorsContainer>
+        <>
+          <Label color={'primaryMain'} size={0} marginTop={10}>
+            Suggested Distractors
+          </Label>
+          <DistractorsContainer>
+            {GPTSuggestedDistractors.map((item, i) => (
+              <OptionButton
+                key={i}
+                state={true}
+                selected={false}
+                marginBottom={i < GPTSuggestedDistractors.length - 1 ? 8 : 0}
+              >
+                {item}
+              </OptionButton>
+            ))}
+          </DistractorsContainer>
+        </>
       ) : null}
 
       <FillButton onClick={submit} marginTop={20}>
