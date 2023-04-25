@@ -43,6 +43,7 @@ export default function Page() {
 
           request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
             qStem: res.qinfo.stem_text,
+            qLearningObjective: res.qinfo.learningObjective,
           }).then(res => {
             res && setGPTSuggestedDistractors(res.distractors)
           })
