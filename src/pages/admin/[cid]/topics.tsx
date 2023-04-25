@@ -1,6 +1,6 @@
 import { CreateTopicParams, CreateTopicResults } from '@api/admin/createTopic'
 import { DeleteTopicParams, DeleteTopicResults } from '@api/admin/deleteTopic'
-import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { UpdateTopicParams, UpdateTopicResults } from '@api/admin/updateTopic'
 import { InsertCurrentTopicParams, InsertCurrentTopicResults } from '@api/admin/insertCurrentTopic'
 import { UpdateTopicDialog } from '@components/Dialogs/updateTopicDialog'
@@ -32,7 +32,7 @@ export default function Page() {
 
   useEffect(() => {
     if (cid) {
-      request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, { cid }).then(res => {
         if (res) {
           setClassInfo(res)
           setTopics(res.topics)

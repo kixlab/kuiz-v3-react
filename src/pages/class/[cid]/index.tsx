@@ -1,5 +1,5 @@
 import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
-import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
@@ -89,7 +89,7 @@ export default function Page() {
 
   useEffect(() => {
     if (cid) {
-      request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, {
         cid,
       }).then(async res => {
         if (res) {
@@ -180,6 +180,12 @@ const InformationContainer = styled.div`
   grid-template-columns: auto 1fr auto;
   gap: 40px;
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
+  @media (max-width: 570px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 `
 
 const Progress = styled.div`

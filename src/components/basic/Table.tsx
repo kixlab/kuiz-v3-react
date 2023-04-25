@@ -33,6 +33,15 @@ export const Table = View<Props>(({ headers, rows, onClickRow, ...props }) => {
 
 const Container = styled.table`
   width: 100%;
+  @media (max-width: 590px) {
+    font-size: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0;
+  }
+  @media (max-width: 400px) {
+    font-size: 0.5rem;
+  }
 `
 
 const TableHeader = styled.thead`
