@@ -70,6 +70,7 @@ export default function Page() {
         cid,
         topic,
         page,
+        questionsPerPage: 10,
       }).then(res => {
         if (res) {
           setQuestionList(res.problemList.reverse())

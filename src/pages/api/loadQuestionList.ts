@@ -6,6 +6,7 @@ export interface LoadQuestionListParams {
   cid: ID
   topic?: string
   page: number
+  questionsPerPage: number
 }
 
 export interface LoadQuestionListResults {
@@ -13,27 +14,27 @@ export interface LoadQuestionListResults {
   maxPages: number
 }
 
-export default apiController<LoadQuestionListParams, LoadQuestionListResults>(async ({ cid, topic = '', page }) => {
-  const questionsPerPage = 10
+export default apiController<LoadQuestionListParams, LoadQuestionListResults>(
+  async ({ cid, topic = '', page, questionsPerPage }) => {
+    const getNumOfQuestions = QStemModel.find({
+      class: { $eq: cid },
+      learningObjective: { $regex: topic, $options: 'i' },
+    }).countDocuments()
 
-  const getNumOfQuestions = QStemModel.find({
-    class: { $eq: cid },
-    learningObjective: { $regex: topic, $options: 'i' },
-  }).countDocuments()
+    const getQStems = QStemModel.find({
+      class: { $eq: cid },
+      learningObjective: { $regex: topic, $options: 'i' },
+    })
+      .skip((page - 1) * questionsPerPage)
+      .limit(questionsPerPage)
 
-  const getQStems = QStemModel.find({
-    class: { $eq: cid },
-    learningObjective: { $regex: topic, $options: 'i' },
-  })
-    .skip((page - 1) * questionsPerPage)
-    .limit(questionsPerPage)
+    const [totalDocuments, qStems] = await Promise.all([getNumOfQuestions, getQStems])
 
-  const [totalDocuments, qStems] = await Promise.all([getNumOfQuestions, getQStems])
+    const maxPages = Math.ceil(totalDocuments / questionsPerPage)
 
-  const maxPages = Math.ceil(totalDocuments / questionsPerPage)
-
-  return {
-    problemList: qStems,
-    maxPages,
+    return {
+      problemList: qStems,
+      maxPages,
+    }
   }
-})
+)
