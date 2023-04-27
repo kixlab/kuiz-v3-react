@@ -122,8 +122,8 @@ export default function Page() {
   )
 
   return (
-    <Wrapper>
-      <Sheet gap={0}>
+    <>
+      <Sheet gap={0} marginBottom={10}>
         <Label color="grey200" marginBottom={8}>
           Contributors
         </Label>
@@ -182,15 +182,9 @@ export default function Page() {
           <Text>{qinfo?.explanation}</Text>
         </Sheet>
       )}
-    </Wrapper>
+    </>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`
 
 const Text = styled.p`
   ${typography.b02};
