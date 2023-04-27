@@ -25,6 +25,7 @@ export default apiController<LoadQuestionListParams, LoadQuestionListResults>(
       class: { $eq: cid },
       learningObjective: { $regex: topic, $options: 'i' },
     })
+      .sort({ updatedAt: 1 })
       .skip((page - 1) * questionsPerPage)
       .limit(questionsPerPage)
 
