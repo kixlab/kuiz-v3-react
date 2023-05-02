@@ -91,7 +91,7 @@ export default function Page() {
     if (cid) {
       request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, {
         cid,
-      }).then(async res => {
+      }).then(res => {
         if (res) {
           setTopics(res.topics)
           if (topic === undefined) {
