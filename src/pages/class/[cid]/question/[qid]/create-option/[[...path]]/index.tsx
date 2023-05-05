@@ -3,6 +3,7 @@ import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/getGPTDi
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { RadioInput } from '@components/basic/input/Radio'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
@@ -20,6 +21,7 @@ export default function Page() {
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
+  const LLMPath = query.path?.includes('LLM')
   const callbackUrl = query.callbackUrl as string | undefined
   const [ansList, setAnsList] = useState<Option[]>([])
   const [disList, setDistList] = useState<Option[]>([])
@@ -41,17 +43,18 @@ export default function Page() {
           setDistList(dis)
           setQinfo(res.qinfo)
 
-          request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
-            qStem: res.qinfo.stem_text,
-            qLearningObjective: res.qinfo.learningObjective,
-          }).then(res => {
-            res && setGPTSuggestedDistractors(res.distractors)
-          })
+          LLMPath &&
+            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
+              qStem: res.qinfo.stem_text,
+              qLearningObjective: res.qinfo.learningObjective,
+            }).then(res => {
+              res && setGPTSuggestedDistractors(res.distractors)
+            })
         }
       })
     }
     //don't add qinfo in the dependencies of his useEffect it will create infinite loop
-  }, [push, qid, setAnsList, setDistList, setQinfo, setGPTSuggestedDistractors])
+  }, [push, qid, setAnsList, setDistList, setQinfo, setGPTSuggestedDistractors, LLMPath])
 
   const submit = useCallback(async () => {
     if (option.trim().length === 0) {
@@ -79,6 +82,10 @@ export default function Page() {
       }
     }
   }, [option, cid, qid, isAnswer, callbackUrl, push])
+
+  const onTryLLMSuggestions = useCallback(() => {
+    push(`/class/${cid}/question/${qid}/create-option/LLM?callbackUrl=${location.href}`)
+  }, [cid, push, qid])
 
   return (
     <Sheet gap={0}>
@@ -128,12 +135,12 @@ export default function Page() {
         value={option}
         marginTop={8}
       />
-      {GPTSuggestedDistractors.length !== 0 ? (
+      {LLMPath && GPTSuggestedDistractors.length !== 0 ? (
         <>
           <Label color={'primaryMain'} size={0} marginTop={10}>
             Suggested Distractors
           </Label>
-          <DistractorsContainer>
+          <Container>
             {GPTSuggestedDistractors.map((item, i) => (
               <OptionButton
                 key={i}
@@ -144,18 +151,18 @@ export default function Page() {
                 {item}
               </OptionButton>
             ))}
-          </DistractorsContainer>
+          </Container>
         </>
       ) : null}
-
-      <FillButton onClick={submit} marginTop={20}>
-        Submit
-      </FillButton>
+      <Container>
+        <FillButton onClick={submit}>Submit</FillButton>
+        {!LLMPath && <StrokeButton onClick={onTryLLMSuggestions}>Try LLM Suggestions</StrokeButton>}
+      </Container>
     </Sheet>
   )
 }
 
-const DistractorsContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
