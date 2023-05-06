@@ -39,7 +39,6 @@ export default function Page() {
           setAnsList(ans)
           setDistList(dis)
           setQinfo(res.qinfo)
-          console.log(dis)
         }
       })
     }
