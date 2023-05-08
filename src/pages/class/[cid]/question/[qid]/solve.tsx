@@ -117,7 +117,9 @@ export default function Page() {
   const reportSubmit = useCallback(
     async (msg: string) => {
       toggleModal()
-      qid && (await request<SubmitReportParams, SubmitReportResults>(`question/submitReport`, { qid, comment: msg }))
+      if (qid) {
+        await request<SubmitReportParams, SubmitReportResults>(`question/submitReport`, { qid, comment: msg })
+      }
     },
     [toggleModal, qid]
   )
