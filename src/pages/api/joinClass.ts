@@ -14,14 +14,16 @@ export default apiController<JoinClassParams, JoinClassResults>(async ({ code },
   const classToJoin = await ClassModel.findOne({ code })
 
   if (classToJoin) {
-    const classInfo = await ClassModel.findOneAndUpdate({ code }, { $push: { students: user.id } })
-    await user.updateOne({ $push: { classes: classToJoin.id } })
+    if (!classToJoin.students.includes(user.id)) {
+      const classInfo = await ClassModel.findOneAndUpdate({ code }, { $push: { students: user.id } })
+      await user.updateOne({ $push: { classes: classToJoin.id } })
 
-    return {
-      cid: classToJoin.id.toString(),
-      name: classInfo.name,
+      return {
+        cid: classToJoin.id.toString(),
+        name: classInfo.name,
+      }
     }
+    throw new Error('Already enrolled in the class')
   }
-
   throw new Error('Class not found')
 })

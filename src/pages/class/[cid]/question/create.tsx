@@ -1,6 +1,6 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
-import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
@@ -85,7 +85,7 @@ export default function Page() {
 
   useEffect(() => {
     if (cid) {
-      request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, { cid }).then(res => {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, { cid }).then(res => {
         if (res) {
           setTopics(res.topics.map(t => t.label))
         }
