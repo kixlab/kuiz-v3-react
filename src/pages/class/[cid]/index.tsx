@@ -18,6 +18,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -180,7 +181,7 @@ const InformationContainer = styled.div`
   grid-template-columns: auto 1fr auto;
   gap: 40px;
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
-  @media (max-width: 570px) {
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
