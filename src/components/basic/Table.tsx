@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { palette } from '@styles/theme'
 import { View } from './View'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 interface Props {
   headers: string[]
@@ -33,6 +34,12 @@ export const Table = View<Props>(({ headers, rows, onClickRow, ...props }) => {
 
 const Container = styled.table`
   width: 100%;
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
+    font-size: 0.5rem;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0;
+  }
 `
 
 const TableHeader = styled.thead`
