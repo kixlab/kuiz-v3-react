@@ -16,8 +16,10 @@ import { QStem } from '@server/db/qstem'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
+import { useButton } from 'src/hooks/useButton'
 
 export default function Page() {
+  const { isLoading, handleClick } = useButton()
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
@@ -61,27 +63,28 @@ export default function Page() {
       alert('Please enter an option')
       return
     }
+    await handleClick<void>(async () => {
+      if (cid && qid) {
+        const optionData = {
+          option_text: option,
+          is_answer: isAnswer,
+          class: cid,
+          qstem: qid,
+          keywords: [],
+        }
 
-    if (cid && qid) {
-      const optionData = {
-        option_text: option,
-        is_answer: isAnswer,
-        class: cid,
-        qstem: qid,
-        keywords: [],
+        await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
+          optionData,
+          similarOptions: [],
+        })
+        if (callbackUrl) {
+          push(callbackUrl)
+        } else {
+          push('/class/' + cid)
+        }
       }
-
-      await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
-        optionData,
-        similarOptions: [],
-      })
-      if (callbackUrl) {
-        push(callbackUrl)
-      } else {
-        push('/class/' + cid)
-      }
-    }
-  }, [option, cid, qid, isAnswer, callbackUrl, push])
+    })
+  }, [option, cid, qid, isAnswer, callbackUrl, push, handleClick])
 
   const onTryLLMSuggestions = useCallback(() => {
     push(`/class/${cid}/question/${qid}/create-option/LLM?callbackUrl=${location.href}`)
@@ -155,7 +158,9 @@ export default function Page() {
         </>
       ) : null}
       <Container>
-        <FillButton onClick={submit}>Submit</FillButton>
+        <FillButton onClick={submit} disabled={isLoading}>
+          Submit
+        </FillButton>
         {!LLMPath && <StrokeButton onClick={onTryLLMSuggestions}>Try LLM Suggestions</StrokeButton>}
       </Container>
     </Sheet>
