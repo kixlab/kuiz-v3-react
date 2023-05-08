@@ -9,18 +9,19 @@ interface OpenAIData {
 
 class OpenAIService {
   private apiKey: string
+  private openAI: OpenAIApi
 
   constructor() {
     this.apiKey = Env.OPEN_AI_KEY
-  }
-
-  async create({ model, role, content }: OpenAIData) {
-    const openAI = new OpenAIApi(
+    this.openAI = new OpenAIApi(
       new Configuration({
         apiKey: this.apiKey,
       })
     )
-    const openAIResponse = await openAI.createChatCompletion({
+  }
+
+  async create({ model, role, content }: OpenAIData) {
+    const openAIResponse = await this.openAI.createChatCompletion({
       model: model,
       messages: [{ role, content }],
     })
