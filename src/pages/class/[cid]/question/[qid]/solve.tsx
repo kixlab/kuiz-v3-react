@@ -1,6 +1,7 @@
 import { GetContributorsParams, GetContributorsResults } from '@api/getContributors'
 import { LoadClusterParams, LoadClusterResults } from '@api/loadCluster'
 import { LoadQuestionDetailParams, LoadQuestionDetailResults } from '@api/loadQuestionDetail'
+import { SubmitReportParams, SubmitReportResults } from '@api/question/submitReport'
 import { SolveQuestionParams, SolveQuestionResults } from '@api/solveQuestion'
 import { InputDialog } from '@components/Dialogs/InputDialog'
 import { Divider } from '@components/Divider'
@@ -116,9 +117,11 @@ export default function Page() {
   const reportSubmit = useCallback(
     async (msg: string) => {
       toggleModal()
-      // TODO: Link to the backend
+      if (qid) {
+        await request<SubmitReportParams, SubmitReportResults>(`question/submitReport`, { qid, comment: msg })
+      }
     },
-    [toggleModal]
+    [toggleModal, qid]
   )
 
   return (
