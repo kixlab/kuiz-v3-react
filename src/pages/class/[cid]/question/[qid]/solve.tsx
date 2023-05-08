@@ -12,6 +12,7 @@ import { StrokeButton } from '@components/basic/button/Stroke'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
+import { typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
@@ -121,55 +122,74 @@ export default function Page() {
   )
 
   return (
-    <Sheet gap={0}>
-      <Label color="grey200" marginBottom={8}>
-        Contributors
-      </Label>
-      <Contributors>
-        {contributors?.userData?.map(
-          (contributor, index: number) =>
-            contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
-        )}
-      </Contributors>
-      <Divider marginVertical={20} />
-      <Label color="grey200" marginBottom={16}>
-        Q. {qinfo?.stem_text}
-      </Label>
-      <div>
-        {optionSet?.map((e, i) => {
-          return (
-            <OptionButton
-              onClick={() => {
-                setSelected(i)
-              }}
-              state={0 <= selected}
-              selected={selected === i}
-              key={i}
-              isAnswer={showAnswer && answer === i}
-              marginBottom={8}
-            >
-              {e.option_text}
-            </OptionButton>
-          )
-        })}
-      </div>
-      <BtnDisplay>
-        <FillButton
-          onClick={() => {
-            checkAnswer()
-            setShowAnswer(true)
-          }}
-          disabled={selected == -1}
-        >
-          Submit
-        </FillButton>
-        <StrokeButton onClick={shuffleOptions}>Shuffle Options</StrokeButton>
-        <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
-        <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
-      </BtnDisplay>
-    </Sheet>
+    <>
+      <Sheet gap={0} marginBottom={10}>
+        <Label color="grey200" marginBottom={8}>
+          Contributors
+        </Label>
+        <Contributors>
+          {contributors?.userData?.map(
+            (contributor, index: number) =>
+              contributor.img && <ProfileImg src={contributor.img} key={index} title={contributor.name}></ProfileImg>
+          )}
+        </Contributors>
+        <Divider marginVertical={20} />
+        <Label color="grey200" marginBottom={16}>
+          Q. {qinfo?.stem_text}
+        </Label>
+        <div>
+          {optionSet?.map((e, i) => {
+            return (
+              <OptionButton
+                onClick={() => {
+                  setSelected(i)
+                }}
+                state={0 <= selected}
+                selected={selected === i}
+                key={i}
+                isAnswer={showAnswer && answer === i}
+                marginBottom={8}
+              >
+                {e.option_text}
+              </OptionButton>
+            )
+          })}
+        </div>
+        <BtnDisplay>
+          <FillButton
+            onClick={() => {
+              checkAnswer()
+              setShowAnswer(true)
+            }}
+            disabled={selected == -1}
+          >
+            Submit
+          </FillButton>
+          <StrokeButton onClick={shuffleOptions}>Shuffle Options</StrokeButton>
+          <StrokeButton onClick={toggleModal}>Report Error</StrokeButton>
+          <InputDialog modalState={isOpenModal} submit={reportSubmit} toggleModal={toggleModal} />
+        </BtnDisplay>
+      </Sheet>
+      {showAnswer && (
+        <Sheet gap={0}>
+          <Label color="grey200" marginBottom={8}>
+            Learning Objective
+          </Label>
+          <Text>{qinfo?.learningObjective}</Text>
+          <Label color="grey200" marginBottom={8}>
+            Explanation
+          </Label>
+          <Text>{qinfo?.explanation}</Text>
+        </Sheet>
+      )}
+    </>
   )
 }
+
+const Text = styled.p`
+  ${typography.b02};
+  margin: 10px;
+`
 
 const BtnDisplay = styled.div`
   display: flex;
