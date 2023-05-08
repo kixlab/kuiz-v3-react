@@ -1,4 +1,4 @@
-import { LoadClassInfoParams, LoadClassInfoResults } from '@api/admin/loadClassInfo'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { Sheet } from '@components/Sheet'
 import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
@@ -22,7 +22,7 @@ export default function Page() {
       push('/')
     } else {
       if (cid) {
-        request<LoadClassInfoParams, LoadClassInfoResults>(`admin/loadClassInfo`, { cid }).then(res => {
+        request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, { cid }).then(res => {
           if (res) {
             setClassInfo(res)
           }

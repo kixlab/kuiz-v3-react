@@ -1,5 +1,5 @@
 import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
-import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
@@ -18,6 +18,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -89,9 +90,9 @@ export default function Page() {
 
   useEffect(() => {
     if (cid) {
-      request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, {
         cid,
-      }).then(async res => {
+      }).then(res => {
         if (res) {
           setTopics(res.topics)
           if (topic === undefined) {
@@ -180,6 +181,12 @@ const InformationContainer = styled.div`
   grid-template-columns: auto 1fr auto;
   gap: 40px;
   box-shadow: 0px 0px 16px rgba(40, 40, 40, 0.12);
+  @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 `
 
 const Progress = styled.div`
