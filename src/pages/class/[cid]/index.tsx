@@ -4,6 +4,7 @@ import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserAc
 import { FillButton } from '@components/basic/button/Fill'
 import { SelectInput } from '@components/basic/input/Select'
 import { Label } from '@components/basic/Label'
+import { Pagination } from '@components/pagination'
 import { ProgressBar } from '@components/ProgressBar'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
@@ -24,10 +25,13 @@ export default function Page() {
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
   const topic = query.topic as string | undefined
+  const currentPage = query.page as string | undefined
+  const page = currentPage === undefined ? 1 : parseInt(currentPage)
   const [questionList, setQuestionList] = useState<QStem[]>([])
   const [topics, setTopics] = useState<Topic[]>([])
   const [userMadeOptions, setUserMadeOptions] = useState(0)
   const [userMadeQuestions, setUserMadeQuestions] = useState(0)
+  const [maxNumberOfPages, setMaxNumberOfPages] = useState(1)
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
   const selectedTopic = topics.find(t => t.label === topic)
 
@@ -66,13 +70,16 @@ export default function Page() {
       request<LoadQuestionListParams, LoadQuestionListResults>(`loadQuestionList`, {
         cid,
         topic,
+        page,
+        questionsPerPage: 10,
       }).then(res => {
         if (res) {
           setQuestionList(res.problemList.reverse())
+          setMaxNumberOfPages(res.maxPages)
         }
       })
     }
-  }, [cid, setQuestionList, topic, topics])
+  }, [cid, setQuestionList, topic, topics, page])
 
   useEffect(() => {
     if (cid) {
@@ -167,6 +174,7 @@ export default function Page() {
         ))}
         {questionList.length === 0 && <Empty>No questions yet. Please create one!</Empty>}
       </Sheet>
+      <Pagination numberOfPages={maxNumberOfPages} currentPage={page} URL={`${cid}?topic=${topic}`} />
     </>
   )
 }
