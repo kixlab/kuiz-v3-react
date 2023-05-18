@@ -1,7 +1,15 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
+import {
+  GetGPTQuestionTopicSuggestionParams,
+  GetGPTQuestionTopicSuggestionResults,
+} from '@api/LLM/getGPTQuestionTopicSuggestion'
+import { GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults } from '@api/LLM/getGPTRephrasedQuestion'
+import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/getGPTSyntaxChecker'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { FillButton } from '@components/basic/button/Fill'
+import { OptionButton } from '@components/basic/button/Option'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
@@ -27,6 +35,10 @@ export default function Page() {
   const [explanation, setExplanation] = useState('')
   const [question, setQuestion] = useState('')
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
+  const [questionStarter, setQuestionStarter] = useState<string | undefined>(undefined)
+  const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
+  const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
+  const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -80,6 +92,66 @@ export default function Page() {
     setMethod(BLOOMS_TAXONOMY[i])
   }, [])
 
+  const onQuestionStarter = useCallback(() => {
+    //question stem template Question Stem Templates (Converted from King 1990 & Yu 2009)
+    const questionStarters = [
+      'What might occur if … ?',
+      'What is the difference between … and … ?',
+      'How are … and … similar?',
+      '… is a problem because …. . What is a possible solution for this?',
+      'How does … affect …?',
+      'What is the meaning of … ?',
+      'Why is …. important?',
+      'How is … related to …. ? ',
+      'What causes …. ?',
+      'What is an example of … ?',
+    ]
+    setQuestionStarter(questionStarters[Math.floor(Math.random() * questionStarters.length)])
+  }, [])
+
+  const onQuestionTopic = useCallback(async () => {
+    if (cid) {
+      const GPTTopicSuggestions = await request<
+        GetGPTQuestionTopicSuggestionParams,
+        GetGPTQuestionTopicSuggestionResults
+      >(`LLM/getGPTQuestionTopicSuggestion`, {
+        topic,
+        cid,
+        method,
+      })
+      if (GPTTopicSuggestions) {
+        setQuestionTopicSuggestion(GPTTopicSuggestions.topics)
+      }
+    }
+  }, [cid, method, topic])
+
+  const onSyntaxCheck = useCallback(async () => {
+    if (question && question.length > 0) {
+      const GPTSyntaxCheckedQuestion = await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(
+        `LLM/getGPTSyntaxChecker`,
+        {
+          question,
+        }
+      )
+      setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion?.syntaxCheckedQuestion)
+    }
+  }, [question])
+
+  const onRephraseQuestion = useCallback(async () => {
+    if (cid && question && question.length > 0) {
+      const GPTRephrasedQuestion = await request<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
+        `LLM/getGPTRephrasedQuestion`,
+        {
+          topic,
+          cid,
+          method,
+          question,
+        }
+      )
+      setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
+    }
+  }, [question, cid, topic, method])
+
   useEffect(() => {
     if (cid) {
       request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, { cid }).then(res => {
@@ -114,7 +186,57 @@ export default function Page() {
           onChange={setQuestion}
           marginBottom={20}
         />
+        {questionTopicSuggestion && questionTopicSuggestion.length !== 0 ? (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={5}>
+              Suggested Question Topics
+            </Label>
+            <RowContainer>
+              {questionTopicSuggestion.map((item, i) => (
+                <OptionButton key={i} state={true} selected={false} marginBottom={5}>
+                  {item}
+                </OptionButton>
+              ))}
+            </RowContainer>
+          </>
+        ) : null}
+        {questionStarter && (
+          <>
+            <Label color={'primaryMain'} size={0} marginBottom={10}>
+              Suggested Question Starters
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {questionStarter}
+            </OptionButton>
+          </>
+        )}
+        {rephrasedQuestion && (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
+              Rephrased Question
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {rephrasedQuestion}
+            </OptionButton>
+          </>
+        )}
 
+        {syntaxCheckedQuestion && (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
+              Syntax Checked Question
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {syntaxCheckedQuestion}
+            </OptionButton>
+          </>
+        )}
+
+        <RowContainer>
+          <div>Suggest: </div>
+          <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
+          <FillButton onClick={onQuestionTopic}>A question topic</FillButton>
+        </RowContainer>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />
         </Label>
@@ -136,6 +258,10 @@ export default function Page() {
         />
 
         <FillButton onClick={submitStem}>Submit</FillButton>
+        <RowContainer>
+          <StrokeButton onClick={onSyntaxCheck}>Syntax Check Question</StrokeButton>
+          <StrokeButton onClick={onRephraseQuestion}>Rephrase Question</StrokeButton>
+        </RowContainer>
       </Sheet>
     </>
   )
@@ -146,4 +272,12 @@ const TopicContainer = styled.div`
   align-items: center;
   gap: 1ch;
   margin-bottom: 20px;
+`
+const RowContainer = styled.div`
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+  margin: 10px 0;
 `

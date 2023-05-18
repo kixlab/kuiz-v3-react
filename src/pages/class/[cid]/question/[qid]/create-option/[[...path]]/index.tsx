@@ -1,5 +1,5 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/getGPTDistractor'
+import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/LLM/getGPTDistractor'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
@@ -44,7 +44,7 @@ export default function Page() {
           setQinfo(res.qinfo)
 
           LLMPath &&
-            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
+            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`LLM/getGPTDistractor`, {
               qStem: res.qinfo.stem_text,
               qLearningObjective: res.qinfo.learningObjective,
             }).then(res => {
