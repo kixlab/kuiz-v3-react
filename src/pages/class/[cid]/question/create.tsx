@@ -14,10 +14,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useButton } from 'src/hooks/useButton'
 
 const BLOOMS_TAXONOMY = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']
 
 export default function Page() {
+  const { isLoading, handleClick } = useButton()
   const { push, query } = useRouter()
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
@@ -39,35 +41,36 @@ export default function Page() {
         return
       }
     }
-
-    if (cid) {
-      const res = await request<CreateQStemParams, CreateQStemResults>(`createQuestion`, {
-        qstemObj: {
-          stem_text: question,
-          explanation,
-          keyword: [],
-          cid,
-          options: [],
-          optionSets: [],
-          learningObjective: `To ${method} the concept of ${topic}`,
-        },
-      })
-      if (res) {
-        await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
-          optionData: {
-            option_text: answer,
-            is_answer: true,
-            class: cid,
-            qstem: res.data,
-            keywords: [],
+    await handleClick<void>(async () => {
+      if (cid) {
+        const res = await request<CreateQStemParams, CreateQStemResults>(`createQuestion`, {
+          qstemObj: {
+            stem_text: question,
+            explanation,
+            keyword: [],
+            cid,
+            options: [],
+            optionSets: [],
+            learningObjective: `To ${method} the concept of ${topic}`,
           },
-          similarOptions: [],
         })
+        if (res) {
+          await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
+            optionData: {
+              option_text: answer,
+              is_answer: true,
+              class: cid,
+              qstem: res.data,
+              keywords: [],
+            },
+            similarOptions: [],
+          })
 
-        push(`/class/${cid}?topic=${topic}`)
+          push(`/class/${cid}?topic=${topic}`)
+        }
       }
-    }
-  }, [question, answer, cid, explanation, method, topic, push])
+    })
+  }, [question, answer, cid, explanation, method, topic, push, handleClick])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -135,7 +138,9 @@ export default function Page() {
           marginBottom={20}
         />
 
-        <FillButton onClick={submitStem}>Submit</FillButton>
+        <FillButton onClick={submitStem} disabled={isLoading}>
+          Submit
+        </FillButton>
       </Sheet>
     </>
   )
