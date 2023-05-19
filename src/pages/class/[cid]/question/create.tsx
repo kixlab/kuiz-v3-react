@@ -44,6 +44,9 @@ export default function Page() {
   const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
   const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
   const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
+  const [numberOfTopicSuggestionsChecked, setNumberOfTopicSuggestionsChecked] = useState(0)
+  const [numberOfRephraseRequestsChecked, setNumberOfRephraseRequestsChecked] = useState(0)
+  const [numberOfGrammarChecks, setNumberOfGrammarChecks] = useState(0)
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -67,6 +70,9 @@ export default function Page() {
             options: [],
             optionSets: [],
             learningObjective: `To ${method} the concept of ${topic}`,
+            numberOfTopicSuggestionsChecked,
+            numberOfRephraseRequestsChecked,
+            numberOfGrammarChecks,
           },
         })
         if (res) {
@@ -85,7 +91,19 @@ export default function Page() {
         }
       }
     })
-  }, [question, answer, cid, explanation, method, topic, push, submitStemHandleClick])
+  }, [
+    question,
+    answer,
+    cid,
+    explanation,
+    method,
+    topic,
+    push,
+    submitStemHandleClick,
+    numberOfTopicSuggestionsChecked,
+    numberOfRephraseRequestsChecked,
+    numberOfGrammarChecks,
+  ])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -129,6 +147,7 @@ export default function Page() {
       })
       if (GPTTopicSuggestions) {
         setQuestionTopicSuggestion(GPTTopicSuggestions.topics)
+        setNumberOfTopicSuggestionsChecked(prevNumber => prevNumber + 1)
       }
     }
   }, [cid, method, topic, onQuestionTopicHandleClick])
@@ -141,7 +160,10 @@ export default function Page() {
           sentence: question,
         })
       })
-      setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion?.syntaxChecked)
+      if (GPTSyntaxCheckedQuestion) {
+        setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion.syntaxChecked)
+        setNumberOfGrammarChecks(prevNumber => prevNumber + 1)
+      }
     }
   }, [question, onSyntaxCheckHandleClick])
 
@@ -158,7 +180,10 @@ export default function Page() {
           }
         )
       })
-      setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
+      if (GPTRephrasedQuestion) {
+        setNumberOfRephraseRequestsChecked(prevNumber => prevNumber + 1)
+        setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
+      }
     }
   }, [question, cid, topic, method, onRephraseQuestionHandleClick])
 
