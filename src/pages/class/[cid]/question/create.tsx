@@ -186,16 +186,13 @@ export default function Page() {
           the concept of
           <SelectInput options={topics} value={topic} onSelect={onSelectTopic} placeholder="topic" />
         </TopicContainer>
-
-        <Label color={'primaryMain'} size={0} marginBottom={8}>
-          Question <Required />
-        </Label>
-        <TextInput
-          placeholder="E.g. What benefits do keyboard shortcuts provide users?"
-          value={question}
-          onChange={setQuestion}
-          marginBottom={20}
-        />
+        <RowContainer>
+          <div>Suggest: </div>
+          <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
+          <FillButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
+            A question topic
+          </FillButton>
+        </RowContainer>
         {questionTopicSuggestion && questionTopicSuggestion.length !== 0 ? (
           <>
             <Label color={'primaryMain'} size={0} marginTop={5}>
@@ -220,6 +217,16 @@ export default function Page() {
             </OptionButton>
           </>
         )}
+        <Label color={'primaryMain'} size={0} marginBottom={8}>
+          Question <Required />
+        </Label>
+        <TextInput
+          placeholder="E.g. What benefits do keyboard shortcuts provide users?"
+          value={question}
+          onChange={setQuestion}
+          marginBottom={20}
+        />
+
         {rephrasedQuestion && (
           <>
             <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
@@ -241,13 +248,13 @@ export default function Page() {
             </OptionButton>
           </>
         )}
-
         <RowContainer>
-          <div>Suggest: </div>
-          <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
-          <FillButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
-            A question topic
-          </FillButton>
+          <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+            Grammar Check
+          </StrokeButton>
+          <StrokeButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
+            Rephrase Question
+          </StrokeButton>
         </RowContainer>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />
@@ -268,18 +275,9 @@ export default function Page() {
           onChange={setAnswer}
           marginBottom={20}
         />
-
         <FillButton onClick={submitStem} disabled={submitStemLoading}>
           Submit
         </FillButton>
-        <RowContainer>
-          <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-            Syntax Check Question
-          </StrokeButton>
-          <StrokeButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
-            Rephrase Question
-          </StrokeButton>
-        </RowContainer>
       </Sheet>
     </>
   )
@@ -297,5 +295,5 @@ const RowContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   gap: 5px;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
 `

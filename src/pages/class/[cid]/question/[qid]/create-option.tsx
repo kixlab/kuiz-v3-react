@@ -185,17 +185,18 @@ export default function Page() {
           </Container>
         </>
       ) : null}
-      <FillButton onClick={submit} disabled={onSubmitIsLoading} marginTop={5}>
-        Submit
-      </FillButton>
+
       <RowContainerNoWrap>
         <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-          Syntax Check Option
+          Grammar Check
         </StrokeButton>
         <StrokeButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
           Keyword Suggestions
         </StrokeButton>
       </RowContainerNoWrap>
+      <FillButton onClick={submit} disabled={onSubmitIsLoading}>
+        Submit
+      </FillButton>
     </Sheet>
   )
 }
