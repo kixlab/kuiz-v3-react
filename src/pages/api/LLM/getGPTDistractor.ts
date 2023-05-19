@@ -16,7 +16,7 @@ export interface GetGPTDistractorsResults {
 export default apiController<GetGPTDistractorsParams, GetGPTDistractorsResults>(
   async ({ qStem, qLearningObjective, cid }) => {
     const course = await ClassModel.findById(cid)
-    const promptQuestion = `Suggest 3 keywords to create distractors reply by separating them with a comma for the following question ${qStem}; its learning objective is ${qLearningObjective} and the course is ${course.name}, reply only with the distractors.`
+    const promptQuestion = `Suggest 3 keywords to create distractors reply by separating them with a comma for the following question ${qStem}; its learning objective is ${qLearningObjective} under the domain ${course.name}, reply only with the distractors.`
 
     const openAIResponse = await openAIService.create({
       model: 'gpt-3.5-turbo',
