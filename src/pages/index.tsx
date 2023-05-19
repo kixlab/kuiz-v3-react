@@ -18,15 +18,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { Label } from '@components/basic/Label'
-import { StrokeButton } from '@components/basic/button/Stroke'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
 import { Required } from '@components/Required'
+import { useButton } from 'src/hooks/useButton'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
 }
 
 export default function Page({ providers }: Props) {
+  const { isLoading, handleClick } = useButton()
   const { data: session } = useSession()
   const { push, query } = useRouter()
   const dispatch = useDispatch()
@@ -44,16 +45,18 @@ export default function Page({ providers }: Props) {
   )
 
   const onSubmit = useCallback(async () => {
-    const res = await request<JoinClassParams, JoinClassResults>(`joinClass`, {
-      code,
+    const res = await handleClick<JoinClassResults>(async () => {
+      return await request<JoinClassParams, JoinClassResults>(`joinClass`, {
+        code,
+      })
     })
     if (res?.cid) {
       dispatch(enroll({ name: res.name, cid: res.cid, code }))
     }
-  }, [code, dispatch])
+  }, [code, dispatch, handleClick])
 
   const onClassEnter = useCallback(
-    (cid: string) => async () => {
+    (cid: string) => () => {
       push(`/class/${cid}`)
     },
     [push]
@@ -62,30 +65,37 @@ export default function Page({ providers }: Props) {
   const signInCallback = useCallback(
     (provider: ClientSafeProvider) => async () => {
       const callbackUrl = (query.callbackUrl ?? '/') as string
-      await signIn(provider.id, { callbackUrl })
+      handleClick(async () => {
+        return await signIn(provider.id, { callbackUrl })
+      })
     },
-    [query.callbackUrl]
+    [query.callbackUrl, handleClick]
   )
 
   const onUpdateDataCollectionConsentState = useCallback(
     async (dataCollectionConsentState: boolean) => {
-      const res = await request<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
-        `updateDataCollectionConsentState`,
-        {
-          dataCollectionConsentState,
-        }
-      )
+      const res = await handleClick<UpdateDataCollectionConsentStateResults>(async () => {
+        return await request<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
+          `updateDataCollectionConsentState`,
+          {
+            dataCollectionConsentState,
+          }
+        )
+      })
       if (res) {
         dispatch(updateDataCollectionConsentState(dataCollectionConsentState))
       }
     },
-    [dispatch]
+    [dispatch, handleClick]
   )
 
   const onRegister = async () => {
-    const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      studentID,
+    const res = await handleClick<PutStudentIDResults>(async () => {
+      return await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
+        studentID,
+      })
     })
+
     if (res) {
       dispatch(updateStudentID(studentID))
     }
@@ -105,7 +115,11 @@ export default function Page({ providers }: Props) {
                   Research Consent
                 </Label>
                 We would like to use and analyze your system use data for research purposes.
-                <FillButton onClick={() => onUpdateDataCollectionConsentState(true)} marginTop={20}>
+                <FillButton
+                  onClick={() => onUpdateDataCollectionConsentState(true)}
+                  marginTop={20}
+                  disabled={isLoading}
+                >
                   I give my consent
                 </FillButton>
               </Sheet>
@@ -118,7 +132,9 @@ export default function Page({ providers }: Props) {
                 Please register your student ID for class activity and evaluation.
                 <InputSection>
                   <TextInput placeholder="Student ID" onChange={setStudentID} value={studentID} />
-                  <FillButton onClick={onRegister}>Register</FillButton>
+                  <FillButton onClick={onRegister} disabled={isLoading}>
+                    Register
+                  </FillButton>
                 </InputSection>
               </Sheet>
             )}
@@ -134,7 +150,9 @@ export default function Page({ providers }: Props) {
             ))}
             <InputSection>
               <TextInput placeholder="Enter class code" onChange={onCodeChange} value={code} />
-              <FillButton onClick={onSubmit}>Enter</FillButton>
+              <FillButton onClick={onSubmit} disabled={isLoading}>
+                Enter
+              </FillButton>
             </InputSection>
           </Sheet>
         </>
@@ -174,7 +192,7 @@ export default function Page({ providers }: Props) {
           </IntroBox>
           {providers &&
             Object.values(providers).map(provider => (
-              <FillButton key={provider.id} onClick={signInCallback(provider)}>
+              <FillButton key={provider.id} onClick={signInCallback(provider)} disabled={isLoading}>
                 Sign In With {provider.name}
               </FillButton>
             ))}

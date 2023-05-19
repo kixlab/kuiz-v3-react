@@ -3,11 +3,15 @@ import { Doc } from 'src/types/common'
 
 export interface Report extends Doc {
   uid: Types.ObjectId
+  qid: Types.ObjectId
   comment: string
 }
 
 const ReportSchema = new Schema<Report>({
   uid: {
+    type: Schema.Types.ObjectId,
+  },
+  qid: {
     type: Schema.Types.ObjectId,
   },
   comment: {

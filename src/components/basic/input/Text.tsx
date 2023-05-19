@@ -14,7 +14,6 @@ export const TextInput = View<Props>(({ placeholder, value, onChange, disabled =
   return (
     <TextInputComponent
       {...props}
-      type="text"
       placeholder={placeholder}
       onChange={e => onChange?.(e.target.value)}
       value={value}
@@ -23,8 +22,10 @@ export const TextInput = View<Props>(({ placeholder, value, onChange, disabled =
   )
 })
 
-const TextInputComponent = styled.input`
+const TextInputComponent = styled.textarea`
   ${typography.b02};
+  resize: vertical;
+  overflow: hidden;
   padding: 16px;
   border-radius: 6px;
   border: 1px solid ${palette.grey500};

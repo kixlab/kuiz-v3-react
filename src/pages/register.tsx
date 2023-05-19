@@ -9,17 +9,22 @@ import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useButton } from 'src/hooks/useButton'
 
 export default function StudentID() {
+  const { isLoading, handleClick } = useButton()
   const [sid, setSid] = useState('')
   const dispatch = useDispatch()
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
 
   const onSubmit = async () => {
-    const res = await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
-      studentID: sid,
+    const res = await handleClick<PutStudentIDResults>(async () => {
+      return await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
+        studentID: sid,
+      })
     })
+
     if (res) {
       dispatch(updateStudentID(sid))
       push(`/my-page/${cid}`)
@@ -31,7 +36,9 @@ export default function StudentID() {
       <Header>Please Enter Your Student ID</Header>
       <InputSection>
         <TextInput placeholder="Enter Student ID" value={sid} onChange={setSid} />
-        <FillButton onClick={onSubmit}>Submit</FillButton>
+        <FillButton onClick={onSubmit} disabled={isLoading}>
+          Submit
+        </FillButton>
       </InputSection>
     </Sheet>
   )
