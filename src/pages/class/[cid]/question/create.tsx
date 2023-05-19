@@ -137,10 +137,11 @@ export default function Page() {
     if (question && question.length > 0) {
       const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
         return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
-          question,
+          type: 'question',
+          sentence: question,
         })
       })
-      setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion?.syntaxCheckedQuestion)
+      setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion?.syntaxChecked)
     }
   }, [question, onSyntaxCheckHandleClick])
 
