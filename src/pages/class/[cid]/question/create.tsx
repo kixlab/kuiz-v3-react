@@ -27,7 +27,10 @@ import { useButton } from 'src/hooks/useButton'
 const BLOOMS_TAXONOMY = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']
 
 export default function Page() {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading: onQuestionTopicLoading, handleClick: onQuestionTopicHandleClick } = useButton()
+  const { isLoading: submitStemLoading, handleClick: submitStemHandleClick } = useButton()
+  const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
+  const { isLoading: onRephraseQuestionLoading, handleClick: onRephraseQuestionHandleClick } = useButton()
   const { push, query } = useRouter()
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
@@ -53,7 +56,7 @@ export default function Page() {
         return
       }
     }
-    await handleClick<void>(async () => {
+    await submitStemHandleClick<void>(async () => {
       if (cid) {
         const res = await request<CreateQStemParams, CreateQStemResults>(`createQuestion`, {
           qstemObj: {
@@ -82,7 +85,7 @@ export default function Page() {
         }
       }
     })
-  }, [question, answer, cid, explanation, method, topic, push, handleClick])
+  }, [question, answer, cid, explanation, method, topic, push, submitStemHandleClick])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -114,46 +117,49 @@ export default function Page() {
 
   const onQuestionTopic = useCallback(async () => {
     if (cid) {
-      const GPTTopicSuggestions = await request<
-        GetGPTQuestionTopicSuggestionParams,
-        GetGPTQuestionTopicSuggestionResults
-      >(`LLM/getGPTQuestionTopicSuggestion`, {
-        topic,
-        cid,
-        method,
+      const GPTTopicSuggestions = await onQuestionTopicHandleClick<GetGPTQuestionTopicSuggestionResults>(async () => {
+        return await request<GetGPTQuestionTopicSuggestionParams, GetGPTQuestionTopicSuggestionResults>(
+          `LLM/getGPTQuestionTopicSuggestion`,
+          {
+            topic,
+            cid,
+            method,
+          }
+        )
       })
       if (GPTTopicSuggestions) {
         setQuestionTopicSuggestion(GPTTopicSuggestions.topics)
       }
     }
-  }, [cid, method, topic])
+  }, [cid, method, topic, onQuestionTopicHandleClick])
 
   const onSyntaxCheck = useCallback(async () => {
     if (question && question.length > 0) {
-      const GPTSyntaxCheckedQuestion = await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(
-        `LLM/getGPTSyntaxChecker`,
-        {
+      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
+        return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
           question,
-        }
-      )
+        })
+      })
       setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion?.syntaxCheckedQuestion)
     }
-  }, [question])
+  }, [question, onSyntaxCheckHandleClick])
 
   const onRephraseQuestion = useCallback(async () => {
     if (cid && question && question.length > 0) {
-      const GPTRephrasedQuestion = await request<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
-        `LLM/getGPTRephrasedQuestion`,
-        {
-          topic,
-          cid,
-          method,
-          question,
-        }
-      )
+      const GPTRephrasedQuestion = await onRephraseQuestionHandleClick<GetGPTRephrasedQuestionResults>(async () => {
+        return await request<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
+          `LLM/getGPTRephrasedQuestion`,
+          {
+            topic,
+            cid,
+            method,
+            question,
+          }
+        )
+      })
       setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
     }
-  }, [question, cid, topic, method])
+  }, [question, cid, topic, method, onRephraseQuestionHandleClick])
 
   useEffect(() => {
     if (cid) {
@@ -238,7 +244,9 @@ export default function Page() {
         <RowContainer>
           <div>Suggest: </div>
           <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
-          <FillButton onClick={onQuestionTopic}>A question topic</FillButton>
+          <FillButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
+            A question topic
+          </FillButton>
         </RowContainer>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />
@@ -260,12 +268,16 @@ export default function Page() {
           marginBottom={20}
         />
 
-        <FillButton onClick={submitStem} disabled={isLoading}>
+        <FillButton onClick={submitStem} disabled={submitStemLoading}>
           Submit
         </FillButton>
         <RowContainer>
-          <StrokeButton onClick={onSyntaxCheck}>Syntax Check Question</StrokeButton>
-          <StrokeButton onClick={onRephraseQuestion}>Rephrase Question</StrokeButton>
+          <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+            Syntax Check Question
+          </StrokeButton>
+          <StrokeButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
+            Rephrase Question
+          </StrokeButton>
         </RowContainer>
       </Sheet>
     </>

@@ -9,7 +9,11 @@ interface Props {
 }
 
 export const StrokeButton = (props: Props) => {
-  return <Stroke onClick={props.onClick}>{props.children}</Stroke>
+  return (
+    <Stroke onClick={props.onClick} disabled={props.disabled ? props.disabled : false}>
+      {props.children}
+    </Stroke>
+  )
 }
 
 const Stroke = styled.button`
@@ -25,4 +29,7 @@ const Stroke = styled.button`
     background-color: ${palette.background.light};
   }
   min-height: ${MIN_BUTTON_SIZE}px;
+  &:disabled {
+    background-color: ${palette.grey500};
+  }
 `
