@@ -15,7 +15,8 @@ export default function StudentID() {
   const { isLoading, handleClick } = useButton()
   const [sid, setSid] = useState('')
   const dispatch = useDispatch()
-  const { push } = useRouter()
+  const { query, push } = useRouter()
+  const cid = query.cid as string | undefined
 
   const onSubmit = async () => {
     const res = await handleClick<PutStudentIDResults>(async () => {
@@ -26,7 +27,7 @@ export default function StudentID() {
 
     if (res) {
       dispatch(updateStudentID(sid))
-      push('/my-page')
+      push(`/my-page/${cid}`)
     }
   }
 
