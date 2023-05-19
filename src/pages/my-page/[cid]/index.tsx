@@ -17,9 +17,9 @@ import { LoadCreatedStemDataParams, LoadCreatedStemDataResults } from '@api/load
 import Head from 'next/head'
 import { Required } from '@components/Required'
 import { SelectInput } from '@components/basic/input/Select'
-import { LoadTopicsParams, LoadTopicsResults } from '@api/loadTopics'
 import { Topic } from '@server/db/topic'
 import styled from '@emotion/styled'
+import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -94,7 +94,7 @@ export default function Page() {
     getMadeStem()
     getMadeOption()
     if (cid) {
-      request<LoadTopicsParams, LoadTopicsResults>(`loadTopics`, {
+      request<LoadClassInfoParams, LoadClassInfoResults>(`loadClassInfo`, {
         cid,
       }).then(async res => {
         if (res) {
