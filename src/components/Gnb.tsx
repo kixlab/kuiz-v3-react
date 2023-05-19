@@ -24,8 +24,8 @@ export const Gnb = () => {
   }, [push])
 
   const onClickMyPage = useCallback(() => {
-    push(`/my-page/${cid}`)
-  }, [push, cid])
+    push('/my-page')
+  }, [push])
 
   const onClickAdmin = useCallback(() => {
     push(`/admin/${cid}`)
@@ -63,7 +63,7 @@ export const Gnb = () => {
       {data && (
         <Menu>
           <MenuBtn onClick={onClickSwitchClass}>Classes</MenuBtn>
-          {cid && <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>}
+          <MenuBtn onClick={onClickMyPage}>My Page</MenuBtn>
           {cid && isAdmin && <MenuBtn onClick={onClickAdmin}>Admin</MenuBtn>}
           <ProfileImg src={userImg}></ProfileImg>
         </Menu>
