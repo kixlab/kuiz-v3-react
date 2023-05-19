@@ -10,7 +10,7 @@ interface OptionData {
   optionText: string
   isAnswer: boolean
   keywords?: string[]
-  numberOfGrammarChecks: number
+  numberOfOptionGrammarChecks: number
   numberOfKeywordSuggestionChecks: number
 }
 
@@ -22,7 +22,7 @@ class OptionService {
     optionText,
     isAnswer,
     keywords = [],
-    numberOfGrammarChecks,
+    numberOfOptionGrammarChecks,
     numberOfKeywordSuggestionChecks,
   }: OptionData) {
     const option = new OptionModel({
@@ -32,7 +32,7 @@ class OptionService {
       is_answer: isAnswer,
       qstem: qid,
       keywords: keywords,
-      numberOfGrammarChecks,
+      numberOfOptionGrammarChecks,
       numberOfKeywordSuggestionChecks,
     })
     option.disjointSet = option.id

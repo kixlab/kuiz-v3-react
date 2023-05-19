@@ -35,7 +35,7 @@ export default function Page() {
   const [GPTKeywordDistractorSuggestions, setGPTKeywordDistractorSuggestions] = useState<string[]>([])
   const [syntaxCheckedOption, setSyntaxCheckedOption] = useState<string | undefined>(undefined)
   const [numberOfKeywordSuggestionChecks, setNumberOfKeywordSuggestionChecks] = useState(0)
-  const [numberOfGrammarChecks, setNumberOfGrammarChecks] = useState(0)
+  const [numberOfOptionGrammarChecks, setNumberOfOptionGrammarChecks] = useState(0)
 
   useEffect(() => {
     if (qid) {
@@ -68,7 +68,7 @@ export default function Page() {
           class: cid,
           qstem: qid,
           keywords: [],
-          numberOfGrammarChecks,
+          numberOfOptionGrammarChecks,
           numberOfKeywordSuggestionChecks,
         }
 
@@ -91,7 +91,7 @@ export default function Page() {
     callbackUrl,
     push,
     onSubmitHandleClick,
-    numberOfGrammarChecks,
+    numberOfOptionGrammarChecks,
     numberOfKeywordSuggestionChecks,
   ])
 
@@ -121,7 +121,7 @@ export default function Page() {
       })
       if (GPTSyntaxCheckedQuestion) {
         setSyntaxCheckedOption(GPTSyntaxCheckedQuestion.syntaxChecked)
-        setNumberOfGrammarChecks(prevNumber => prevNumber + 1)
+        setNumberOfOptionGrammarChecks(prevNumber => prevNumber + 1)
       }
     }
   }, [option, setSyntaxCheckedOption, onSyntaxCheckHandleClick])
@@ -177,7 +177,7 @@ export default function Page() {
       {syntaxCheckedOption && (
         <>
           <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
-            Syntax Checked Option
+            Grammar Checked Option
           </Label>
           <OptionButton state={true} selected={false} marginBottom={5}>
             {syntaxCheckedOption}

@@ -25,7 +25,7 @@ export interface Option extends Doc {
   liked: Types.ObjectId[]
   disliked: Types.ObjectId[]
   keywords: string[]
-  numberOfGrammarChecks: number
+  numberOfOptionGrammarChecks: number
   numberOfKeywordSuggestionChecks: number
 }
 
@@ -127,7 +127,7 @@ const optionSchema = new Schema<Option>({
     type: [String],
     default: [],
   },
-  numberOfGrammarChecks: {
+  numberOfOptionGrammarChecks: {
     type: Number,
     default: 0,
   },

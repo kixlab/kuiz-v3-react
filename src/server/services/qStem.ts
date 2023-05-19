@@ -14,7 +14,7 @@ interface QStemData {
   learningObjective: string
   numberOfTopicSuggestionsChecked: number
   numberOfRephraseRequestsChecked: number
-  numberOfGrammarChecks: number
+  numberOfQuestionGrammarChecks: number
 }
 
 class QStemService {
@@ -29,7 +29,7 @@ class QStemService {
     learningObjective,
     numberOfTopicSuggestionsChecked,
     numberOfRephraseRequestsChecked,
-    numberOfGrammarChecks,
+    numberOfQuestionGrammarChecks,
   }: QStemData) {
     const qStem = new QStemModel({
       author: uid,
@@ -42,7 +42,7 @@ class QStemService {
       learningObjective,
       numberOfTopicSuggestionsChecked,
       numberOfRephraseRequestsChecked,
-      numberOfGrammarChecks,
+      numberOfQuestionGrammarChecks,
     })
     await qStem.save()
 

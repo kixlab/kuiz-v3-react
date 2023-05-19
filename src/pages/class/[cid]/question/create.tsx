@@ -46,7 +46,7 @@ export default function Page() {
   const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
   const [numberOfTopicSuggestionsChecked, setNumberOfTopicSuggestionsChecked] = useState(0)
   const [numberOfRephraseRequestsChecked, setNumberOfRephraseRequestsChecked] = useState(0)
-  const [numberOfGrammarChecks, setNumberOfGrammarChecks] = useState(0)
+  const [numberOfQuestionGrammarChecks, setNumberOfQuestionGrammarChecks] = useState(0)
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -72,7 +72,7 @@ export default function Page() {
             learningObjective: `To ${method} the concept of ${topic}`,
             numberOfTopicSuggestionsChecked,
             numberOfRephraseRequestsChecked,
-            numberOfGrammarChecks,
+            numberOfQuestionGrammarChecks,
           },
         })
         if (res) {
@@ -102,7 +102,7 @@ export default function Page() {
     submitStemHandleClick,
     numberOfTopicSuggestionsChecked,
     numberOfRephraseRequestsChecked,
-    numberOfGrammarChecks,
+    numberOfQuestionGrammarChecks,
   ])
 
   const onSelectTopic = useCallback(
@@ -162,7 +162,7 @@ export default function Page() {
       })
       if (GPTSyntaxCheckedQuestion) {
         setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion.syntaxChecked)
-        setNumberOfGrammarChecks(prevNumber => prevNumber + 1)
+        setNumberOfQuestionGrammarChecks(prevNumber => prevNumber + 1)
       }
     }
   }, [question, onSyntaxCheckHandleClick])
@@ -266,7 +266,7 @@ export default function Page() {
         {syntaxCheckedQuestion && (
           <>
             <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
-              Syntax Checked Question
+              Grammar Checked Question
             </Label>
             <OptionButton state={true} selected={false} marginBottom={5}>
               {syntaxCheckedQuestion}

@@ -14,7 +14,7 @@ export interface CreateQStemParams {
     learningObjective: string
     numberOfTopicSuggestionsChecked: number
     numberOfRephraseRequestsChecked: number
-    numberOfGrammarChecks: number
+    numberOfQuestionGrammarChecks: number
   }
 }
 
@@ -35,7 +35,7 @@ export default apiController<CreateQStemParams, CreateQStemResults>(
         learningObjective,
         numberOfTopicSuggestionsChecked,
         numberOfRephraseRequestsChecked,
-        numberOfGrammarChecks,
+        numberOfQuestionGrammarChecks,
       },
     },
     user
@@ -51,7 +51,7 @@ export default apiController<CreateQStemParams, CreateQStemResults>(
       learningObjective,
       numberOfTopicSuggestionsChecked,
       numberOfRephraseRequestsChecked,
-      numberOfGrammarChecks,
+      numberOfQuestionGrammarChecks,
     })
 
     return {

@@ -15,7 +15,7 @@ export interface QStem extends Doc {
   report: Types.ObjectId[]
   numberOfTopicSuggestionsChecked: number
   numberOfRephraseRequestsChecked: number
-  numberOfGrammarChecks: number
+  numberOfQuestionGrammarChecks: number
 }
 
 const QstemSchema = new Schema<QStem>(
@@ -88,7 +88,7 @@ const QstemSchema = new Schema<QStem>(
       type: Number,
       default: 0,
     },
-    numberOfGrammarChecks: {
+    numberOfQuestionGrammarChecks: {
       type: Number,
       default: 0,
     },
