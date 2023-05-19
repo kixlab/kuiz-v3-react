@@ -20,7 +20,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useButton } from 'src/hooks/useButton'
 
 export default function Page() {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading: onSubmitIsLoading, handleClick: onSubmitHandleClick } = useButton()
   const { isLoading: keywordSuggestionIsLoading, handleClick: keywordSuggestionHandleClick } = useButton()
   const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
   const { push, query } = useRouter()
@@ -58,7 +58,7 @@ export default function Page() {
       alert('Please enter an option')
       return
     }
-    await handleClick<void>(async () => {
+    await onSubmitHandleClick<void>(async () => {
       if (cid && qid) {
         const optionData = {
           option_text: option,
@@ -79,7 +79,7 @@ export default function Page() {
         }
       }
     })
-  }, [option, cid, qid, isAnswer, callbackUrl, push, handleClick])
+  }, [option, cid, qid, isAnswer, callbackUrl, push, onSubmitHandleClick])
 
   const onTryLLMKeywordSuggestions = useCallback(async () => {
     if (qinfo && cid) {
@@ -185,7 +185,7 @@ export default function Page() {
           </Container>
         </>
       ) : null}
-      <FillButton onClick={submit} disabled={isLoading} marginTop={5}>
+      <FillButton onClick={submit} disabled={onSubmitIsLoading} marginTop={5}>
         Submit
       </FillButton>
       <RowContainerNoWrap>
