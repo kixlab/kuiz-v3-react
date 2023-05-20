@@ -1,41 +1,38 @@
-import { ClassModel } from '@server/db/class'
 import { logService } from '@server/services/log'
 import { openAIService } from '@server/services/openAI'
 import { apiController } from '@utils/api'
+import { trim } from 'lodash'
+import { QUESTION_IMPROVE_PROMPT } from 'src/constants/questionRephrasePrompt'
 import { ID } from 'src/types/common'
 
 export interface GetRephrasedQuestionParams {
   question: string
-  topic: string
-  method: string
+  learningObjective: string
+  explanation: string
   cid: ID
 }
 
 export interface GetRephrasedQuestionResults {
-  rephrasedQuestion: string | undefined
+  rephrasedQuestions: string[]
 }
 
 export default apiController<GetRephrasedQuestionParams, GetRephrasedQuestionResults>(
-  async ({ question, topic, method, cid }, user) => {
-    const course = await ClassModel.findById(cid)
-    const promptQuestion = `Rephrase the following question "${question}"; considering that the objective is to ${method} the concept of ${topic} under the course ${course.name}`
-
-    const openAIResponse = await openAIService.create({
-      model: 'gpt-3.5-turbo',
-      role: 'user',
-      content: promptQuestion,
+  async ({ question, learningObjective, explanation, cid }, user) => {
+    const openAIResponse = await openAIService.complete({
+      prompt: QUESTION_IMPROVE_PROMPT(question, learningObjective, explanation),
     })
 
-    const rephrasedQuestion = openAIResponse.data.choices[0].message?.content
+    const rephrasedQuestions = openAIResponse.data.choices[0].text?.split('\n')?.map(trim) ?? []
 
     await logService.add(user._id, 'getRephrasedQuestion', cid, {
-      method,
       question,
-      rephrasedQuestion,
+      learningObjective,
+      explanation,
+      rephrasedQuestions,
     })
 
     return {
-      rephrasedQuestion,
+      rephrasedQuestions,
     }
   }
 )
