@@ -22,7 +22,15 @@ export const RadioInput = View<Props>(({ options, onSelect, value, ...props }) =
     <Container {...props}>
       {options.map((option, i) => (
         <Option key={i}>
-          <Input type="radio" id={option} name={id} value={option} checked={i === value} onClick={onClick(i)} />
+          <Input
+            type="radio"
+            id={option}
+            name={id}
+            value={option}
+            checked={i === value}
+            onClick={onClick(i)}
+            readOnly
+          />
           <Label htmlFor={option}>{option}</Label>
         </Option>
       ))}
@@ -43,8 +51,7 @@ const Option = styled.div`
 `
 
 const Input = styled.input`
-  margin-left: 0;
-  margin-right: 8px;
+  margin: 0 8px 0 0;
   cursor: pointer;
 `
 

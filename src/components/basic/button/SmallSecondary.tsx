@@ -3,11 +3,16 @@ import { palette, typography } from '@styles/theme'
 
 interface Props {
   children: React.ReactNode
+  disabled?: boolean
   onClick: () => void
 }
 
-export function SmallSecondaryButton({ children, onClick }: Props) {
-  return <Container onClick={onClick}>{children}</Container>
+export function SmallSecondaryButton({ children, disabled = false, onClick }: Props) {
+  return (
+    <Container onClick={onClick} disabled={disabled}>
+      {children}
+    </Container>
+  )
 }
 
 const Container = styled.button`

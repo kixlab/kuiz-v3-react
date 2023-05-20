@@ -4,16 +4,19 @@ import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
-import { StrokeButton } from '@components/basic/button/Stroke'
+import { SmallSecondaryButton } from '@components/basic/button/SmallSecondary'
 import { RadioInput } from '@components/basic/input/Radio'
 import { TextInput } from '@components/basic/input/Text'
+import { Item } from '@components/basic/Item'
 import { Label } from '@components/basic/Label'
+import { CaptionText } from '@components/basic/text/Caption'
 import { Divider } from '@components/Divider'
 import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { Option } from '@server/db/option'
 import { QStem } from '@server/db/qstem'
+import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
@@ -169,49 +172,39 @@ export default function Page() {
       <RadioInput options={['Answer', 'Distractor']} value={isAnswer ? 0 : 1} onSelect={i => setIsAnswer(i === 0)} />
 
       <TextInput
-        placeholder="Suggest an answer or distractor for this question"
+        placeholder={`Suggest ${isAnswer ? 'an answer' : 'a distractor'} for this question`}
         onChange={setOption}
         value={option}
         marginTop={8}
       />
-      {syntaxCheckedOption && (
-        <>
-          <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
-            Grammar Checked Option
-          </Label>
-          <OptionButton state={true} selected={false} marginBottom={5}>
-            {syntaxCheckedOption}
-          </OptionButton>
-        </>
-      )}
-      {GPTKeywordDistractorSuggestions.length !== 0 ? (
-        <>
-          <Label color={'primaryMain'} size={0} marginTop={10}>
-            Suggested Distractors
-          </Label>
-          <Container>
-            {GPTKeywordDistractorSuggestions.map((item, i) => (
-              <OptionButton
-                key={i}
-                state={true}
-                selected={false}
-                marginBottom={i < GPTKeywordDistractorSuggestions.length - 1 ? 8 : 0}
-              >
-                {item}
-              </OptionButton>
-            ))}
-          </Container>
-        </>
-      ) : null}
 
       <RowContainerNoWrap>
-        <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-          Grammar Check
-        </StrokeButton>
-        <StrokeButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
-          Keyword Suggestions
-        </StrokeButton>
+        <CaptionText>🧑‍🏫 Need a help?</CaptionText>
+        <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+          I want to check grammar
+        </SmallSecondaryButton>
+        <SmallSecondaryButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
+          I need some keyword suggestions
+        </SmallSecondaryButton>
       </RowContainerNoWrap>
+
+      {syntaxCheckedOption && <AssistanceContainer>{syntaxCheckedOption}</AssistanceContainer>}
+
+      {0 < GPTKeywordDistractorSuggestions.length && (
+        <AssistanceContainer>
+          <div>Here are some keywords you may consider:</div>
+          <ul>
+            {GPTKeywordDistractorSuggestions.map((item, i) => (
+              <li key={i}>
+                <Item marginTop={4} marginLeft={4}>
+                  {item}
+                </Item>
+              </li>
+            ))}
+          </ul>
+        </AssistanceContainer>
+      )}
+
       <FillButton onClick={submit} disabled={onSubmitIsLoading}>
         Submit
       </FillButton>
@@ -219,20 +212,21 @@ export default function Page() {
   )
 }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: 10px;
-`
-
 const RowContainerNoWrap = styled.div`
   align-items: baseline;
   display: flex;
   flex-direction: row;
-  gap: 5px;
-  margin: 10px 0;
+  gap: 8px;
+  margin: 12px 0;
+`
+
+const AssistanceContainer = styled.div`
+  border-left: 1px solid ${palette.grey500};
+  color: ${palette.grey200};
+  margin-bottom: 12px;
+  ${typography.overline}
+  padding: 8px;
+  width: fit-content;
+  font-style: italic;
+  margin-left: 8px;
 `
