@@ -1,14 +1,11 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
-import {
-  GetGPTQuestionTopicSuggestionParams,
-  GetGPTQuestionTopicSuggestionResults,
-} from '@api/LLM/getGPTQuestionTopicSuggestion'
-import { GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults } from '@api/LLM/getGPTRephrasedQuestion'
-import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/getGPTSyntaxChecker'
+import { GetQuestionTemplatesParams, GetQuestionTemplatesResults } from '@api/LLM/getQuestionTemplates'
+import { GetQuestionIdeasParams, GetQuestionIdeasResults } from '@api/LLM/getQuestionIdeas'
+import { GetRephrasedQuestionParams, GetRephrasedQuestionResults } from '@api/LLM/getRephrasedQuestion'
+import { GetSyntaxCheckParams, GetSyntaxCheckResults } from '@api/LLM/getSyntaxCheck'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { FillButton } from '@components/basic/button/Fill'
-import { OptionButton } from '@components/basic/button/Option'
 import { SmallSecondaryButton } from '@components/basic/button/SmallSecondary'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
@@ -19,23 +16,21 @@ import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
-import { palette } from '@styles/theme'
-import { typography } from '@styles/theme'
+import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
-import { shuffle } from 'lodash'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BLOOMS_TAXONOMY } from 'src/constants/bloomsTaxonomy'
-import { QUESTION_STARTERS } from 'src/constants/questionStarters'
-import { useButton } from 'src/hooks/useButton'
+import { useAPILoading } from 'src/hooks/useButton'
 
 export default function Page() {
-  const { isLoading: onQuestionTopicLoading, handleClick: onQuestionTopicHandleClick } = useButton()
-  const { isLoading: submitStemLoading, handleClick: submitStemHandleClick } = useButton()
-  const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
-  const { isLoading: onRephraseQuestionLoading, handleClick: onRephraseQuestionHandleClick } = useButton()
+  const { isLoading: onTemplateLoading, callAPI: onTemplateClick } = useAPILoading()
+  const { isLoading: onQuestionTopicLoading, callAPI: onQuestionTopicHandleClick } = useAPILoading()
+  const { isLoading: submitStemLoading, callAPI: submitStemHandleClick } = useAPILoading()
+  const { isLoading: onSyntaxCheckLoading, callAPI: onSyntaxCheckHandleClick } = useAPILoading()
+  const { isLoading: onRephraseQuestionLoading, callAPI: onRephraseQuestionHandleClick } = useAPILoading()
   const { push, query } = useRouter()
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
@@ -49,9 +44,6 @@ export default function Page() {
   const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
   const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
   const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
-  const [numberOfTopicSuggestionsChecked, setNumberOfTopicSuggestionsChecked] = useState(0)
-  const [numberOfRephraseRequestsChecked, setNumberOfRephraseRequestsChecked] = useState(0)
-  const [numberOfQuestionGrammarChecks, setNumberOfQuestionGrammarChecks] = useState(0)
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -75,9 +67,6 @@ export default function Page() {
             options: [],
             optionSets: [],
             learningObjective: `To ${method} the concept of ${topic}`,
-            numberOfTopicSuggestionsChecked,
-            numberOfRephraseRequestsChecked,
-            numberOfQuestionGrammarChecks,
           },
         })
         if (res) {
@@ -96,19 +85,7 @@ export default function Page() {
         }
       }
     })
-  }, [
-    question,
-    answer,
-    cid,
-    explanation,
-    method,
-    topic,
-    push,
-    submitStemHandleClick,
-    numberOfTopicSuggestionsChecked,
-    numberOfRephraseRequestsChecked,
-    numberOfQuestionGrammarChecks,
-  ])
+  }, [question, answer, cid, explanation, method, topic, push, submitStemHandleClick])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -121,61 +98,68 @@ export default function Page() {
     setMethod(BLOOMS_TAXONOMY[i])
   }, [])
 
-  const onQuestionStarter = useCallback(() => {
-    setQuestionStarter(shuffle(QUESTION_STARTERS).slice(0, 3))
-  }, [])
+  const onQuestionStarter = useCallback(async () => {
+    if (cid) {
+      const results = await onTemplateClick(() =>
+        request<GetQuestionTemplatesParams, GetQuestionTemplatesResults>('LLM/getQuestionTemplates', {
+          cid,
+          topic,
+          method,
+        })
+      )
+      if (results) {
+        setQuestionStarter(results.templates)
+      }
+    }
+  }, [cid, method, onTemplateClick, topic])
 
   const onQuestionTopic = useCallback(async () => {
     if (cid) {
-      const GPTTopicSuggestions = await onQuestionTopicHandleClick<GetGPTQuestionTopicSuggestionResults>(async () => {
-        return await request<GetGPTQuestionTopicSuggestionParams, GetGPTQuestionTopicSuggestionResults>(
-          `LLM/getGPTQuestionTopicSuggestion`,
-          {
-            topic,
-            cid,
-            method,
-          }
-        )
-      })
+      const GPTTopicSuggestions = await onQuestionTopicHandleClick(() =>
+        request<GetQuestionIdeasParams, GetQuestionIdeasResults>(`LLM/getQuestionIdeas`, {
+          topic,
+          cid,
+          method,
+        })
+      )
       if (GPTTopicSuggestions) {
-        setQuestionTopicSuggestion(GPTTopicSuggestions.topics)
-        setNumberOfTopicSuggestionsChecked(prevNumber => prevNumber + 1)
+        setQuestionTopicSuggestion(GPTTopicSuggestions.ideas)
       }
     }
   }, [cid, method, topic, onQuestionTopicHandleClick])
 
   const onSyntaxCheck = useCallback(async () => {
-    if (question && question.length > 0) {
-      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
-        return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
+    if (0 < question.length && cid) {
+      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick(() =>
+        request<GetSyntaxCheckParams, GetSyntaxCheckResults>(`LLM/getSyntaxCheck`, {
           type: 'question',
           sentence: question,
+          cid,
         })
-      })
+      )
       if (GPTSyntaxCheckedQuestion) {
         setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion.syntaxChecked)
-        setNumberOfQuestionGrammarChecks(prevNumber => prevNumber + 1)
       }
+    } else {
+      alert('Please enter a question.')
     }
-  }, [question, onSyntaxCheckHandleClick])
+  }, [question, cid, onSyntaxCheckHandleClick])
 
   const onRephraseQuestion = useCallback(async () => {
-    if (cid && question && question.length > 0) {
-      const GPTRephrasedQuestion = await onRephraseQuestionHandleClick<GetGPTRephrasedQuestionResults>(async () => {
-        return await request<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
-          `LLM/getGPTRephrasedQuestion`,
-          {
-            topic,
-            cid,
-            method,
-            question,
-          }
-        )
-      })
+    if (cid && 0 < question.length) {
+      const GPTRephrasedQuestion = await onRephraseQuestionHandleClick(() =>
+        request<GetRephrasedQuestionParams, GetRephrasedQuestionResults>(`LLM/getRephrasedQuestion`, {
+          topic,
+          cid,
+          method,
+          question,
+        })
+      )
       if (GPTRephrasedQuestion) {
-        setNumberOfRephraseRequestsChecked(prevNumber => prevNumber + 1)
         setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
       }
+    } else {
+      alert('Please enter a question.')
     }
   }, [question, cid, topic, method, onRephraseQuestionHandleClick])
 
@@ -216,7 +200,9 @@ export default function Page() {
 
         <RowContainer>
           <CaptionText>🧑‍🏫 Need a help?</CaptionText>
-          <SmallSecondaryButton onClick={onQuestionStarter}>I need templates to start with</SmallSecondaryButton>
+          <SmallSecondaryButton onClick={onQuestionStarter} disabled={onTemplateLoading}>
+            I need templates to start with
+          </SmallSecondaryButton>
           <SmallSecondaryButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
             I need ideas for my question
           </SmallSecondaryButton>

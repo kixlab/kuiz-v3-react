@@ -9,17 +9,17 @@ import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useButton } from 'src/hooks/useButton'
+import { useAPILoading } from 'src/hooks/useButton'
 
 export default function StudentID() {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading, callAPI } = useAPILoading()
   const [sid, setSid] = useState('')
   const dispatch = useDispatch()
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
 
   const onSubmit = async () => {
-    const res = await handleClick<PutStudentIDResults>(async () => {
+    const res = await callAPI<PutStudentIDResults>(async () => {
       return await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
         studentID: sid,
       })

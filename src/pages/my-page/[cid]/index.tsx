@@ -123,18 +123,25 @@ export default function Page() {
         </Label>
         {studentID ?? 'Not registered'}
         <StrokeButton onClick={onInsertStudentID}>{studentID ? 'Update Student ID' : 'Add Student ID'}</StrokeButton>
-        <TopicContainer>
-          <Label color="grey200" marginBottom={8}>
-            Choose a topic to filter by
-          </Label>
-          <SelectInput
-            options={topics.map(t => t.label)}
-            value={topic ?? null}
-            onSelect={onSelectTopic}
-            placeholder={'Select topic'}
-          />
-        </TopicContainer>
-        {0 < myQuestions.length && <Label size={0}>My Questions</Label>}
+
+        {0 < myQuestions.length && (
+          <>
+            <Linear>
+              <Label size={0}>My Questions</Label>
+
+              <Linear>
+                <span>Filter by:</span>
+                <SelectInput
+                  options={topics.map(t => t.label)}
+                  value={topic ?? null}
+                  onSelect={onSelectTopic}
+                  placeholder={'Select topic'}
+                  marginLeft={8}
+                />
+              </Linear>
+            </Linear>
+          </>
+        )}
         {myQuestions.map(stem => {
           return <MadeStem key={stem._id} qid={stem._id} question={stem.stem_text} cid={stem.class.toString()} />
         })}
@@ -157,8 +164,9 @@ export default function Page() {
   )
 }
 
-const TopicContainer = styled.div`
+const Linear = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 `

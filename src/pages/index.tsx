@@ -20,17 +20,17 @@ import { JoinClassParams, JoinClassResults } from './api/joinClass'
 import { Label } from '@components/basic/Label'
 import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
 import { Required } from '@components/Required'
-import { useButton } from 'src/hooks/useButton'
+import { useAPILoading } from 'src/hooks/useButton'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
 }
 
 export default function Page({ providers }: Props) {
-  const { isLoading: onSubmitLoading, handleClick: onSubmitHandleClick } = useButton()
-  const { isLoading: singInLoading, handleClick: singInHandleClick } = useButton()
-  const { isLoading: onDataCollectionConsentIsLoading, handleClick: onDataCollectionConsentHandleClick } = useButton()
-  const { isLoading: onRegisterIsLoading, handleClick: onRegisterHandleClick } = useButton()
+  const { isLoading: onSubmitLoading, callAPI: onSubmitHandleClick } = useAPILoading()
+  const { isLoading: singInLoading, callAPI: singInHandleClick } = useAPILoading()
+  const { isLoading: onDataCollectionConsentIsLoading, callAPI: onDataCollectionConsentHandleClick } = useAPILoading()
+  const { isLoading: onRegisterIsLoading, callAPI: onRegisterHandleClick } = useAPILoading()
   const { data: session } = useSession()
   const { push, query } = useRouter()
   const dispatch = useDispatch()
