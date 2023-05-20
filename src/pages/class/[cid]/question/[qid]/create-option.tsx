@@ -37,8 +37,6 @@ export default function Page() {
   const [isAnswer, setIsAnswer] = useState(false)
   const [GPTKeywordDistractorSuggestions, setGPTKeywordDistractorSuggestions] = useState<string[]>([])
   const [syntaxCheckedOption, setSyntaxCheckedOption] = useState<string | undefined>(undefined)
-  const [numberOfKeywordSuggestionChecks, setNumberOfKeywordSuggestionChecks] = useState(0)
-  const [numberOfOptionGrammarChecks, setNumberOfOptionGrammarChecks] = useState(0)
 
   useEffect(() => {
     if (qid) {
@@ -71,8 +69,6 @@ export default function Page() {
           class: cid,
           qstem: qid,
           keywords: [],
-          numberOfOptionGrammarChecks,
-          numberOfKeywordSuggestionChecks,
         }
 
         await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
@@ -86,17 +82,7 @@ export default function Page() {
         }
       }
     })
-  }, [
-    option,
-    cid,
-    qid,
-    isAnswer,
-    callbackUrl,
-    push,
-    onSubmitHandleClick,
-    numberOfOptionGrammarChecks,
-    numberOfKeywordSuggestionChecks,
-  ])
+  }, [option, cid, qid, isAnswer, callbackUrl, push, onSubmitHandleClick])
 
   const onTryLLMKeywordSuggestions = useCallback(async () => {
     if (qinfo && cid) {
@@ -109,7 +95,6 @@ export default function Page() {
       )
       if (distractorKeywords) {
         setGPTKeywordDistractorSuggestions(distractorKeywords.distractorKeywords)
-        setNumberOfKeywordSuggestionChecks(prevNumber => prevNumber + 1)
       }
     }
   }, [qinfo, keywordSuggestionHandleClick, cid])
@@ -125,7 +110,6 @@ export default function Page() {
       )
       if (GPTSyntaxCheckedQuestion) {
         setSyntaxCheckedOption(GPTSyntaxCheckedQuestion.syntaxChecked)
-        setNumberOfOptionGrammarChecks(prevNumber => prevNumber + 1)
       }
     } else {
       alert('Please enter an option')
