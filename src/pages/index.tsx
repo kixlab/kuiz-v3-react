@@ -27,7 +27,10 @@ interface Props {
 }
 
 export default function Page({ providers }: Props) {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading: onSubmitLoading, handleClick: onSubmitHandleClick } = useButton()
+  const { isLoading: singInLoading, handleClick: singInHandleClick } = useButton()
+  const { isLoading: onDataCollectionConsentIsLoading, handleClick: onDataCollectionConsentHandleClick } = useButton()
+  const { isLoading: onRegisterIsLoading, handleClick: onRegisterHandleClick } = useButton()
   const { data: session } = useSession()
   const { push, query } = useRouter()
   const dispatch = useDispatch()
@@ -45,7 +48,7 @@ export default function Page({ providers }: Props) {
   )
 
   const onSubmit = useCallback(async () => {
-    const res = await handleClick<JoinClassResults>(async () => {
+    const res = await onSubmitHandleClick<JoinClassResults>(async () => {
       return await request<JoinClassParams, JoinClassResults>(`joinClass`, {
         code,
       })
@@ -53,7 +56,7 @@ export default function Page({ providers }: Props) {
     if (res?.cid) {
       dispatch(enroll({ name: res.name, cid: res.cid, code }))
     }
-  }, [code, dispatch, handleClick])
+  }, [code, dispatch, onSubmitHandleClick])
 
   const onClassEnter = useCallback(
     (cid: string) => () => {
@@ -65,16 +68,16 @@ export default function Page({ providers }: Props) {
   const signInCallback = useCallback(
     (provider: ClientSafeProvider) => async () => {
       const callbackUrl = (query.callbackUrl ?? '/') as string
-      handleClick(async () => {
+      singInHandleClick(async () => {
         return await signIn(provider.id, { callbackUrl })
       })
     },
-    [query.callbackUrl, handleClick]
+    [query.callbackUrl, singInHandleClick]
   )
 
   const onUpdateDataCollectionConsentState = useCallback(
     async (dataCollectionConsentState: boolean) => {
-      const res = await handleClick<UpdateDataCollectionConsentStateResults>(async () => {
+      const res = await onDataCollectionConsentHandleClick<UpdateDataCollectionConsentStateResults>(async () => {
         return await request<UpdateDataCollectionConsentStateParams, UpdateDataCollectionConsentStateResults>(
           `updateDataCollectionConsentState`,
           {
@@ -86,11 +89,11 @@ export default function Page({ providers }: Props) {
         dispatch(updateDataCollectionConsentState(dataCollectionConsentState))
       }
     },
-    [dispatch, handleClick]
+    [dispatch, onDataCollectionConsentHandleClick]
   )
 
   const onRegister = async () => {
-    const res = await handleClick<PutStudentIDResults>(async () => {
+    const res = await onRegisterHandleClick<PutStudentIDResults>(async () => {
       return await request<PutStudentIDParams, PutStudentIDResults>(`insertStudentID`, {
         studentID,
       })
@@ -118,7 +121,7 @@ export default function Page({ providers }: Props) {
                 <FillButton
                   onClick={() => onUpdateDataCollectionConsentState(true)}
                   marginTop={20}
-                  disabled={isLoading}
+                  disabled={onDataCollectionConsentIsLoading}
                 >
                   I give my consent
                 </FillButton>
@@ -132,7 +135,7 @@ export default function Page({ providers }: Props) {
                 Please register your student ID for class activity and evaluation.
                 <InputSection>
                   <TextInput placeholder="Student ID" onChange={setStudentID} value={studentID} />
-                  <FillButton onClick={onRegister} disabled={isLoading}>
+                  <FillButton onClick={onRegister} disabled={onRegisterIsLoading}>
                     Register
                   </FillButton>
                 </InputSection>
@@ -150,7 +153,7 @@ export default function Page({ providers }: Props) {
             ))}
             <InputSection>
               <TextInput placeholder="Enter class code" onChange={onCodeChange} value={code} />
-              <FillButton onClick={onSubmit} disabled={isLoading}>
+              <FillButton onClick={onSubmit} disabled={onSubmitLoading}>
                 Enter
               </FillButton>
             </InputSection>
@@ -192,7 +195,7 @@ export default function Page({ providers }: Props) {
           </IntroBox>
           {providers &&
             Object.values(providers).map(provider => (
-              <FillButton key={provider.id} onClick={signInCallback(provider)} disabled={isLoading}>
+              <FillButton key={provider.id} onClick={signInCallback(provider)} disabled={singInLoading}>
                 Sign In With {provider.name}
               </FillButton>
             ))}

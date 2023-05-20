@@ -1,5 +1,6 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/getGPTDistractor'
+import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/LLM/getGPTDistractor'
+import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/getGPTSyntaxChecker'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
@@ -19,18 +20,22 @@ import { useCallback, useEffect, useState } from 'react'
 import { useButton } from 'src/hooks/useButton'
 
 export default function Page() {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading: onSubmitIsLoading, handleClick: onSubmitHandleClick } = useButton()
+  const { isLoading: keywordSuggestionIsLoading, handleClick: keywordSuggestionHandleClick } = useButton()
+  const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
-  const LLMPath = query.path?.includes('LLM')
   const callbackUrl = query.callbackUrl as string | undefined
   const [ansList, setAnsList] = useState<Option[]>([])
   const [disList, setDistList] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
   const [option, setOption] = useState('')
   const [isAnswer, setIsAnswer] = useState(false)
-  const [GPTSuggestedDistractors, setGPTSuggestedDistractors] = useState<string[]>([])
+  const [GPTKeywordDistractorSuggestions, setGPTKeywordDistractorSuggestions] = useState<string[]>([])
+  const [syntaxCheckedOption, setSyntaxCheckedOption] = useState<string | undefined>(undefined)
+  const [numberOfKeywordSuggestionChecks, setNumberOfKeywordSuggestionChecks] = useState(0)
+  const [numberOfOptionGrammarChecks, setNumberOfOptionGrammarChecks] = useState(0)
 
   useEffect(() => {
     if (qid) {
@@ -44,26 +49,18 @@ export default function Page() {
           setAnsList(ans)
           setDistList(dis)
           setQinfo(res.qinfo)
-
-          LLMPath &&
-            request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`getGPTDistractor`, {
-              qStem: res.qinfo.stem_text,
-              qLearningObjective: res.qinfo.learningObjective,
-            }).then(res => {
-              res && setGPTSuggestedDistractors(res.distractors)
-            })
         }
       })
     }
     //don't add qinfo in the dependencies of his useEffect it will create infinite loop
-  }, [push, qid, setAnsList, setDistList, setQinfo, setGPTSuggestedDistractors, LLMPath])
+  }, [push, qid, setAnsList, setDistList, setQinfo])
 
   const submit = useCallback(async () => {
     if (option.trim().length === 0) {
       alert('Please enter an option')
       return
     }
-    await handleClick<void>(async () => {
+    await onSubmitHandleClick<void>(async () => {
       if (cid && qid) {
         const optionData = {
           option_text: option,
@@ -71,6 +68,8 @@ export default function Page() {
           class: cid,
           qstem: qid,
           keywords: [],
+          numberOfOptionGrammarChecks,
+          numberOfKeywordSuggestionChecks,
         }
 
         await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
@@ -84,11 +83,48 @@ export default function Page() {
         }
       }
     })
-  }, [option, cid, qid, isAnswer, callbackUrl, push, handleClick])
+  }, [
+    option,
+    cid,
+    qid,
+    isAnswer,
+    callbackUrl,
+    push,
+    onSubmitHandleClick,
+    numberOfOptionGrammarChecks,
+    numberOfKeywordSuggestionChecks,
+  ])
 
-  const onTryLLMSuggestions = useCallback(() => {
-    push(`/class/${cid}/question/${qid}/create-option/LLM?callbackUrl=${location.href}`)
-  }, [cid, push, qid])
+  const onTryLLMKeywordSuggestions = useCallback(async () => {
+    if (qinfo && cid) {
+      const distractorKeywords = await keywordSuggestionHandleClick<GetGPTDistractorsResults>(async () => {
+        return await request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`LLM/getGPTDistractor`, {
+          qStem: qinfo.stem_text,
+          qLearningObjective: qinfo.learningObjective,
+          cid,
+        })
+      })
+      if (distractorKeywords) {
+        setGPTKeywordDistractorSuggestions(distractorKeywords.distractorKeywords)
+        setNumberOfKeywordSuggestionChecks(prevNumber => prevNumber + 1)
+      }
+    }
+  }, [qinfo, keywordSuggestionHandleClick, cid])
+
+  const onSyntaxCheck = useCallback(async () => {
+    if (option) {
+      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
+        return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
+          type: 'question option',
+          sentence: option,
+        })
+      })
+      if (GPTSyntaxCheckedQuestion) {
+        setSyntaxCheckedOption(GPTSyntaxCheckedQuestion.syntaxChecked)
+        setNumberOfOptionGrammarChecks(prevNumber => prevNumber + 1)
+      }
+    }
+  }, [option, setSyntaxCheckedOption, onSyntaxCheckHandleClick])
 
   return (
     <Sheet gap={0}>
@@ -138,18 +174,28 @@ export default function Page() {
         value={option}
         marginTop={8}
       />
-      {LLMPath && GPTSuggestedDistractors.length !== 0 ? (
+      {syntaxCheckedOption && (
+        <>
+          <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
+            Grammar Checked Option
+          </Label>
+          <OptionButton state={true} selected={false} marginBottom={5}>
+            {syntaxCheckedOption}
+          </OptionButton>
+        </>
+      )}
+      {GPTKeywordDistractorSuggestions.length !== 0 ? (
         <>
           <Label color={'primaryMain'} size={0} marginTop={10}>
             Suggested Distractors
           </Label>
           <Container>
-            {GPTSuggestedDistractors.map((item, i) => (
+            {GPTKeywordDistractorSuggestions.map((item, i) => (
               <OptionButton
                 key={i}
                 state={true}
                 selected={false}
-                marginBottom={i < GPTSuggestedDistractors.length - 1 ? 8 : 0}
+                marginBottom={i < GPTKeywordDistractorSuggestions.length - 1 ? 8 : 0}
               >
                 {item}
               </OptionButton>
@@ -157,12 +203,18 @@ export default function Page() {
           </Container>
         </>
       ) : null}
-      <Container>
-        <FillButton onClick={submit} disabled={isLoading}>
-          Submit
-        </FillButton>
-        {!LLMPath && <StrokeButton onClick={onTryLLMSuggestions}>Try LLM Suggestions</StrokeButton>}
-      </Container>
+
+      <RowContainerNoWrap>
+        <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+          Grammar Check
+        </StrokeButton>
+        <StrokeButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
+          Keyword Suggestions
+        </StrokeButton>
+      </RowContainerNoWrap>
+      <FillButton onClick={submit} disabled={onSubmitIsLoading}>
+        Submit
+      </FillButton>
     </Sheet>
   )
 }
@@ -175,4 +227,12 @@ const Container = styled.div`
   align-items: baseline;
   gap: 10px;
   margin-top: 10px;
+`
+
+const RowContainerNoWrap = styled.div`
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin: 10px 0;
 `

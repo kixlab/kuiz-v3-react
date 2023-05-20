@@ -12,6 +12,8 @@ export interface CreateOptionParams {
     class: ID
     qstem: ID
     keywords: string[]
+    numberOfOptionGrammarChecks?: number
+    numberOfKeywordSuggestionChecks?: number
   }
   similarOptions: ID[]
 }
@@ -28,6 +30,10 @@ export default apiController<CreateOptionParams, CreateOptionResults>(async ({ o
     isAnswer: optionData.is_answer,
     optionText: await profanityFilterService.filter(optionData.option_text),
     keywords: optionData.keywords,
+    numberOfOptionGrammarChecks: optionData.numberOfOptionGrammarChecks ? optionData.numberOfOptionGrammarChecks : 0,
+    numberOfKeywordSuggestionChecks: optionData.numberOfKeywordSuggestionChecks
+      ? optionData.numberOfKeywordSuggestionChecks
+      : 0,
   })
 
   for await (const similarOption of similarOptions) {

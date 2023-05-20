@@ -10,10 +10,21 @@ interface OptionData {
   optionText: string
   isAnswer: boolean
   keywords?: string[]
+  numberOfOptionGrammarChecks: number
+  numberOfKeywordSuggestionChecks: number
 }
 
 class OptionService {
-  async create({ uid, qid, cid, optionText, isAnswer, keywords = [] }: OptionData) {
+  async create({
+    uid,
+    qid,
+    cid,
+    optionText,
+    isAnswer,
+    keywords = [],
+    numberOfOptionGrammarChecks,
+    numberOfKeywordSuggestionChecks,
+  }: OptionData) {
     const option = new OptionModel({
       author: uid,
       class: cid,
@@ -21,6 +32,8 @@ class OptionService {
       is_answer: isAnswer,
       qstem: qid,
       keywords: keywords,
+      numberOfOptionGrammarChecks,
+      numberOfKeywordSuggestionChecks,
     })
     option.disjointSet = option.id
     await option.save()

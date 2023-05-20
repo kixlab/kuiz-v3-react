@@ -17,6 +17,11 @@ export interface CreateFullQuestionParams {
   cid: ID
   explanation: string
   learningObjective: string
+  numberOfTopicSuggestionsChecked?: number
+  numberOfRephraseRequestsChecked?: number
+  numberOfQuestionGrammarChecks?: number
+  numberOfOptionGrammarChecks?: number
+  numberOfKeywordSuggestionChecks?: number
 }
 
 export interface CreateFullQuestionResults {
@@ -24,7 +29,18 @@ export interface CreateFullQuestionResults {
 }
 
 export default apiController<CreateFullQuestionParams, CreateFullQuestionResults>(
-  async ({ optionList, qinfo, cid, explanation, learningObjective }) => {
+  async ({
+    optionList,
+    qinfo,
+    cid,
+    explanation,
+    learningObjective,
+    numberOfTopicSuggestionsChecked = 0,
+    numberOfRephraseRequestsChecked = 0,
+    numberOfQuestionGrammarChecks = 0,
+    numberOfOptionGrammarChecks = 0,
+    numberOfKeywordSuggestionChecks = 0,
+  }) => {
     /*
     logic
     - 불러올 것 : option List(어떤 index가 정답인지에 대한 정보), question Info(author, qstem HTML, qstem string, class), 
@@ -40,6 +56,9 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
       stem_text: qinfo.stem_text,
       learningObjective: qinfo.authorId,
       explanation: qinfo.authorId,
+      numberOfTopicSuggestionsChecked,
+      numberOfRephraseRequestsChecked,
+      numberOfQuestionGrammarChecks,
     })
 
     const savedOptions = await Promise.all(
@@ -50,6 +69,8 @@ export default apiController<CreateFullQuestionParams, CreateFullQuestionResults
           qid: question.id,
           isAnswer: is_answer,
           optionText: option_text,
+          numberOfOptionGrammarChecks,
+          numberOfKeywordSuggestionChecks,
         })
         return option._id
       })

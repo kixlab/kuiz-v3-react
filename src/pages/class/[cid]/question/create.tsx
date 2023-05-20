@@ -1,7 +1,15 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
+import {
+  GetGPTQuestionTopicSuggestionParams,
+  GetGPTQuestionTopicSuggestionResults,
+} from '@api/LLM/getGPTQuestionTopicSuggestion'
+import { GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults } from '@api/LLM/getGPTRephrasedQuestion'
+import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/getGPTSyntaxChecker'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { FillButton } from '@components/basic/button/Fill'
+import { OptionButton } from '@components/basic/button/Option'
+import { StrokeButton } from '@components/basic/button/Stroke'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
 import { Label } from '@components/basic/Label'
@@ -19,7 +27,10 @@ import { useButton } from 'src/hooks/useButton'
 const BLOOMS_TAXONOMY = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']
 
 export default function Page() {
-  const { isLoading, handleClick } = useButton()
+  const { isLoading: onQuestionTopicLoading, handleClick: onQuestionTopicHandleClick } = useButton()
+  const { isLoading: submitStemLoading, handleClick: submitStemHandleClick } = useButton()
+  const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
+  const { isLoading: onRephraseQuestionLoading, handleClick: onRephraseQuestionHandleClick } = useButton()
   const { push, query } = useRouter()
   const cid = query.cid as string | undefined
   const [answer, setAnswer] = useState('')
@@ -29,6 +40,13 @@ export default function Page() {
   const [explanation, setExplanation] = useState('')
   const [question, setQuestion] = useState('')
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
+  const [questionStarter, setQuestionStarter] = useState<string | undefined>(undefined)
+  const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
+  const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
+  const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
+  const [numberOfTopicSuggestionsChecked, setNumberOfTopicSuggestionsChecked] = useState(0)
+  const [numberOfRephraseRequestsChecked, setNumberOfRephraseRequestsChecked] = useState(0)
+  const [numberOfQuestionGrammarChecks, setNumberOfQuestionGrammarChecks] = useState(0)
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -41,7 +59,7 @@ export default function Page() {
         return
       }
     }
-    await handleClick<void>(async () => {
+    await submitStemHandleClick<void>(async () => {
       if (cid) {
         const res = await request<CreateQStemParams, CreateQStemResults>(`createQuestion`, {
           qstemObj: {
@@ -52,6 +70,9 @@ export default function Page() {
             options: [],
             optionSets: [],
             learningObjective: `To ${method} the concept of ${topic}`,
+            numberOfTopicSuggestionsChecked,
+            numberOfRephraseRequestsChecked,
+            numberOfQuestionGrammarChecks,
           },
         })
         if (res) {
@@ -70,7 +91,19 @@ export default function Page() {
         }
       }
     })
-  }, [question, answer, cid, explanation, method, topic, push, handleClick])
+  }, [
+    question,
+    answer,
+    cid,
+    explanation,
+    method,
+    topic,
+    push,
+    submitStemHandleClick,
+    numberOfTopicSuggestionsChecked,
+    numberOfRephraseRequestsChecked,
+    numberOfQuestionGrammarChecks,
+  ])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -82,6 +115,77 @@ export default function Page() {
   const onSelectMethod = useCallback((i: number) => {
     setMethod(BLOOMS_TAXONOMY[i])
   }, [])
+
+  const onQuestionStarter = useCallback(() => {
+    //question stem template Question Stem Templates (Converted from King 1990 & Yu 2009)
+    const questionStarters = [
+      'What might occur if … ?',
+      'What is the difference between … and … ?',
+      'How are … and … similar?',
+      '… is a problem because …. . What is a possible solution for this?',
+      'How does … affect …?',
+      'What is the meaning of … ?',
+      'Why is …. important?',
+      'How is … related to …. ? ',
+      'What causes …. ?',
+      'What is an example of … ?',
+    ]
+    setQuestionStarter(questionStarters[Math.floor(Math.random() * questionStarters.length)])
+  }, [])
+
+  const onQuestionTopic = useCallback(async () => {
+    if (cid) {
+      const GPTTopicSuggestions = await onQuestionTopicHandleClick<GetGPTQuestionTopicSuggestionResults>(async () => {
+        return await request<GetGPTQuestionTopicSuggestionParams, GetGPTQuestionTopicSuggestionResults>(
+          `LLM/getGPTQuestionTopicSuggestion`,
+          {
+            topic,
+            cid,
+            method,
+          }
+        )
+      })
+      if (GPTTopicSuggestions) {
+        setQuestionTopicSuggestion(GPTTopicSuggestions.topics)
+        setNumberOfTopicSuggestionsChecked(prevNumber => prevNumber + 1)
+      }
+    }
+  }, [cid, method, topic, onQuestionTopicHandleClick])
+
+  const onSyntaxCheck = useCallback(async () => {
+    if (question && question.length > 0) {
+      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
+        return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
+          type: 'question',
+          sentence: question,
+        })
+      })
+      if (GPTSyntaxCheckedQuestion) {
+        setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion.syntaxChecked)
+        setNumberOfQuestionGrammarChecks(prevNumber => prevNumber + 1)
+      }
+    }
+  }, [question, onSyntaxCheckHandleClick])
+
+  const onRephraseQuestion = useCallback(async () => {
+    if (cid && question && question.length > 0) {
+      const GPTRephrasedQuestion = await onRephraseQuestionHandleClick<GetGPTRephrasedQuestionResults>(async () => {
+        return await request<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
+          `LLM/getGPTRephrasedQuestion`,
+          {
+            topic,
+            cid,
+            method,
+            question,
+          }
+        )
+      })
+      if (GPTRephrasedQuestion) {
+        setNumberOfRephraseRequestsChecked(prevNumber => prevNumber + 1)
+        setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
+      }
+    }
+  }, [question, cid, topic, method, onRephraseQuestionHandleClick])
 
   useEffect(() => {
     if (cid) {
@@ -107,7 +211,37 @@ export default function Page() {
           the concept of
           <SelectInput options={topics} value={topic} onSelect={onSelectTopic} placeholder="topic" />
         </TopicContainer>
-
+        <RowContainer>
+          <div>Suggest: </div>
+          <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
+          <FillButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
+            A question topic
+          </FillButton>
+        </RowContainer>
+        {questionTopicSuggestion && questionTopicSuggestion.length !== 0 ? (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={5}>
+              Suggested Question Topics
+            </Label>
+            <RowContainer>
+              {questionTopicSuggestion.map((item, i) => (
+                <OptionButton key={i} state={true} selected={false} marginBottom={5}>
+                  {item}
+                </OptionButton>
+              ))}
+            </RowContainer>
+          </>
+        ) : null}
+        {questionStarter && (
+          <>
+            <Label color={'primaryMain'} size={0} marginBottom={10}>
+              Suggested Question Starters
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {questionStarter}
+            </OptionButton>
+          </>
+        )}
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Question <Required />
         </Label>
@@ -118,6 +252,35 @@ export default function Page() {
           marginBottom={20}
         />
 
+        {rephrasedQuestion && (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
+              Rephrased Question
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {rephrasedQuestion}
+            </OptionButton>
+          </>
+        )}
+
+        {syntaxCheckedQuestion && (
+          <>
+            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
+              Grammar Checked Question
+            </Label>
+            <OptionButton state={true} selected={false} marginBottom={5}>
+              {syntaxCheckedQuestion}
+            </OptionButton>
+          </>
+        )}
+        <RowContainer>
+          <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+            Grammar Check
+          </StrokeButton>
+          <StrokeButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
+            Rephrase Question
+          </StrokeButton>
+        </RowContainer>
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />
         </Label>
@@ -137,8 +300,7 @@ export default function Page() {
           onChange={setAnswer}
           marginBottom={20}
         />
-
-        <FillButton onClick={submitStem} disabled={isLoading}>
+        <FillButton onClick={submitStem} disabled={submitStemLoading}>
           Submit
         </FillButton>
       </Sheet>
@@ -151,4 +313,12 @@ const TopicContainer = styled.div`
   align-items: center;
   gap: 1ch;
   margin-bottom: 20px;
+`
+const RowContainer = styled.div`
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 0 10px 0;
 `
