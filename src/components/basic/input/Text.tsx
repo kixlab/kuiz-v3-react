@@ -22,7 +22,7 @@ export const TextInput = View<Props>(({ placeholder, value, onChange, disabled =
   )
 })
 
-const TextInputComponent = styled.input`
+const TextInputComponent = styled.textarea`
   ${typography.b02};
   padding: 16px;
   border-radius: 6px;
