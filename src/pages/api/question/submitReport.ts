@@ -1,3 +1,4 @@
+import { QStemModel } from '@server/db/qstem'
 import { reportService } from '@server/services/report'
 import { apiController } from '@utils/api'
 import { Types } from 'mongoose'
@@ -11,6 +12,9 @@ export interface SubmitReportParams {
 export interface SubmitReportResults {}
 
 export default apiController<SubmitReportParams, SubmitReportResults>(async ({ qid, comment }, user) => {
-  await reportService.create(new Types.ObjectId(user.id), new Types.ObjectId(qid), comment)
+  const report = await reportService.create(new Types.ObjectId(user.id), new Types.ObjectId(qid), comment)
+  if (report) {
+    await QStemModel.updateOne({ _id: qid }, { $push: { report: report._id } })
+  }
   return {}
 })
