@@ -25,7 +25,7 @@ export const OptionButton = View<Props>(({ onClick, state, selected, isAnswer, c
   )
 })
 
-const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean; isAnswer: 'answer' | null }>`
+const OptionBtnComponent = styled.button<{ state: boolean; selected: boolean; isAnswer: 'answer' | null }>`
   ${({ state, selected, isAnswer }) => css`
     ${typography.b02};
     background-color: ${palette.background.light};
@@ -35,6 +35,7 @@ const OptionBtnComponent = styled.div<{ state: boolean; selected: boolean; isAns
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 8px;
+    width: 100%;
 
     ${!state &&
     css`

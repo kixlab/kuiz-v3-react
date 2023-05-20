@@ -9,22 +9,27 @@ import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
-import { StrokeButton } from '@components/basic/button/Stroke'
+import { SmallSecondaryButton } from '@components/basic/button/SmallSecondary'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
+import { Item } from '@components/basic/Item'
 import { Label } from '@components/basic/Label'
+import { CaptionText } from '@components/basic/text/Caption'
 import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
+import { palette } from '@styles/theme'
+import { typography } from '@styles/theme'
 import { request } from '@utils/api'
+import { shuffle } from 'lodash'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { BLOOMS_TAXONOMY } from 'src/constants/bloomsTaxonomy'
+import { QUESTION_STARTERS } from 'src/constants/questionStarters'
 import { useButton } from 'src/hooks/useButton'
-
-const BLOOMS_TAXONOMY = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']
 
 export default function Page() {
   const { isLoading: onQuestionTopicLoading, handleClick: onQuestionTopicHandleClick } = useButton()
@@ -40,7 +45,7 @@ export default function Page() {
   const [explanation, setExplanation] = useState('')
   const [question, setQuestion] = useState('')
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
-  const [questionStarter, setQuestionStarter] = useState<string | undefined>(undefined)
+  const [questionStarter, setQuestionStarter] = useState<string[]>([])
   const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
   const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
   const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
@@ -117,20 +122,7 @@ export default function Page() {
   }, [])
 
   const onQuestionStarter = useCallback(() => {
-    //question stem template Question Stem Templates (Converted from King 1990 & Yu 2009)
-    const questionStarters = [
-      'What might occur if … ?',
-      'What is the difference between … and … ?',
-      'How are … and … similar?',
-      '… is a problem because …. . What is a possible solution for this?',
-      'How does … affect …?',
-      'What is the meaning of … ?',
-      'Why is …. important?',
-      'How is … related to …. ? ',
-      'What causes …. ?',
-      'What is an example of … ?',
-    ]
-    setQuestionStarter(questionStarters[Math.floor(Math.random() * questionStarters.length)])
+    setQuestionStarter(shuffle(QUESTION_STARTERS).slice(0, 3))
   }, [])
 
   const onQuestionTopic = useCallback(async () => {
@@ -211,37 +203,7 @@ export default function Page() {
           the concept of
           <SelectInput options={topics} value={topic} onSelect={onSelectTopic} placeholder="topic" />
         </TopicContainer>
-        <RowContainer>
-          <div>Suggest: </div>
-          <FillButton onClick={onQuestionStarter}>A question Starter</FillButton>
-          <FillButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
-            A question topic
-          </FillButton>
-        </RowContainer>
-        {questionTopicSuggestion && questionTopicSuggestion.length !== 0 ? (
-          <>
-            <Label color={'primaryMain'} size={0} marginTop={5}>
-              Suggested Question Topics
-            </Label>
-            <RowContainer>
-              {questionTopicSuggestion.map((item, i) => (
-                <OptionButton key={i} state={true} selected={false} marginBottom={5}>
-                  {item}
-                </OptionButton>
-              ))}
-            </RowContainer>
-          </>
-        ) : null}
-        {questionStarter && (
-          <>
-            <Label color={'primaryMain'} size={0} marginBottom={10}>
-              Suggested Question Starters
-            </Label>
-            <OptionButton state={true} selected={false} marginBottom={5}>
-              {questionStarter}
-            </OptionButton>
-          </>
-        )}
+
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Question <Required />
         </Label>
@@ -249,38 +211,60 @@ export default function Page() {
           placeholder="E.g. What benefits do keyboard shortcuts provide users?"
           value={question}
           onChange={setQuestion}
-          marginBottom={20}
+          marginBottom={8}
         />
 
-        {rephrasedQuestion && (
-          <>
-            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
-              Rephrased Question
-            </Label>
-            <OptionButton state={true} selected={false} marginBottom={5}>
-              {rephrasedQuestion}
-            </OptionButton>
-          </>
+        <RowContainer>
+          <CaptionText>🧑‍🏫 Need a help?</CaptionText>
+          <SmallSecondaryButton onClick={onQuestionStarter}>I need templates to start with</SmallSecondaryButton>
+          <SmallSecondaryButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
+            I need ideas for my question
+          </SmallSecondaryButton>
+        </RowContainer>
+
+        {0 < questionStarter.length && (
+          <AssistanceContainer>
+            <div>Here are some templates:</div>
+            <ul>
+              {questionStarter.map((template, i) => (
+                <li key={i}>
+                  <Item marginLeft={4} marginTop={4}>
+                    {template}
+                  </Item>
+                </li>
+              ))}
+            </ul>
+          </AssistanceContainer>
+        )}
+        {0 < questionTopicSuggestion.length && (
+          <AssistanceContainer>
+            <div>Here are some ideas:</div>
+            <ul>
+              {questionTopicSuggestion.map((template, i) => (
+                <li key={i}>
+                  <Item marginLeft={4} marginTop={4}>
+                    {template}
+                  </Item>
+                </li>
+              ))}
+            </ul>
+          </AssistanceContainer>
         )}
 
-        {syntaxCheckedQuestion && (
-          <>
-            <Label color={'primaryMain'} size={0} marginTop={10} marginBottom={10}>
-              Grammar Checked Question
-            </Label>
-            <OptionButton state={true} selected={false} marginBottom={5}>
-              {syntaxCheckedQuestion}
-            </OptionButton>
-          </>
-        )}
         <RowContainer>
-          <StrokeButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-            Grammar Check
-          </StrokeButton>
-          <StrokeButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
-            Rephrase Question
-          </StrokeButton>
+          <CaptionText>🧑‍🏫 Need a check?</CaptionText>
+          <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+            I want to check grammar
+          </SmallSecondaryButton>
+          <SmallSecondaryButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
+            I want to rephrase my question
+          </SmallSecondaryButton>
         </RowContainer>
+
+        {syntaxCheckedQuestion && <AssistanceContainer>{syntaxCheckedQuestion}</AssistanceContainer>}
+
+        {rephrasedQuestion && <AssistanceContainer>{rephrasedQuestion}</AssistanceContainer>}
+
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />
         </Label>
@@ -313,12 +297,25 @@ const TopicContainer = styled.div`
   align-items: center;
   gap: 1ch;
   margin-bottom: 20px;
+  font-size: 15px;
 `
 const RowContainer = styled.div`
   align-items: baseline;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  gap: 5px;
+  gap: 8px;
+  align-items: center;
   margin: 0 0 10px 0;
+  margin-bottom: 12px;
+`
+
+const AssistanceContainer = styled.div`
+  border-left: 1px solid ${palette.grey500};
+  color: ${palette.grey200};
+  margin-bottom: 12px;
+  ${typography.overline}
+  padding: 8px;
+  width: fit-content;
+  font-style: italic;
+  margin-left: 8px;
 `
