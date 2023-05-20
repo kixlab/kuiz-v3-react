@@ -30,4 +30,10 @@ const Container = styled.button`
     background-color: ${palette.grey500};
     cursor: pointer;
   }
+
+  :disabled {
+    background-color: ${palette.grey600};
+    cursor: not-allowed;
+    color: white;
+  }
 `

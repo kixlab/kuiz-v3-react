@@ -12,9 +12,6 @@ export interface CreateQStemParams {
     options: ID[]
     optionSets: ID[]
     learningObjective: string
-    numberOfTopicSuggestionsChecked: number
-    numberOfRephraseRequestsChecked: number
-    numberOfQuestionGrammarChecks: number
   }
 }
 
@@ -23,23 +20,7 @@ export interface CreateQStemResults {
 }
 
 export default apiController<CreateQStemParams, CreateQStemResults>(
-  async (
-    {
-      qstemObj: {
-        stem_text,
-        explanation,
-        keyword,
-        cid,
-        options,
-        optionSets,
-        learningObjective,
-        numberOfTopicSuggestionsChecked,
-        numberOfRephraseRequestsChecked,
-        numberOfQuestionGrammarChecks,
-      },
-    },
-    user
-  ) => {
+  async ({ qstemObj: { stem_text, explanation, keyword, cid, options, optionSets, learningObjective } }, user) => {
     const qStem = await qStemService.create({
       uid: user.id,
       cid,
@@ -49,9 +30,6 @@ export default apiController<CreateQStemParams, CreateQStemResults>(
       options,
       optionSets,
       learningObjective,
-      numberOfTopicSuggestionsChecked,
-      numberOfRephraseRequestsChecked,
-      numberOfQuestionGrammarChecks,
     })
 
     return {

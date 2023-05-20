@@ -1,21 +1,22 @@
 import { ClassModel } from '@server/db/class'
+import { logService } from '@server/services/log'
 import { openAIService } from '@server/services/openAI'
 import { apiController } from '@utils/api'
 import { ID } from 'src/types/common'
 
-export interface GetGPTRephrasedQuestionParams {
+export interface GetRephrasedQuestionParams {
   question: string
   topic: string
   method: string
   cid: ID
 }
 
-export interface GetGPTRephrasedQuestionResults {
+export interface GetRephrasedQuestionResults {
   rephrasedQuestion: string | undefined
 }
 
-export default apiController<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuestionResults>(
-  async ({ question, topic, method, cid }) => {
+export default apiController<GetRephrasedQuestionParams, GetRephrasedQuestionResults>(
+  async ({ question, topic, method, cid }, user) => {
     const course = await ClassModel.findById(cid)
     const promptQuestion = `Considering that the objective is to ${method} the concept of ${topic} under the course ${course.name} rephrase the following question "${question}"`
 
@@ -25,9 +26,16 @@ export default apiController<GetGPTRephrasedQuestionParams, GetGPTRephrasedQuest
       content: promptQuestion,
     })
 
-    const RephrasedQuestion = openAIResponse.data.choices[0].message?.content
+    const rephrasedQuestion = openAIResponse.data.choices[0].message?.content
+
+    await logService.add(user._id, 'getRephrasedQuestion', cid, {
+      method,
+      question,
+      rephrasedQuestion,
+    })
+
     return {
-      rephrasedQuestion: RephrasedQuestion,
+      rephrasedQuestion,
     }
   }
 )

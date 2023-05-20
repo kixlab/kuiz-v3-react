@@ -28,60 +28,39 @@ export const MadeOption = ({ qid, option, question, cid, optionType }: Props) =>
 
   return (
     <OptionBox>
-      <RowFlex>
-        <QuestionLabel>Q. {question}</QuestionLabel>
-      </RowFlex>
-      <RowFlex>
+      <div>
+        <Question>Q. {question}</Question>
         <Tag id={optionType}>{optionType}</Tag>
-        <OptionLabel>{option}</OptionLabel>
-      </RowFlex>
-      <RowFlex id="EditBtns">
-        <TextButton onClick={toggleModal} color={palette.grey400}>
-          Delete
-        </TextButton>
-        {isOpenModal && (
-          <CheckDialog
-            title="Delete the stem"
-            btnName="Delete"
-            message="Do you really want to delete it? You can't restore it."
-            toggleModal={toggleModal}
-            cancelModal={toggleModal}
-          />
-        )}
-        <TextButton onClick={viewOption} color={palette.primaryDark}>
-          View
-        </TextButton>
-      </RowFlex>
+        {option}
+      </div>
+
+      <TextButton onClick={viewOption} color={palette.primaryDark}>
+        View
+      </TextButton>
     </OptionBox>
   )
 }
 
 const OptionBox = styled.div`
-  padding: 12px;
+  padding: 4px 8px;
   border-radius: 8px;
   border: 1px solid #323232;
   display: grid;
   gap: 12px;
-`
-
-const RowFlex = styled.div<{ id?: 'EditBtns' }>`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  font-family: 'inter-m';
-  ${props =>
-    props.id === 'EditBtns' &&
-    css`
-      justify-content: right;
-    `}
 `
 
-const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
+const Question = styled.div`
+  margin-bottom: 8px;
+`
+
+const Tag = styled.span<{ id?: 'Answer' | 'Distractor' }>`
   ${typography.overline};
   color: ${palette.tags.contrastText};
   padding: 4px 8px 4px 8px;
   border-radius: 6px;
+  margin-right: 8px;
   ${props =>
     props.id === 'Answer' &&
     css`
@@ -92,12 +71,4 @@ const Tag = styled.div<{ id?: 'Answer' | 'Distractor' }>`
     css`
       background-color: ${palette.tags.distractor};
     `}
-`
-
-const OptionLabel = styled.div`
-  ${typography.b02b};
-`
-
-const QuestionLabel = styled.div`
-  ${typography.b02};
 `

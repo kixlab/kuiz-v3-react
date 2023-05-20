@@ -1,16 +1,18 @@
+import { logService } from '@server/services/log'
 import { openAIService } from '@server/services/openAI'
 import { apiController } from '@utils/api'
 
-export interface GetGPTSyntaxCheckerParams {
+export interface GetSyntaxCheckParams {
   type: 'question' | 'question option'
   sentence: string
+  cid: string
 }
 
-export interface GetGPTSyntaxCheckerResults {
+export interface GetSyntaxCheckResults {
   syntaxChecked: string | undefined
 }
 
-export default apiController<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(async ({ type, sentence }) => {
+export default apiController<GetSyntaxCheckParams, GetSyntaxCheckResults>(async ({ type, sentence, cid }, user) => {
   const promptQuestion = `Adjust the grammar and punctuation of the following ${type} "${sentence}"`
 
   const openAIResponse = await openAIService.create({
@@ -20,7 +22,14 @@ export default apiController<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResul
   })
 
   const syntaxChecked = openAIResponse.data.choices[0].message?.content
+
+  await logService.add(user._id, 'getSyntaxCheck', cid, {
+    type,
+    sentence,
+    syntaxChecked,
+  })
+
   return {
-    syntaxChecked: syntaxChecked,
+    syntaxChecked,
   }
 })

@@ -1,6 +1,6 @@
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
-import { GetGPTDistractorsParams, GetGPTDistractorsResults } from '@api/LLM/getGPTDistractor'
-import { GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults } from '@api/LLM/getGPTSyntaxChecker'
+import { GetDistractorsParams, GetDistractorsResults } from '@api/LLM/getDistractor'
+import { GetSyntaxCheckParams, GetSyntaxCheckResults } from '@api/LLM/getSyntaxCheck'
 import { LoadOptionsParams, LoadOptionsResults } from '@api/loadOptions'
 import { FillButton } from '@components/basic/button/Fill'
 import { OptionButton } from '@components/basic/button/Option'
@@ -20,12 +20,12 @@ import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { useButton } from 'src/hooks/useButton'
+import { useAPILoading } from 'src/hooks/useButton'
 
 export default function Page() {
-  const { isLoading: onSubmitIsLoading, handleClick: onSubmitHandleClick } = useButton()
-  const { isLoading: keywordSuggestionIsLoading, handleClick: keywordSuggestionHandleClick } = useButton()
-  const { isLoading: onSyntaxCheckLoading, handleClick: onSyntaxCheckHandleClick } = useButton()
+  const { isLoading: onSubmitIsLoading, callAPI: onSubmitHandleClick } = useAPILoading()
+  const { isLoading: keywordSuggestionIsLoading, callAPI: keywordSuggestionHandleClick } = useAPILoading()
+  const { isLoading: onSyntaxCheckLoading, callAPI: onSyntaxCheckHandleClick } = useAPILoading()
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
@@ -37,8 +37,6 @@ export default function Page() {
   const [isAnswer, setIsAnswer] = useState(false)
   const [GPTKeywordDistractorSuggestions, setGPTKeywordDistractorSuggestions] = useState<string[]>([])
   const [syntaxCheckedOption, setSyntaxCheckedOption] = useState<string | undefined>(undefined)
-  const [numberOfKeywordSuggestionChecks, setNumberOfKeywordSuggestionChecks] = useState(0)
-  const [numberOfOptionGrammarChecks, setNumberOfOptionGrammarChecks] = useState(0)
 
   useEffect(() => {
     if (qid) {
@@ -71,8 +69,6 @@ export default function Page() {
           class: cid,
           qstem: qid,
           keywords: [],
-          numberOfOptionGrammarChecks,
-          numberOfKeywordSuggestionChecks,
         }
 
         await request<CreateOptionParams, CreateOptionResults>(`createOption`, {
@@ -86,48 +82,39 @@ export default function Page() {
         }
       }
     })
-  }, [
-    option,
-    cid,
-    qid,
-    isAnswer,
-    callbackUrl,
-    push,
-    onSubmitHandleClick,
-    numberOfOptionGrammarChecks,
-    numberOfKeywordSuggestionChecks,
-  ])
+  }, [option, cid, qid, isAnswer, callbackUrl, push, onSubmitHandleClick])
 
   const onTryLLMKeywordSuggestions = useCallback(async () => {
     if (qinfo && cid) {
-      const distractorKeywords = await keywordSuggestionHandleClick<GetGPTDistractorsResults>(async () => {
-        return await request<GetGPTDistractorsParams, GetGPTDistractorsResults>(`LLM/getGPTDistractor`, {
+      const distractorKeywords = await keywordSuggestionHandleClick(() =>
+        request<GetDistractorsParams, GetDistractorsResults>(`LLM/getDistractor`, {
           qStem: qinfo.stem_text,
           qLearningObjective: qinfo.learningObjective,
           cid,
         })
-      })
+      )
       if (distractorKeywords) {
         setGPTKeywordDistractorSuggestions(distractorKeywords.distractorKeywords)
-        setNumberOfKeywordSuggestionChecks(prevNumber => prevNumber + 1)
       }
     }
   }, [qinfo, keywordSuggestionHandleClick, cid])
 
   const onSyntaxCheck = useCallback(async () => {
-    if (option) {
-      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick<GetGPTSyntaxCheckerResults>(async () => {
-        return await request<GetGPTSyntaxCheckerParams, GetGPTSyntaxCheckerResults>(`LLM/getGPTSyntaxChecker`, {
+    if (0 < option.length && cid) {
+      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick(() =>
+        request<GetSyntaxCheckParams, GetSyntaxCheckResults>(`LLM/getSyntaxCheck`, {
           type: 'question option',
           sentence: option,
+          cid,
         })
-      })
+      )
       if (GPTSyntaxCheckedQuestion) {
         setSyntaxCheckedOption(GPTSyntaxCheckedQuestion.syntaxChecked)
-        setNumberOfOptionGrammarChecks(prevNumber => prevNumber + 1)
       }
+    } else {
+      alert('Please enter an option')
     }
-  }, [option, setSyntaxCheckedOption, onSyntaxCheckHandleClick])
+  }, [option, cid, onSyntaxCheckHandleClick])
 
   return (
     <Sheet gap={0}>

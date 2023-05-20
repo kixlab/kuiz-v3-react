@@ -23,51 +23,23 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
 
   return (
     <StemBox>
-      <RowFlex>
-        <QuestionLabel>Q. {question}</QuestionLabel>
-      </RowFlex>
-      <RowFlex id="EditBtns">
-        <TextButton onClick={toggleModal} color={palette.grey400}>
-          Delete
-        </TextButton>
-        {isOpenModal && (
-          <CheckDialog
-            title="Delete the stem"
-            btnName="Delete"
-            message="Do you really want to delete it? You can't restore it."
-            toggleModal={toggleModal}
-            cancelModal={toggleModal}
-          />
-        )}
-        <TextButton
-          onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
-          color={palette.primaryDark}
-        >
-          View
-        </TextButton>
-      </RowFlex>
+      <div>Q. {question}</div>
+      <TextButton
+        onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
+        color={palette.primaryDark}
+      >
+        View
+      </TextButton>
     </StemBox>
   )
 }
 
 const StemBox = styled.div`
-  padding: 12px;
+  padding: 4px 8px;
   border-radius: 8px;
   border: 1px solid #323232;
   display: grid;
-  gap: 12px;
-`
-
-const RowFlex = styled.div<{ id?: 'EditBtns' }>`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  ${props =>
-    props.id === 'EditBtns' &&
-    css`
-      justify-content: right;
-    `}
-`
-const QuestionLabel = styled.div`
+  grid-template-columns: 1fr auto;
   ${typography.b01};
+  align-items: center;
 `
