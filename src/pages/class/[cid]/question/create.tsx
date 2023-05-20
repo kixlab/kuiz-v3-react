@@ -24,6 +24,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BLOOMS_TAXONOMY } from 'src/constants/bloomsTaxonomy'
 import { useAPILoading } from 'src/hooks/useButton'
+import { GetGrammarCheckParams, GetGrammarCheckResults } from '@api/LLM/getGrammarCheck'
 
 export default function Page() {
   const { isLoading: onTemplateLoading, callAPI: onTemplateClick } = useAPILoading()
@@ -43,7 +44,7 @@ export default function Page() {
   const [questionStarter, setQuestionStarter] = useState<string[]>([])
   const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
   const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
-  const [rephrasedQuestion, setRephrasedQuestion] = useState<string | undefined>()
+  const [rephrasedQuestion, setRephrasedQuestion] = useState<string[]>([])
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -100,45 +101,41 @@ export default function Page() {
 
   const onQuestionStarter = useCallback(async () => {
     if (cid) {
-      const results = await onTemplateClick(() =>
+      const res = await onTemplateClick(() =>
         request<GetQuestionTemplatesParams, GetQuestionTemplatesResults>('LLM/getQuestionTemplates', {
           cid,
-          topic,
-          method,
         })
       )
-      if (results) {
-        setQuestionStarter(results.templates)
+      if (res) {
+        setQuestionStarter(res.templates)
       }
     }
-  }, [cid, method, onTemplateClick, topic])
+  }, [cid, onTemplateClick])
 
   const onQuestionTopic = useCallback(async () => {
     if (cid) {
-      const GPTTopicSuggestions = await onQuestionTopicHandleClick(() =>
+      const res = await onQuestionTopicHandleClick(() =>
         request<GetQuestionIdeasParams, GetQuestionIdeasResults>(`LLM/getQuestionIdeas`, {
           topic,
           cid,
-          method,
         })
       )
-      if (GPTTopicSuggestions) {
-        setQuestionTopicSuggestion(GPTTopicSuggestions.ideas)
+      if (res) {
+        setQuestionTopicSuggestion(res.ideas)
       }
     }
-  }, [cid, method, topic, onQuestionTopicHandleClick])
+  }, [cid, topic, onQuestionTopicHandleClick])
 
   const onSyntaxCheck = useCallback(async () => {
     if (0 < question.length && cid) {
-      const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick(() =>
-        request<GetSyntaxCheckParams, GetSyntaxCheckResults>(`LLM/getSyntaxCheck`, {
-          type: 'question',
+      const res = await onSyntaxCheckHandleClick(() =>
+        request<GetGrammarCheckParams, GetGrammarCheckResults>(`LLM/getGrammarCheck`, {
           sentence: question,
           cid,
         })
       )
-      if (GPTSyntaxCheckedQuestion) {
-        setSyntaxCheckedQuestion(GPTSyntaxCheckedQuestion.syntaxChecked)
+      if (res) {
+        setSyntaxCheckedQuestion(res.grammarChecked)
       }
     } else {
       alert('Please enter a question.')
@@ -147,21 +144,21 @@ export default function Page() {
 
   const onRephraseQuestion = useCallback(async () => {
     if (cid && 0 < question.length) {
-      const GPTRephrasedQuestion = await onRephraseQuestionHandleClick(() =>
+      const res = await onRephraseQuestionHandleClick(() =>
         request<GetRephrasedQuestionParams, GetRephrasedQuestionResults>(`LLM/getRephrasedQuestion`, {
-          topic,
+          learningObjective: `To ${method} the concept of ${topic}`,
           cid,
-          method,
+          explanation,
           question,
         })
       )
-      if (GPTRephrasedQuestion) {
-        setRephrasedQuestion(GPTRephrasedQuestion?.rephrasedQuestion)
+      if (res) {
+        setRephrasedQuestion(res.rephrasedQuestions)
       }
     } else {
       alert('Please enter a question.')
     }
-  }, [question, cid, topic, method, onRephraseQuestionHandleClick])
+  }, [cid, question, onRephraseQuestionHandleClick, method, topic, explanation])
 
   useEffect(() => {
     if (cid) {
@@ -243,13 +240,26 @@ export default function Page() {
             I want to check grammar
           </SmallSecondaryButton>
           <SmallSecondaryButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
-            I want to rephrase my question
+            I want to improve my question
           </SmallSecondaryButton>
         </RowContainer>
 
         {syntaxCheckedQuestion && <AssistanceContainer>{syntaxCheckedQuestion}</AssistanceContainer>}
 
-        {rephrasedQuestion && <AssistanceContainer>{rephrasedQuestion}</AssistanceContainer>}
+        {0 < rephrasedQuestion.length && (
+          <AssistanceContainer>
+            <div>Here are some ideas to improve your question:</div>
+            <ul>
+              {rephrasedQuestion.map((template, i) => (
+                <li key={i}>
+                  <Item marginLeft={4} marginTop={4}>
+                    {template}
+                  </Item>
+                </li>
+              ))}
+            </ul>
+          </AssistanceContainer>
+        )}
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
           Explanation <Required />

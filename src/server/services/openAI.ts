@@ -2,28 +2,28 @@ import { Env } from '@utils/getEnv'
 import { Configuration, OpenAIApi } from 'openai'
 
 interface OpenAIData {
-  model: 'gpt-3.5-turbo' | 'gpt-4'
-  role: 'user' | 'assistant' | 'system'
-  content: string
+  model?: 'text-davinci-003'
+  prompt: string
+  temperature?: number
+  stop?: string
+  maxTokens?: number
 }
 
 class OpenAIService {
-  private apiKey: string
-  private openAI: OpenAIApi
+  private apiKey = Env.OPEN_AI_KEY
+  private openAI = new OpenAIApi(
+    new Configuration({
+      apiKey: this.apiKey,
+    })
+  )
 
-  constructor() {
-    this.apiKey = Env.OPEN_AI_KEY
-    this.openAI = new OpenAIApi(
-      new Configuration({
-        apiKey: this.apiKey,
-      })
-    )
-  }
-
-  async create({ model, role, content }: OpenAIData) {
-    const openAIResponse = await this.openAI.createChatCompletion({
-      model: model,
-      messages: [{ role, content }],
+  async complete({ prompt, maxTokens = 300, temperature = 1, model = 'text-davinci-003', stop = '---' }: OpenAIData) {
+    const openAIResponse = await this.openAI.createCompletion({
+      model,
+      prompt,
+      temperature,
+      max_tokens: maxTokens,
+      stop,
     })
 
     return openAIResponse

@@ -88,24 +88,23 @@ export default function Page() {
     if (qinfo && cid) {
       const distractorKeywords = await keywordSuggestionHandleClick(() =>
         request<GetDistractorsParams, GetDistractorsResults>(`LLM/getDistractor`, {
-          qStem: qinfo.stem_text,
-          qLearningObjective: qinfo.learningObjective,
-          cid,
+          qid: qinfo._id,
+          isAnswer,
         })
       )
       if (distractorKeywords) {
         setGPTKeywordDistractorSuggestions(distractorKeywords.distractorKeywords)
       }
     }
-  }, [qinfo, keywordSuggestionHandleClick, cid])
+  }, [qinfo, cid, keywordSuggestionHandleClick, isAnswer])
 
   const onSyntaxCheck = useCallback(async () => {
-    if (0 < option.length && cid) {
+    if (0 < option.length && qinfo) {
       const GPTSyntaxCheckedQuestion = await onSyntaxCheckHandleClick(() =>
         request<GetSyntaxCheckParams, GetSyntaxCheckResults>(`LLM/getSyntaxCheck`, {
-          type: 'question option',
-          sentence: option,
-          cid,
+          qid: qinfo._id,
+          option,
+          otherOptions: [...ansList, ...disList].map(item => item.option_text),
         })
       )
       if (GPTSyntaxCheckedQuestion) {
@@ -114,7 +113,7 @@ export default function Page() {
     } else {
       alert('Please enter an option')
     }
-  }, [option, cid, onSyntaxCheckHandleClick])
+  }, [option, qinfo, onSyntaxCheckHandleClick, ansList, disList])
 
   return (
     <Sheet gap={0}>
@@ -168,7 +167,7 @@ export default function Page() {
       <RowContainerNoWrap>
         <CaptionText>🧑‍🏫 Need a help?</CaptionText>
         <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-          I want to check grammar
+          I want to check consistency
         </SmallSecondaryButton>
         <SmallSecondaryButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
           I need some keyword suggestions
