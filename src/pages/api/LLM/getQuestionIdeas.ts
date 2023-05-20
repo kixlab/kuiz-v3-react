@@ -30,6 +30,26 @@ export default apiController<GetQuestionIdeasParams, GetQuestionIdeasResults>(as
         content: 'Generate topics using just 3 comma-separated sentences: Sentence A, Sentence B, Sentence C',
       },
       { role: 'assistant', content: '"Sentence A", "Sentence B", "Sentence C"' },
+      {
+        role: 'user',
+        content:
+          "Suggestion 3 question topic ideas in order to understand the concept of newton's laws of motion under the course general physics",
+      },
+      {
+        role: 'assistant',
+        content:
+          '"What is Newton\'s First Law of Motion and how does it relate to the concept of inertia?", "Discuss real-world applications of Newton\'s Second Law, such as the motion of vehicles or the behavior of projectiles.", "Explain Newton\'s Third Law of Motion and the concept of action and reaction forces."',
+      },
+      {
+        role: 'user',
+        content:
+          'Suggestion 3 question topic ideas in order to remember the concept of prototyping under the course introduction to human computer interaction',
+      },
+      {
+        role: 'assistant',
+        content:
+          '"What are the benefits of prototyping in Human Computer Interaction?", "How can prototyping improve the design process in HCI?", "What are some common prototyping tools used in HCI"',
+      },
     ],
   })
 
