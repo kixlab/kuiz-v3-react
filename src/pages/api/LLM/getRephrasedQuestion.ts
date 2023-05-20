@@ -18,7 +18,7 @@ export interface GetRephrasedQuestionResults {
 export default apiController<GetRephrasedQuestionParams, GetRephrasedQuestionResults>(
   async ({ question, topic, method, cid }, user) => {
     const course = await ClassModel.findById(cid)
-    const promptQuestion = `Considering that the objective is to ${method} the concept of ${topic} under the course ${course.name} rephrase the following question "${question}"`
+    const promptQuestion = `Rephrase the following question "${question}"; considering that the objective is to ${method} the concept of ${topic} under the course ${course.name}`
 
     const openAIResponse = await openAIService.create({
       model: 'gpt-3.5-turbo',

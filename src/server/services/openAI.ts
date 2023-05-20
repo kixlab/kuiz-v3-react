@@ -5,6 +5,8 @@ interface OpenAIData {
   model: 'gpt-3.5-turbo' | 'gpt-4'
   role: 'user' | 'assistant' | 'system'
   content: string
+  promptForTextCompletion?: string
+  examples?: { role: 'user' | 'assistant' | 'system'; content: string }[]
 }
 
 class OpenAIService {
@@ -20,10 +22,12 @@ class OpenAIService {
     )
   }
 
-  async create({ model, role, content }: OpenAIData) {
+  async create({ model, role, content, promptForTextCompletion, examples }: OpenAIData) {
+    const prompt = `${promptForTextCompletion}\n\n${content}`
+    const messages = examples ? [...examples, { role, content: prompt }] : [{ role, content: prompt }]
     const openAIResponse = await this.openAI.createChatCompletion({
       model: model,
-      messages: [{ role, content }],
+      messages,
     })
 
     return openAIResponse

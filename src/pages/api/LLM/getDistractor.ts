@@ -17,12 +17,14 @@ export interface GetDistractorsResults {
 export default apiController<GetDistractorsParams, GetDistractorsResults>(
   async ({ qStem, qLearningObjective, cid }, user) => {
     const course = await ClassModel.findById(cid)
-    const promptQuestion = `Suggest 3 keywords to create distractors reply by separating them with a comma for the following question ${qStem}; its learning objective is ${qLearningObjective} under the domain ${course.name}, reply only with the distractors.`
+    const promptForTextCompletion = `You are a helpful assistant that provides distractor suggestions using just 3 comma-separated keywords:`
+    const promptQuestion = `${qStem}; its learning objective is ${qLearningObjective} under the domain ${course.name}.`
 
     const openAIResponse = await openAIService.create({
       model: 'gpt-3.5-turbo',
       role: 'user',
       content: promptQuestion,
+      promptForTextCompletion,
     })
 
     const responseDistractors = openAIResponse.data.choices[0].message?.content
