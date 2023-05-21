@@ -14,7 +14,6 @@ export const TextInput = View<Props>(({ placeholder, value, onChange, disabled =
   return (
     <TextInputComponent
       {...props}
-      type="text"
       placeholder={placeholder}
       onChange={e => onChange?.(e.target.value)}
       value={value}
