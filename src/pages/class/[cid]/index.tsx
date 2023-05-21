@@ -167,7 +167,6 @@ export default function Page() {
             key={i}
             title={question.stem_text}
             options={question.options.length}
-            date={question.updatedAt ? new Date(question.updatedAt) : new Date(question.createdAt)}
             onSolve={onSolve(question._id)}
             onAddOption={onAddOption(question._id)}
           />

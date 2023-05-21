@@ -15,7 +15,6 @@ class TopicService {
     const topic: Topic | null = await TopicModel.findById(tid)
     if (topic) {
       await TopicModel.findByIdAndDelete(tid)
-      console.log(topic.class, tid)
       await ClassModel.findByIdAndUpdate(topic.class, { $pull: { topics: tid } })
     } else {
       throw new Error('Topic not found')

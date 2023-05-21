@@ -5,8 +5,6 @@ class LogService {
     const log = new LogModel({ user, action, cid, info: JSON.stringify(info) })
     await log.save()
 
-    console.log(log)
-
     return log
   }
 }

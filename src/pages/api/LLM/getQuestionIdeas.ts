@@ -17,9 +17,9 @@ export interface GetQuestionIdeasResults {
 export default apiController<GetQuestionIdeasParams, GetQuestionIdeasResults>(async ({ topic, cid }, user) => {
   const openAIResponse = await openAIService.complete({
     prompt: QUESTION_IDEA_GENERATION_PROMPT(
-      topic === 'Accessibility'
-        ? shuffle(ACCESSIBILITY_MATERIALS).slice(5).join('\n')
-        : shuffle(INTERNATIONALIZATION_MATERIALS).slice(5).join('\n')
+      shuffle([...ACCESSIBILITY_MATERIALS, ...INTERNATIONALIZATION_MATERIALS])
+        .slice(0, 5)
+        .join('\n')
     ),
   })
 

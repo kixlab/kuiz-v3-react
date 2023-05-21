@@ -308,7 +308,7 @@ const RowContainer = styled.div`
 const AssistanceContainer = styled.div`
   border-left: 1px solid ${palette.grey500};
   color: ${palette.grey200};
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   ${typography.overline}
   padding: 8px;
   width: fit-content;
