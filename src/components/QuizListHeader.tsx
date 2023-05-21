@@ -7,7 +7,6 @@ export const QuizListHeader = () => {
     <QuizList>
       <Legend>Question</Legend>
       <Legend># Options</Legend>
-      <Legend>Last Updated</Legend>
       <Legend>Actions</Legend>
     </QuizList>
   )
@@ -17,7 +16,7 @@ const QuizList = styled.div`
   ${typography.b02b};
   width: calc(100% - 40px);
   display: grid;
-  grid-template-columns: auto 100px 100px 100px;
+  grid-template-columns: auto 100px 130px;
   align-items: center;
   column-gap: 8px;
   text-align: center;
