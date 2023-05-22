@@ -165,7 +165,7 @@ export default function Page() {
       />
 
       <RowContainerNoWrap>
-        <CaptionText>🧑‍🏫 Need a help?</CaptionText>
+        <CaptionText>🧑‍🏫 Need help?</CaptionText>
         <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
           I want to check consistency
         </SmallSecondaryButton>
