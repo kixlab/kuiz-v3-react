@@ -260,14 +260,14 @@ export default function Page() {
           </AssistanceContainer>
         )}
 
-        <Label color={'primaryMain'} size={0} marginBottom={8}>
+        <Label color={'primaryMain'} size={0} marginBottom={8} marginTop={12}>
           Explanation <Required />
         </Label>
         <TextInput
           placeholder="Provide an explanation for the question and the intent behind the question."
           value={explanation}
           onChange={setExplanation}
-          marginBottom={20}
+          marginBottom={24}
         />
 
         <Label color={'primaryMain'} size={0} marginBottom={8}>
@@ -277,7 +277,7 @@ export default function Page() {
           placeholder="Suggest one correct answer for the question"
           value={answer}
           onChange={setAnswer}
-          marginBottom={20}
+          marginBottom={24}
         />
         <FillButton onClick={submitStem} disabled={submitStemLoading}>
           Submit
@@ -291,8 +291,8 @@ const TopicContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1ch;
-  margin-bottom: 20px;
-  font-size: 15px;
+  margin-bottom: 24px;
+  font-size: 16px;
 `
 const RowContainer = styled.div`
   align-items: baseline;
@@ -307,7 +307,7 @@ const RowContainer = styled.div`
 const AssistanceContainer = styled.div`
   border-left: 1px solid ${palette.grey500};
   color: ${palette.grey200};
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   ${typography.overline}
   padding: 8px;
   width: fit-content;

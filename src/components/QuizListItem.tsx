@@ -29,19 +29,27 @@ export const QuizListItem = ({ title, options, onAddOption, onSolve }: Props) =>
 }
 
 const Container = styled.div`
-  width: calc(100% - 40px);
+  width: calc(100% - 32px);
   text-align: center;
   display: grid;
   align-items: center;
   grid-template-columns: auto 100px 130px;
   column-gap: 8px;
   background-color: white;
-  padding: 8px 20px;
+  padding: 8px 16px;
   ${typography.b02};
   text-align: center;
 
   @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
     grid-template-columns: auto 0 0 100px;
+  }
+
+  :nth-of-type(2) {
+    padding-top: 16px;
+  }
+
+  :last-of-type {
+    padding-bottom: 16px;
   }
 `
 

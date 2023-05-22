@@ -160,7 +160,7 @@ export default function Page() {
         </div>
       </InformationContainer>
 
-      <Sheet padding={0} gap={0} marginTop={20}>
+      <Sheet padding={0} gap={0} marginTop={24}>
         <QuizListHeader />
         {questionList.map((question, i) => (
           <QuizListItem
@@ -173,7 +173,15 @@ export default function Page() {
         ))}
         {questionList.length === 0 && <Empty>No questions yet. Please create one!</Empty>}
       </Sheet>
-      <Pagination numberOfPages={maxNumberOfPages} currentPage={page} URL={`${cid}?topic=${topic}`} />
+
+      {maxNumberOfPages > 1 && (
+        <Pagination
+          numberOfPages={maxNumberOfPages + 8}
+          currentPage={page}
+          URL={`${cid}?topic=${topic}`}
+          marginTop={24}
+        />
+      )}
     </>
   )
 }
