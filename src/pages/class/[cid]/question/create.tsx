@@ -1,19 +1,19 @@
+import { GetGrammarCheckParams, GetGrammarCheckResults } from '@api/LLM/getGrammarCheck'
+import { GetQuestionIdeasParams, GetQuestionIdeasResults } from '@api/LLM/getQuestionIdeas'
+import { GetQuestionTemplatesParams, GetQuestionTemplatesResults } from '@api/LLM/getQuestionTemplates'
+import { GetRephrasedQuestionParams, GetRephrasedQuestionResults } from '@api/LLM/getRephrasedQuestion'
 import { CreateOptionParams, CreateOptionResults } from '@api/createOption'
 import { CreateQStemParams, CreateQStemResults } from '@api/createQuestion'
-import { GetQuestionTemplatesParams, GetQuestionTemplatesResults } from '@api/LLM/getQuestionTemplates'
-import { GetQuestionIdeasParams, GetQuestionIdeasResults } from '@api/LLM/getQuestionIdeas'
-import { GetRephrasedQuestionParams, GetRephrasedQuestionResults } from '@api/LLM/getRephrasedQuestion'
-import { GetSyntaxCheckParams, GetSyntaxCheckResults } from '@api/LLM/getSyntaxCheck'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
+import { Required } from '@components/Required'
+import { Sheet } from '@components/Sheet'
+import { Item } from '@components/basic/Item'
+import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
 import { SmallSecondaryButton } from '@components/basic/button/SmallSecondary'
 import { SelectInput } from '@components/basic/input/Select'
 import { TextInput } from '@components/basic/input/Text'
-import { Item } from '@components/basic/Item'
-import { Label } from '@components/basic/Label'
 import { CaptionText } from '@components/basic/text/Caption'
-import { Required } from '@components/Required'
-import { Sheet } from '@components/Sheet'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
 import { palette, typography } from '@styles/theme'
@@ -24,7 +24,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BLOOMS_TAXONOMY } from 'src/constants/bloomsTaxonomy'
 import { useAPILoading } from 'src/hooks/useButton'
-import { GetGrammarCheckParams, GetGrammarCheckResults } from '@api/LLM/getGrammarCheck'
 
 export default function Page() {
   const { isLoading: onTemplateLoading, callAPI: onTemplateClick } = useAPILoading()
@@ -196,7 +195,7 @@ export default function Page() {
         />
 
         <RowContainer>
-          <CaptionText>🧑‍🏫 Need a help?</CaptionText>
+          <CaptionText>🧑‍🏫 Need help?</CaptionText>
           <SmallSecondaryButton onClick={onQuestionStarter} disabled={onTemplateLoading}>
             I need templates to start with
           </SmallSecondaryButton>
@@ -308,7 +307,7 @@ const RowContainer = styled.div`
 const AssistanceContainer = styled.div`
   border-left: 1px solid ${palette.grey500};
   color: ${palette.grey200};
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   ${typography.overline}
   padding: 8px;
   width: fit-content;

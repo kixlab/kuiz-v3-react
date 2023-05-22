@@ -7,17 +7,15 @@ import { SmallSecondaryButton } from './basic/button/SmallSecondary'
 interface Props {
   title: string
   options: number
-  date: Date
   onSolve: () => void
   onAddOption: () => void
 }
 
-export const QuizListItem = ({ title, options, date, onAddOption, onSolve }: Props) => {
+export const QuizListItem = ({ title, options, onAddOption, onSolve }: Props) => {
   return (
     <Container>
       <QuizText>{title}</QuizText>
       <Item>{options}</Item>
-      <Item>{date.toLocaleDateString()}</Item>
       <ButtonArea>
         <SmallSecondaryButton onClick={onSolve}>
           Solve <span>&gt;</span>
@@ -35,7 +33,7 @@ const Container = styled.div`
   text-align: center;
   display: grid;
   align-items: center;
-  grid-template-columns: auto 100px 100px 100px;
+  grid-template-columns: auto 100px 130px;
   column-gap: 8px;
   background-color: white;
   padding: 8px 20px;

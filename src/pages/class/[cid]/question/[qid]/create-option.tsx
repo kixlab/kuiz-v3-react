@@ -165,7 +165,7 @@ export default function Page() {
       />
 
       <RowContainerNoWrap>
-        <CaptionText>🧑‍🏫 Need a help?</CaptionText>
+        <CaptionText>🧑‍🏫 Need help?</CaptionText>
         <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
           I want to check consistency
         </SmallSecondaryButton>
@@ -209,7 +209,7 @@ const RowContainerNoWrap = styled.div`
 const AssistanceContainer = styled.div`
   border-left: 1px solid ${palette.grey500};
   color: ${palette.grey200};
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   ${typography.overline}
   padding: 8px;
   width: fit-content;

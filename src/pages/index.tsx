@@ -144,7 +144,7 @@ export default function Page({ providers }: Props) {
           </OnBoardingBox>
           <Sheet gap={0}>
             <Label marginBottom={8}>
-              Choose a Class or Enroll in a new Class <Required />
+              Choose a Class or Enroll in a New Class <Required />
             </Label>
             {classes.map(({ cid, name, code }, i) => (
               <ClassButton key={i} onClick={onClassEnter(cid)}>

@@ -63,14 +63,14 @@ export const typography = {
   `,
   b02: css`
     font-family: 'inter-r';
-    font-size: 15px;
+    font-size: 16px;
     @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
   `,
   b02b: css`
     font-family: 'inter-m';
-    font-size: 15px;
+    font-size: 16px;
     @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 14px;
     }
@@ -88,7 +88,7 @@ export const typography = {
   `,
   button: css`
     font-family: 'inter-m';
-    font-size: 1rem;
+    font-size: 18px;
   `,
   smallbutton: css`
     font-family: 'inter-m';
@@ -99,7 +99,7 @@ export const typography = {
   `,
   overline: css`
     font-family: 'inter-r';
-    font-size: 12px;
+    font-size: 16px;
     @media (max-width: ${MOBILE_WIDTH_THRESHOLD}px) {
       font-size: 11px;
     }
