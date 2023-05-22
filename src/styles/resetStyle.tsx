@@ -90,6 +90,7 @@ export const ResetStyles = css`
     font: inherit;
     vertical-align: baseline;
     color: inherit;
+    text-decoration: none;
   }
   /* HTML5 display-role reset for older browsers */
   article,
