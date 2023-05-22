@@ -120,15 +120,15 @@ export default function Page() {
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         Topic
       </Label>
-      <TextInput value={qinfo?.learningObjective ?? ''} disabled marginBottom={20} />
+      <TextInput value={qinfo?.learningObjective ?? ''} disabled marginBottom={24} />
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         Explanation
       </Label>
-      <TextInput value={qinfo?.explanation ?? ''} disabled marginBottom={20} />
+      <TextInput value={qinfo?.explanation ?? ''} disabled marginBottom={24} />
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         Question
       </Label>
-      <TextInput value={qinfo?.stem_text ?? ''} disabled marginBottom={20} />
+      <TextInput value={qinfo?.stem_text ?? ''} disabled marginBottom={24} />
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         ✅ Answers
       </Label>
@@ -149,7 +149,7 @@ export default function Page() {
           ))}
         </>
       )}
-      <Divider marginVertical={20} />
+      <Divider marginVertical={24} />
 
       <Label color={'primaryMain'} size={0} marginBottom={8}>
         Add an Option <Required />
@@ -166,15 +166,13 @@ export default function Page() {
 
       <RowContainerNoWrap>
         <CaptionText>🧑‍🏫 Need help?</CaptionText>
-        <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-          I want to check consistency
-        </SmallSecondaryButton>
         <SmallSecondaryButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
           I need some keyword suggestions
         </SmallSecondaryButton>
+        <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+          I want to check consistency
+        </SmallSecondaryButton>
       </RowContainerNoWrap>
-
-      {syntaxCheckedOption && <AssistanceContainer>{syntaxCheckedOption}</AssistanceContainer>}
 
       {0 < GPTKeywordDistractorSuggestions.length && (
         <AssistanceContainer>
@@ -191,7 +189,9 @@ export default function Page() {
         </AssistanceContainer>
       )}
 
-      <FillButton onClick={submit} disabled={onSubmitIsLoading}>
+      {syntaxCheckedOption && <AssistanceContainer>{syntaxCheckedOption}</AssistanceContainer>}
+
+      <FillButton onClick={submit} disabled={onSubmitIsLoading} marginTop={24}>
         Submit
       </FillButton>
     </Sheet>
@@ -203,7 +203,7 @@ const RowContainerNoWrap = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
-  margin: 12px 0;
+  margin: 8px 0 12px 0;
 `
 
 const AssistanceContainer = styled.div`

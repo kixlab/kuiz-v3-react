@@ -15,12 +15,11 @@ export interface GetQuestionIdeasResults {
 }
 
 export default apiController<GetQuestionIdeasParams, GetQuestionIdeasResults>(async ({ topic, cid }, user) => {
+  const materials = shuffle([...ACCESSIBILITY_MATERIALS, ...INTERNATIONALIZATION_MATERIALS])
+    .slice(0, 5)
+    .join('\n')
   const openAIResponse = await openAIService.complete({
-    prompt: QUESTION_IDEA_GENERATION_PROMPT(
-      shuffle([...ACCESSIBILITY_MATERIALS, ...INTERNATIONALIZATION_MATERIALS])
-        .slice(0, 5)
-        .join('\n')
-    ),
+    prompt: QUESTION_IDEA_GENERATION_PROMPT(materials),
   })
 
   const ideas = openAIResponse.data.choices[0].text?.split('\n').map(trim) ?? []
