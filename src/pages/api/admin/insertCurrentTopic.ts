@@ -13,16 +13,20 @@ export interface InsertCurrentTopicResults {
   res: ID
 }
 
-export default apiController<InsertCurrentTopicParams, InsertCurrentTopicResults>(async ({ cid, topicID }) => {
-  const topic = await TopicModel.findById(new Types.ObjectId(topicID))
-  const classInfo = await ClassModel.findById(new Types.ObjectId(cid))
-  if (topic && classInfo) {
-    const classInfo = await ClassModel.findOneAndUpdate(
-      { _id: new Types.ObjectId(cid) },
-      { $set: { currentTopic: topic._id } }
-    )
-    return { res: classInfo.currentTopic }
+export default apiController<InsertCurrentTopicParams, InsertCurrentTopicResults>(async ({ cid, topicID }, user) => {
+  if (user.isAdmin) {
+    const topic = await TopicModel.findById(new Types.ObjectId(topicID))
+    const classInfo = await ClassModel.findById(new Types.ObjectId(cid))
+    if (topic && classInfo) {
+      const classInfo = await ClassModel.findOneAndUpdate(
+        { _id: new Types.ObjectId(cid) },
+        { $set: { currentTopic: topic._id } }
+      )
+      return { res: classInfo.currentTopic }
+    } else {
+      throw new Error('Topic not found')
+    }
   } else {
-    throw new Error('Topic not found')
+    throw new Error('Permission denied')
   }
 })

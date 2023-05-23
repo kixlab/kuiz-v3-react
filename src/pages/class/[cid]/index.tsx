@@ -175,12 +175,7 @@ export default function Page() {
       </Sheet>
 
       {maxNumberOfPages > 1 && (
-        <Pagination
-          numberOfPages={maxNumberOfPages + 8}
-          currentPage={page}
-          URL={`${cid}?topic=${topic}`}
-          marginTop={24}
-        />
+        <Pagination numberOfPages={maxNumberOfPages} currentPage={page} URL={`${cid}?topic=${topic}`} marginTop={24} />
       )}
     </>
   )
