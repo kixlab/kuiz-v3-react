@@ -36,6 +36,7 @@ export const SelectInput = View<Props>(({ options, onSelect, value, placeholder,
 
 const Container = styled.div`
   position: relative;
+  width: fit-content;
 `
 
 const Options = styled.select`
