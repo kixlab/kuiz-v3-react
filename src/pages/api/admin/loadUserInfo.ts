@@ -28,7 +28,7 @@ export default apiController<LoadUserInfoParams, LoadUserInfoResults>(async ({ c
           .map(qstem => new Types.ObjectId(qstem._id))
         const options = (await OptionModel.find({
           _id: { $in: student.madeOptions },
-          qstem: { $in: student.made },
+          // qstem: { $in: student.made },
         })) as Option[]
         student.madeOptions = options.map(option => new Types.ObjectId(option._id))
       }
