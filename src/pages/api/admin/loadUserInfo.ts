@@ -20,15 +20,18 @@ export default apiController<LoadUserInfoParams, LoadUserInfoResults>(async ({ c
     const userClass = await ClassModel.findById(cid)
     if (userClass) {
       const students = (await UserModel.find({ _id: { $in: userClass.students } })) as User[]
+      const topicStems = ((await QStemModel.find({ class: { $eq: cid } })) as QStem[])
+        .filter(stem => stem.learningObjective.includes(topic ?? ''))
+        .map(stem => stem._id)
 
       for (const student of students) {
-        const qstems = (await QStemModel.find({ _id: { $in: student.made } })) as QStem[]
+        const qstems = (await QStemModel.find({ _id: { $in: student.made }, class: { $eq: cid } })) as QStem[]
         student.made = qstems
           .filter(qstem => qstem.learningObjective.includes(topic ?? ''))
           .map(qstem => new Types.ObjectId(qstem._id))
         const options = (await OptionModel.find({
           _id: { $in: student.madeOptions },
-          // qstem: { $in: student.made },
+          qstem: { $in: topicStems },
         })) as Option[]
         student.madeOptions = options.map(option => new Types.ObjectId(option._id))
       }
