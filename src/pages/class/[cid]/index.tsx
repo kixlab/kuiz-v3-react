@@ -20,6 +20,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -34,35 +35,36 @@ export default function Page() {
   const [maxNumberOfPages, setMaxNumberOfPages] = useState(1)
   const className = useSelector((state: RootState) => state.userInfo.classes.find(c => c.cid === cid)?.name)
   const selectedTopic = topics.find(t => t.label === topic)
+  const [condition] = useQueryParam('c')
 
   const onSolve = useCallback(
     (qid: string) => () => {
-      push(`/class/${cid}/question/${qid}/solve`)
+      push(`/class/${cid}/question/${qid}/solve?c=${condition}`)
     },
-    [cid, push]
+    [cid, condition, push]
   )
 
   const onAddOption = useCallback(
     (qid: string) => () => {
-      push(`/class/${cid}/question/${qid}/create-option?callbackUrl=${location.href}`)
+      push(`/class/${cid}/question/${qid}/create-option?callbackUrl=${location.href}&c=${condition}`)
     },
-    [cid, push]
+    [cid, condition, push]
   )
 
   const onCreateQuestion = useCallback(() => {
     if (topic) {
-      push(`/class/${cid}/question/create?topic=${topic}`)
+      push(`/class/${cid}/question/create?topic=${topic}&c=${condition}`)
     } else {
-      push(`/class/${cid}/question/create`)
+      push(`/class/${cid}/question/create?c=${condition}`)
     }
-  }, [cid, push, topic])
+  }, [cid, condition, push, topic])
 
   const onSelectTopic = useCallback(
     (i: number) => {
       const t = topics[i]
-      push(`/class/${cid}?topic=${t.label}`, undefined, { shallow: true })
+      push(`/class/${cid}?topic=${t.label}&c=${condition}`, undefined, { shallow: true })
     },
-    [cid, push, topics]
+    [cid, condition, push, topics]
   )
 
   useEffect(() => {
@@ -106,14 +108,16 @@ export default function Page() {
             if (res.currentTopic) {
               const indexOfTopic = res.topics.findIndex(topic => topic._id === res.currentTopic)
               if (indexOfTopic != -1) {
-                push(`/class/${cid}?topic=${res.topics[indexOfTopic].label}`, undefined, { shallow: true })
+                push(`/class/${cid}?topic=${res.topics[indexOfTopic].label}&c=${condition}`, undefined, {
+                  shallow: true,
+                })
               }
             }
           }
         }
       })
     }
-  }, [cid, push, topic])
+  }, [cid, condition, push, topic])
 
   return (
     <>

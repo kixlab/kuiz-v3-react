@@ -20,7 +20,9 @@ import { palette, typography } from '@styles/theme'
 import { request } from '@utils/api'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
+import { CONDITION } from 'src/constants/conditions'
 import { useAPILoading } from 'src/hooks/useButton'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export default function Page() {
   const { isLoading: onSubmitIsLoading, callAPI: onSubmitHandleClick } = useAPILoading()
@@ -29,7 +31,6 @@ export default function Page() {
   const { push, query } = useRouter()
   const qid = query.qid as string | undefined
   const cid = query.cid as string | undefined
-  const callbackUrl = query.callbackUrl as string | undefined
   const [ansList, setAnsList] = useState<Option[]>([])
   const [disList, setDistList] = useState<Option[]>([])
   const [qinfo, setQinfo] = useState<QStem>()
@@ -37,6 +38,8 @@ export default function Page() {
   const [isAnswer, setIsAnswer] = useState(false)
   const [GPTKeywordDistractorSuggestions, setGPTKeywordDistractorSuggestions] = useState<string[]>([])
   const [syntaxCheckedOption, setSyntaxCheckedOption] = useState<string | undefined>(undefined)
+  const [condition] = useQueryParam('c')
+  const [callbackUrl] = useQueryParam('callbackUrl')
 
   useEffect(() => {
     if (qid) {
@@ -54,7 +57,7 @@ export default function Page() {
       })
     }
     //don't add qinfo in the dependencies of his useEffect it will create infinite loop
-  }, [push, qid, setAnsList, setDistList, setQinfo])
+  }, [qid, setAnsList, setDistList, setQinfo])
 
   const submit = useCallback(async () => {
     if (option.trim().length === 0) {
@@ -78,11 +81,11 @@ export default function Page() {
         if (callbackUrl) {
           push(callbackUrl)
         } else {
-          push('/class/' + cid)
+          push(`/class/${cid}?c=${condition}`)
         }
       }
     })
-  }, [option, cid, qid, isAnswer, callbackUrl, push, onSubmitHandleClick])
+  }, [option, onSubmitHandleClick, cid, qid, isAnswer, callbackUrl, push, condition])
 
   const onTryLLMKeywordSuggestions = useCallback(async () => {
     if (qinfo && cid) {
@@ -164,32 +167,36 @@ export default function Page() {
         marginTop={8}
       />
 
-      <RowContainerNoWrap>
-        <CaptionText>🧑‍🏫 Need help?</CaptionText>
-        <SmallSecondaryButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
-          I need some keyword suggestions
-        </SmallSecondaryButton>
-        <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-          I want to check consistency
-        </SmallSecondaryButton>
-      </RowContainerNoWrap>
+      {[CONDITION.AIOnly, CONDITION.ModularAI].some(c => c === condition) && (
+        <>
+          <RowContainerNoWrap>
+            <CaptionText>🧑‍🏫 Need help?</CaptionText>
+            <SmallSecondaryButton onClick={onTryLLMKeywordSuggestions} disabled={keywordSuggestionIsLoading}>
+              I need some keyword suggestions
+            </SmallSecondaryButton>
+            <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+              I want to check consistency
+            </SmallSecondaryButton>
+          </RowContainerNoWrap>
 
-      {0 < GPTKeywordDistractorSuggestions.length && (
-        <AssistanceContainer>
-          <div>Here are some keywords you may consider:</div>
-          <ul>
-            {GPTKeywordDistractorSuggestions.map((item, i) => (
-              <li key={i}>
-                <Item marginTop={4} marginLeft={4}>
-                  {item}
-                </Item>
-              </li>
-            ))}
-          </ul>
-        </AssistanceContainer>
+          {0 < GPTKeywordDistractorSuggestions.length && (
+            <AssistanceContainer>
+              <div>Here are some keywords you may consider:</div>
+              <ul>
+                {GPTKeywordDistractorSuggestions.map((item, i) => (
+                  <li key={i}>
+                    <Item marginTop={4} marginLeft={4}>
+                      {item}
+                    </Item>
+                  </li>
+                ))}
+              </ul>
+            </AssistanceContainer>
+          )}
+
+          {syntaxCheckedOption && <AssistanceContainer>{syntaxCheckedOption}</AssistanceContainer>}
+        </>
       )}
-
-      {syntaxCheckedOption && <AssistanceContainer>{syntaxCheckedOption}</AssistanceContainer>}
 
       <FillButton onClick={submit} disabled={onSubmitIsLoading} marginTop={24}>
         Submit

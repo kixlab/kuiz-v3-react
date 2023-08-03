@@ -23,7 +23,9 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BLOOMS_TAXONOMY } from 'src/constants/bloomsTaxonomy'
+import { CONDITION } from 'src/constants/conditions'
 import { useAPILoading } from 'src/hooks/useButton'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export default function Page() {
   const { isLoading: onTemplateLoading, callAPI: onTemplateClick } = useAPILoading()
@@ -44,6 +46,7 @@ export default function Page() {
   const [questionTopicSuggestion, setQuestionTopicSuggestion] = useState<string[]>([])
   const [syntaxCheckedQuestion, setSyntaxCheckedQuestion] = useState<string | undefined>(undefined)
   const [rephrasedQuestion, setRephrasedQuestion] = useState<string[]>([])
+  const [condition] = useQueryParam('c')
 
   const submitStem = useCallback(async () => {
     const fields = [topic, explanation, question, answer]
@@ -81,11 +84,11 @@ export default function Page() {
             similarOptions: [],
           })
 
-          push(`/class/${cid}?topic=${topic}`)
+          push(`/class/${cid}?topic=${topic}&c=${condition}`)
         }
       }
     })
-  }, [question, answer, cid, explanation, method, topic, push, submitStemHandleClick])
+  }, [topic, explanation, question, answer, submitStemHandleClick, cid, method, push, condition])
 
   const onSelectTopic = useCallback(
     (i: number) => {
@@ -194,70 +197,78 @@ export default function Page() {
           marginBottom={8}
         />
 
-        <RowContainer>
-          <CaptionText>🧑‍🏫 Need help?</CaptionText>
-          <SmallSecondaryButton onClick={onQuestionStarter} disabled={onTemplateLoading}>
-            I need templates to start with
-          </SmallSecondaryButton>
-          <SmallSecondaryButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
-            I need ideas for my question
-          </SmallSecondaryButton>
-        </RowContainer>
+        {[CONDITION.AIOnly, CONDITION.ModularAI].some(c => c === condition) && (
+          <>
+            <RowContainer>
+              <CaptionText>🧑‍🏫 Need help?</CaptionText>
+              <SmallSecondaryButton onClick={onQuestionStarter} disabled={onTemplateLoading}>
+                I need templates to start with
+              </SmallSecondaryButton>
+              <SmallSecondaryButton onClick={onQuestionTopic} disabled={onQuestionTopicLoading}>
+                I need ideas for my question
+              </SmallSecondaryButton>
+            </RowContainer>
 
-        {0 < questionStarter.length && (
-          <AssistanceContainer>
-            <div>Here are some templates:</div>
-            <ul>
-              {questionStarter.map((template, i) => (
-                <li key={i}>
-                  <Item marginLeft={4} marginTop={4}>
-                    {template}
-                  </Item>
-                </li>
-              ))}
-            </ul>
-          </AssistanceContainer>
+            {0 < questionStarter.length && (
+              <AssistanceContainer>
+                <div>Here are some templates:</div>
+                <ul>
+                  {questionStarter.map((template, i) => (
+                    <li key={i}>
+                      <Item marginLeft={4} marginTop={4}>
+                        {template}
+                      </Item>
+                    </li>
+                  ))}
+                </ul>
+              </AssistanceContainer>
+            )}
+            {0 < questionTopicSuggestion.length && (
+              <AssistanceContainer>
+                <div>Here are some ideas:</div>
+                <ul>
+                  {questionTopicSuggestion.map((template, i) => (
+                    <li key={i}>
+                      <Item marginLeft={4} marginTop={4}>
+                        {template}
+                      </Item>
+                    </li>
+                  ))}
+                </ul>
+              </AssistanceContainer>
+            )}
+          </>
         )}
-        {0 < questionTopicSuggestion.length && (
-          <AssistanceContainer>
-            <div>Here are some ideas:</div>
-            <ul>
-              {questionTopicSuggestion.map((template, i) => (
-                <li key={i}>
-                  <Item marginLeft={4} marginTop={4}>
-                    {template}
-                  </Item>
-                </li>
-              ))}
-            </ul>
-          </AssistanceContainer>
-        )}
 
-        <RowContainer>
-          <CaptionText>🧑‍🏫 Need a check?</CaptionText>
-          <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
-            I want to check grammar
-          </SmallSecondaryButton>
-          <SmallSecondaryButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
-            I want to improve my question
-          </SmallSecondaryButton>
-        </RowContainer>
+        {[CONDITION.AIOnly, CONDITION.ModularAI].some(c => c === condition) && (
+          <>
+            <RowContainer>
+              <CaptionText>🧑‍🏫 Need a check?</CaptionText>
+              <SmallSecondaryButton onClick={onSyntaxCheck} disabled={onSyntaxCheckLoading}>
+                I want to check grammar
+              </SmallSecondaryButton>
+              <SmallSecondaryButton onClick={onRephraseQuestion} disabled={onRephraseQuestionLoading}>
+                I want to improve my question
+              </SmallSecondaryButton>
+            </RowContainer>
 
-        {syntaxCheckedQuestion && <AssistanceContainer>{syntaxCheckedQuestion}</AssistanceContainer>}
+            {syntaxCheckedQuestion && <AssistanceContainer>{syntaxCheckedQuestion}</AssistanceContainer>}
 
-        {0 < rephrasedQuestion.length && (
-          <AssistanceContainer>
-            <div>Here are some ideas to improve your question:</div>
-            <ul>
-              {rephrasedQuestion.map((template, i) => (
-                <li key={i}>
-                  <Item marginLeft={4} marginTop={4}>
-                    {template}
-                  </Item>
-                </li>
-              ))}
-            </ul>
-          </AssistanceContainer>
+            {0 < rephrasedQuestion.length && (
+              <AssistanceContainer>
+                <div>Here are some ideas to improve your question:</div>
+                <ul>
+                  {rephrasedQuestion.map((template, i) => (
+                    <li key={i}>
+                      <Item marginLeft={4} marginTop={4}>
+                        {template}
+                      </Item>
+                    </li>
+                  ))}
+                </ul>
+              </AssistanceContainer>
+            )}
+          </>
         )}
 
         <Label color={'primaryMain'} size={0} marginBottom={8} marginTop={12}>
