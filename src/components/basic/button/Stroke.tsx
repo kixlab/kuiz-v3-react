@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { palette, typography } from '@styles/theme'
 import { MIN_BUTTON_SIZE } from 'src/constants/ui'
+import { View } from '../View'
 
 interface Props {
   children: React.ReactNode
@@ -8,13 +9,13 @@ interface Props {
   disabled?: boolean
 }
 
-export const StrokeButton = (props: Props) => {
+export const StrokeButton = View<Props>(({ onClick, children, disabled, ...props }) => {
   return (
-    <Stroke onClick={props.onClick} disabled={props.disabled ? props.disabled : false}>
-      {props.children}
+    <Stroke {...props} onClick={onClick} disabled={disabled ? disabled : false}>
+      {children}
     </Stroke>
   )
-}
+})
 
 const Stroke = styled.button`
   ${typography.button};
