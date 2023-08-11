@@ -1,6 +1,6 @@
 export enum CONDITION {
-  ModularAI = 'ModularAI',
-  Baseline = 'Baseline',
-  ModularOnly = 'ModularOnly',
-  AIOnly = 'AIOnly',
+  ModularAI = 'apple',
+  Baseline = 'banana',
+  ModularOnly = 'cherry',
+  AIOnly = 'durian',
 }

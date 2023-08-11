@@ -69,12 +69,11 @@ export default function Page({ providers }: Props) {
 
   const signInCallback = useCallback(
     (provider: ClientSafeProvider) => async () => {
-      const callbackUrl = (query.callbackUrl ?? '/') as string
       singInHandleClick(async () => {
-        return await signIn(provider.id, { callbackUrl })
+        return await signIn(provider.id)
       })
     },
-    [query.callbackUrl, singInHandleClick]
+    [singInHandleClick]
   )
 
   const onUpdateDataCollectionConsentState = useCallback(

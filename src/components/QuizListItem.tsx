@@ -3,6 +3,8 @@ import { typography } from '@styles/theme'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { SmallPrimaryButton } from './basic/button/SmallPrimary'
 import { SmallSecondaryButton } from './basic/button/SmallSecondary'
+import { CONDITION } from 'src/constants/conditions'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 interface Props {
   title: string
@@ -12,6 +14,8 @@ interface Props {
 }
 
 export const QuizListItem = ({ title, options, onAddOption, onSolve }: Props) => {
+  const [condition] = useQueryParam('c')
+
   return (
     <Container>
       <QuizText>{title}</QuizText>
@@ -20,9 +24,11 @@ export const QuizListItem = ({ title, options, onAddOption, onSolve }: Props) =>
         <SmallSecondaryButton onClick={onSolve}>
           Solve <span>&gt;</span>
         </SmallSecondaryButton>
-        <SmallPrimaryButton onClick={onAddOption}>
-          Add Option <span>&gt;</span>
-        </SmallPrimaryButton>
+        {[CONDITION.ModularAI, CONDITION.ModularOnly].some(c => c === condition) && (
+          <SmallPrimaryButton onClick={onAddOption}>
+            Add Option <span>&gt;</span>
+          </SmallPrimaryButton>
+        )}
       </ButtonArea>
     </Container>
   )

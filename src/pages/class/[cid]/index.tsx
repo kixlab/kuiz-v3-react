@@ -21,6 +21,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { useQueryParam } from 'src/hooks/useQueryParam'
+import { CONDITION } from 'src/constants/conditions'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -52,10 +53,18 @@ export default function Page() {
   )
 
   const onCreateQuestion = useCallback(() => {
-    if (topic) {
-      push(`/class/${cid}/question/create?topic=${topic}&c=${condition}`)
+    if ([CONDITION.ModularAI, CONDITION.ModularOnly].some(c => c === condition)) {
+      if (topic) {
+        push(`/class/${cid}/question/create?topic=${topic}&c=${condition}`)
+      } else {
+        push(`/class/${cid}/question/create?c=${condition}`)
+      }
     } else {
-      push(`/class/${cid}/question/create?c=${condition}`)
+      if (topic) {
+        push(`/class/${cid}/question/make?topic=${topic}&c=${condition}`)
+      } else {
+        push(`/class/${cid}/question/make?c=${condition}`)
+      }
     }
   }, [cid, condition, push, topic])
 
