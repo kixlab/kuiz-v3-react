@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { Logo } from './Logo'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export const Gnb = () => {
   const { push, query } = useRouter()
@@ -18,14 +19,15 @@ export const Gnb = () => {
   const cid = query.cid
   const userImg = useSelector((state: RootState) => state.userInfo.img)
   const dispatch = useDispatch()
+  const [condition] = useQueryParam('c')
 
   const onClickSwitchClass = useCallback(() => {
-    push('/')
-  }, [push])
+    push(`/?c=${condition}`)
+  }, [condition, push])
 
   const onClickMyPage = useCallback(() => {
-    push(`/my-page/${cid}`)
-  }, [push, cid])
+    push(`/my-page/${cid}/?c=${condition}`)
+  }, [push, cid, condition])
 
   const onClickAdmin = useCallback(() => {
     push(`/admin/${cid}`)
@@ -57,7 +59,7 @@ export const Gnb = () => {
 
   return (
     <SideTab>
-      <LogoContainer href={cid ? `/class/${cid}/` : '/'}>
+      <LogoContainer href={cid ? `/class/${cid}/?c=${condition}` : `/?c=${condition}`}>
         <Logo />
       </LogoContainer>
       {data && (

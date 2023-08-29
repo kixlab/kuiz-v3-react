@@ -112,7 +112,7 @@ export default function Page({ providers }: Props) {
       </Head>
       {session ? (
         <>
-          <OnBoardingBox>
+          {/* <OnBoardingBox>
             {showConsent && (
               <Sheet gap={0} marginBottom={20}>
                 <Label color="primaryMain" marginBottom={8}>
@@ -142,7 +142,7 @@ export default function Page({ providers }: Props) {
                 </InputSection>
               </Sheet>
             )}
-          </OnBoardingBox>
+          </OnBoardingBox> */}
           <Sheet gap={0}>
             <Label marginBottom={8}>
               Choose a Class or Enroll in a New Class <Required />

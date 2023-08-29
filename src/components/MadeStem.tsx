@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { palette, typography } from '@styles/theme'
 import { TextButton } from './basic/button/Text'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 interface Props {
   question: string
@@ -16,6 +17,7 @@ interface Props {
 export const MadeStem = ({ question, cid, qid }: Props) => {
   const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [condition] = useQueryParam('c')
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
@@ -25,7 +27,7 @@ export const MadeStem = ({ question, cid, qid }: Props) => {
     <StemBox>
       <div>Q. {question}</div>
       <TextButton
-        onClick={() => push('/class/' + cid + '/question/' + qid + '/create-option')}
+        onClick={() => push('/class/' + cid + '/question/' + qid + `/create-option?c=${condition}`)}
         color={palette.primaryDark}
       >
         View
