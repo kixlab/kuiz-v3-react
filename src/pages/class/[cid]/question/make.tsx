@@ -54,7 +54,11 @@ export default function Page() {
       }
     }
     if (ansList.length === 0 || disList.length === 0) {
-      alert('Please add options.')
+      alert('Please add at least one answer and one distractor.')
+      return
+    }
+    if (ansList.length + disList.length < 4) {
+      alert('Please add at least 4 options.')
       return
     }
     await submitStemHandleClick<void>(async () => {
