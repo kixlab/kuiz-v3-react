@@ -156,12 +156,14 @@ export default function Page() {
               🎯 {selectedTopic?.requiredQuestionNumber ?? '-'}
             </ProgressBar>
           </Progress>
-          <Progress>
-            {userMadeOptions} Options{' '}
-            <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
-              🎯 {selectedTopic?.requiredOptionNumber ?? '-'}
-            </ProgressBar>
-          </Progress>
+          {[CONDITION.ModularAI, CONDITION.ModularOnly].some(c => c === condition) && (
+            <Progress>
+              {userMadeOptions} Options{' '}
+              <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
+                🎯 {selectedTopic?.requiredOptionNumber ?? '-'}
+              </ProgressBar>
+            </Progress>
+          )}
         </div>
         <div>
           <Label color="white" marginBottom={8}>
