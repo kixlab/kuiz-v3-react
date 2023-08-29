@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAPILoading } from 'src/hooks/useButton'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export default function StudentID() {
   const { isLoading, callAPI } = useAPILoading()
@@ -17,6 +18,7 @@ export default function StudentID() {
   const dispatch = useDispatch()
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
+  const [condition] = useQueryParam('c')
 
   const onSubmit = async () => {
     const res = await callAPI<PutStudentIDResults>(async () => {
@@ -27,7 +29,7 @@ export default function StudentID() {
 
     if (res) {
       dispatch(updateStudentID(sid))
-      push(`/my-page/${cid}`)
+      push(`/my-page/${cid}?c=${condition}`)
     }
   }
 
