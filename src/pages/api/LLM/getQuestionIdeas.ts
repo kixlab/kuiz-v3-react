@@ -15,9 +15,7 @@ export interface GetQuestionIdeasResults {
 }
 
 export default apiController<GetQuestionIdeasParams, GetQuestionIdeasResults>(async ({ topic, cid }, user) => {
-  const materials = shuffle([...ACCESSIBILITY_MATERIALS, ...INTERNATIONALIZATION_MATERIALS])
-    .slice(0, 5)
-    .join('\n')
+  const materials = shuffle(SAFETY_MATERIALS).slice(0, 5).join('\n')
   const openAIResponse = await openAIService.complete({
     prompt: QUESTION_IDEA_GENERATION_PROMPT(materials),
   })
@@ -170,4 +168,74 @@ Replaceable icons and images
 Fonts
 Colors
 `,
+]
+
+const SAFETY_MATERIALS = [
+  `# Error Types
+  Slips and lapses
+  - Failure to correctly execute a procedure
+  - Slip is a failure of execution, lapse is a failure of memory
+  - Typically found in skilled behavior
+  Mistakes
+  - Using wrong procedure for the goal
+  - Typically found in rule-based behavior or problem-solving behavior
+  `,
+  `# Capture errors
+  - A frequent sequence of actions captures a less frequent sequence of actions
+  - Leave your house and find yourself walking to school instead of where you meant to go
+  - vi :w command (to save the file) vs. :wq command (to save and quit)
+  - Excel array formulas must be entered with Ctrl-Shift-Enter, not just Enter
+  `,
+  `# Description errors
+  - Actions have similar descriptions
+  - Description can be visual, spatial, or semantic
+  - Consistency (same) is good for learning
+  - Inadvertent similarity (close but not quite) is bad for safety
+  `,
+  `# Mode errors
+  Modes: states in which actions have different meanings
+  - Vi's insert mode vs. command mode
+  - Caps Lock
+  - Drawing Palette
+  `,
+  `# Causes of Slips
+  "Strong-but-wrong" effect
+  - Similarity
+  - High frequency
+  Inattention or inappropriate attention
+  Speed / accuracy tradeoff
+  `,
+  `# Error Prevention
+  Safety from Capture Errors
+  - Avoid habitual action sequences with identical prefixes
+  Safety from Description Errors
+  - Avoid actions with very similar descriptions
+  - Keep dangerous commands away from common ones
+  Safety from Mode Errors
+  - Eliminate modes
+  - Increase visibility of mode
+  - Spring-loaded or temporary modes
+  - Disjoint action sets in different modes
+  Safety by Forcing User Interaction
+  - Interlock: creating mutual dependency in a sequence of actions
+  - Lockin: keeping specific operations active to avoid accidental stopping
+  - Lockout: asking users to perform some action to proceed with a task
+  Confirmation Dialogs
+  `,
+  `# Writing Error Message Dialogs
+  Best error message is none at all
+  - Errors should be prevented
+  - Be more flexible and tolerant
+  - Nonsense entries can often be ignored without harm
+  Be Precise and Comprehensible
+  - Be precise
+  - Restate user's input
+  - Speak the user's language 
+  Suggest Reasons and Solutions
+  - Give constructive help: why the error occurred and how to fix it
+  Suggest Reasons and Solutions
+  - Be polite and nonblaming
+  Avoid Loaded Words
+  - Fatal, illegal, aborted, terminated
+  `,
 ]
