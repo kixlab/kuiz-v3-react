@@ -1,8 +1,11 @@
+import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
 import {
   UpdateDataCollectionConsentStateParams,
   UpdateDataCollectionConsentStateResults,
 } from '@api/updateDataCollectionConsentState'
+import { Required } from '@components/Required'
 import { Sheet } from '@components/Sheet'
+import { Label } from '@components/basic/Label'
 import { FillButton } from '@components/basic/button/Fill'
 import { TextInput } from '@components/basic/input/Text'
 import styled from '@emotion/styled'
@@ -17,10 +20,8 @@ import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AsyncReturnType } from 'src/types/utils'
 import { JoinClassParams, JoinClassResults } from './api/joinClass'
-import { Label } from '@components/basic/Label'
-import { PutStudentIDParams, PutStudentIDResults } from '@api/insertStudentID'
-import { Required } from '@components/Required'
 import { useAPILoading } from 'src/hooks/useButton'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 interface Props {
   providers: AsyncReturnType<typeof getProviders>
@@ -39,6 +40,7 @@ export default function Page({ providers }: Props) {
   const showConsent = useSelector((state: RootState) => !state.userInfo.dataCollectionConsentState)
   const showStudentId = useSelector((state: RootState) => !state.userInfo.studentID)
   const [studentID, setStudentID] = useState('')
+  const [condition] = useQueryParam('c')
 
   const onCodeChange = useCallback(
     (v: string) => {
@@ -59,20 +61,19 @@ export default function Page({ providers }: Props) {
   }, [code, dispatch, onSubmitHandleClick])
 
   const onClassEnter = useCallback(
-    (cid: string) => () => {
-      push(`/class/${cid}`)
+    (cid: string) => async () => {
+      push(`/class/${cid}?c=${condition}`)
     },
-    [push]
+    [condition, push]
   )
 
   const signInCallback = useCallback(
     (provider: ClientSafeProvider) => async () => {
-      const callbackUrl = (query.callbackUrl ?? '/') as string
       singInHandleClick(async () => {
-        return await signIn(provider.id, { callbackUrl })
+        return await signIn(provider.id)
       })
     },
-    [query.callbackUrl, singInHandleClick]
+    [singInHandleClick]
   )
 
   const onUpdateDataCollectionConsentState = useCallback(
@@ -111,7 +112,7 @@ export default function Page({ providers }: Props) {
       </Head>
       {session ? (
         <>
-          <OnBoardingBox>
+          {/* <OnBoardingBox>
             {showConsent && (
               <Sheet gap={0} marginBottom={20}>
                 <Label color="primaryMain" marginBottom={8}>
@@ -141,7 +142,7 @@ export default function Page({ providers }: Props) {
                 </InputSection>
               </Sheet>
             )}
-          </OnBoardingBox>
+          </OnBoardingBox> */}
           <Sheet gap={0}>
             <Label marginBottom={8}>
               Choose a Class or Enroll in a New Class <Required />

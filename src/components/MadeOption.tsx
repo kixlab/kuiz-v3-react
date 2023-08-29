@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { TextButton } from './basic/button/Text'
 import { CheckDialog } from './Dialogs/CheckDialog'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 interface Props {
   qid: string
@@ -17,14 +18,15 @@ interface Props {
 export const MadeOption = ({ qid, option, question, cid, optionType }: Props) => {
   const { push } = useRouter()
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [condition] = useQueryParam('c')
 
   const toggleModal = useCallback(() => {
     setIsOpenModal(!isOpenModal)
   }, [setIsOpenModal, isOpenModal])
 
   const viewOption = useCallback(() => {
-    push('/class/' + cid + '/question/' + qid + '/solve')
-  }, [cid, push, qid])
+    push('/class/' + cid + '/question/' + qid + `/solve?c=${condition}`)
+  }, [cid, condition, push, qid])
 
   return (
     <OptionBox>

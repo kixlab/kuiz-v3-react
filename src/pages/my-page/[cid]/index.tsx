@@ -20,11 +20,13 @@ import { SelectInput } from '@components/basic/input/Select'
 import { Topic } from '@server/db/topic'
 import styled from '@emotion/styled'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 export default function Page() {
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
-  const topic = query.topic as string | undefined
+  const [condition] = useQueryParam('c')
+  const [topic, setTopic] = useQueryParam('topic')
   const studentID = useSelector((state: RootState) => state.userInfo.studentID)
   const dispatch = useDispatch()
   const [myQuestions, setMyQuestions] = useState<QStem[]>([])
@@ -37,7 +39,7 @@ export default function Page() {
     if (cid) {
       request<LoadCreatedStemDataParams, LoadCreatedStemDataResults>(`loadCreatedStemData`, {
         cid: cid,
-        topic: topic,
+        topic: topic ?? undefined,
       }).then(res => {
         if (res) {
           setMyQuestions(res.madeStem.reverse())
@@ -50,7 +52,7 @@ export default function Page() {
     if (cid) {
       const res = await request<LoadCreatedOptionParams, LoadCreatedOptionResults>(`loadCreatedOption`, {
         cid: cid,
-        topic: topic,
+        topic: topic ?? undefined,
       })
       if (res) {
         const res2 = await request<GetQstemByOptionParams, GetQstemByOptionResults>(`getQstemByOption`, {
@@ -73,21 +75,21 @@ export default function Page() {
   }, [cid, topic])
 
   const onInsertStudentID = useCallback(() => {
-    push('/register')
-  }, [push])
+    push(`/register?c=${condition}`)
+  }, [condition, push])
 
   const logOut = useCallback(() => {
     signOut()
     dispatch(logout())
-    push('/')
-  }, [dispatch, push])
+    push(`/?c=${condition}`)
+  }, [condition, dispatch, push])
 
   const onSelectTopic = useCallback(
     (i: number) => {
       const t = topics[i]
-      push(`/my-page/${cid}?topic=${t.label}`, undefined, { shallow: true })
+      setTopic(t.label)
     },
-    [cid, push, topics]
+    [setTopic, topics]
   )
 
   useEffect(() => {
@@ -103,14 +105,14 @@ export default function Page() {
             if (res.currentTopic) {
               const indexOfTopic = res.topics.findIndex(topic => topic._id === res.currentTopic)
               if (indexOfTopic != -1) {
-                push(`/my-page/${cid}?topic=${res.topics[indexOfTopic].label}`, undefined, { shallow: true })
+                setTopic(res.topics[indexOfTopic].label)
               }
             }
           }
         }
       })
     }
-  }, [getMadeOption, getMadeStem, studentID, cid, push, topic])
+  }, [getMadeOption, getMadeStem, studentID, cid, push, topic, setTopic])
 
   return (
     <>
