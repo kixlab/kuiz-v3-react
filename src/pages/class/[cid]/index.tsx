@@ -27,8 +27,8 @@ export default function Page() {
   const { query, push } = useRouter()
   const cid = query.cid as string | undefined
   const topic = query.topic as string | undefined
-  const currentPage = query.page as string | undefined
-  const page = currentPage === undefined ? 1 : parseInt(currentPage)
+  const [currentPage] = useQueryParam('page')
+  const page = currentPage === null ? 1 : parseInt(currentPage)
   const [questionList, setQuestionList] = useState<QStem[]>([])
   const [topics, setTopics] = useState<Topic[]>([])
   const [userMadeOptions, setUserMadeOptions] = useState(0)

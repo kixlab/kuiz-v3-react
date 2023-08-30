@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import { palette } from '@styles/theme'
 import Link from 'next/link'
 import { View } from './basic/View'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useQueryParam } from 'src/hooks/useQueryParam'
 
 interface Props {
   numberOfPages: number
@@ -11,51 +12,27 @@ interface Props {
 }
 
 export const Pagination = View<Props>(({ numberOfPages, currentPage, URL, ...props }) => {
-  const hasNext = currentPage < numberOfPages
-  const hasPrevious = currentPage > 1
-  const previousPage = currentPage - 1 > 0 ? currentPage - 1 : 1
-  const nextPage = currentPage + 1 <= numberOfPages ? currentPage + 1 : numberOfPages
+  const [page, setPage] = useQueryParam('page')
   const pages = useMemo(() => {
-    const pages: [string, string][] = []
-    if (numberOfPages <= 5) {
-      for (let i = 1; i <= numberOfPages; i++) {
-        pages.push([`${URL}&page=${i}`, i.toString()])
-      }
-    } else {
-      const start = currentPage - 1 < 1 ? currentPage : currentPage - 1
-      const end = currentPage + 1 > numberOfPages ? currentPage : currentPage + 1
-      if (start < currentPage && start > 1) {
-        pages.push([`${URL}&page=${start - 1}`, '...'])
-      }
-      for (let i = start; i <= end; i++) {
-        pages.push([`${URL}&page=${i}`, i.toString()])
-      }
-      if (end > currentPage && end < numberOfPages) {
-        pages.push([`${URL}&page=${end + 1}`, '...'])
-      }
-    }
-    return pages
-  }, [URL, currentPage, numberOfPages])
+    return Array(numberOfPages)
+      .fill(0)
+      .map((_, i) => i + 1)
+  }, [numberOfPages])
+
+  const clickPage = useCallback(
+    (i: number) => () => {
+      setPage((i + 1).toString())
+    },
+    [setPage]
+  )
 
   return (
     <Container {...props}>
-      <Link href={`${URL}&page=${1}`}>
-        <Skipper disabled={!hasPrevious}>{'<<'}</Skipper>
-      </Link>
-      <Link href={`${URL}&page=${previousPage}`}>
-        <Skipper disabled={!hasPrevious}>{'<'}</Skipper>
-      </Link>
-      {pages.map(([page, t], i) => (
-        <Link key={i} href={page}>
-          <Page disabled={currentPage === i + 1}>{t}</Page>
-        </Link>
+      {pages.map((t, i) => (
+        <Page key={i} disabled={currentPage === i + 1} onClick={clickPage(i)}>
+          {t}
+        </Page>
       ))}
-      <Link href={`${URL}&page=${nextPage}`}>
-        <Skipper disabled={!hasNext}>{'>'}</Skipper>
-      </Link>
-      <Link href={`${URL}&page=${numberOfPages}`}>
-        <Skipper disabled={!hasNext}>{'>>'}</Skipper>
-      </Link>
     </Container>
   )
 })
