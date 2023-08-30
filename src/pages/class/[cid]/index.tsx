@@ -1,14 +1,13 @@
-import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
+import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
-import { FillButton } from '@components/basic/button/Fill'
-import { SelectInput } from '@components/basic/input/Select'
-import { Label } from '@components/basic/Label'
-import { Pagination } from '@components/pagination'
-import { ProgressBar } from '@components/ProgressBar'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
 import { Sheet } from '@components/Sheet'
+import { Label } from '@components/basic/Label'
+import { FillButton } from '@components/basic/button/Fill'
+import { SelectInput } from '@components/basic/input/Select'
+import { Pagination } from '@components/pagination'
 import styled from '@emotion/styled'
 import { RootState } from '@redux/store'
 import { QStem } from '@server/db/qstem'
@@ -19,9 +18,9 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { CONDITION } from 'src/constants/conditions'
 import { MOBILE_WIDTH_THRESHOLD } from 'src/constants/ui'
 import { useQueryParam } from 'src/hooks/useQueryParam'
-import { CONDITION } from 'src/constants/conditions'
 
 export default function Page() {
   const { query, push } = useRouter()
@@ -151,17 +150,17 @@ export default function Page() {
             Progress
           </Label>
           <Progress>
-            {userMadeQuestions} Questions{' '}
-            <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
+            {userMadeQuestions} Questions
+            {/* <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
               🎯 {selectedTopic?.requiredQuestionNumber ?? '-'}
-            </ProgressBar>
+            </ProgressBar> */}
           </Progress>
           {[CONDITION.ModularAI, CONDITION.ModularOnly].some(c => c === condition) && (
             <Progress>
-              {userMadeOptions} Options{' '}
-              <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
+              {userMadeOptions} Options
+              {/* <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
                 🎯 {selectedTopic?.requiredOptionNumber ?? '-'}
-              </ProgressBar>
+              </ProgressBar> */}
             </Progress>
           )}
         </div>
