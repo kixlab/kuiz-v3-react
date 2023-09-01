@@ -29,7 +29,6 @@ export default function Page() {
   const [option, setOption] = useState('')
   const [isAnswer, setIsAnswer] = useState(false)
   const [condition] = useQueryParam('c')
-  const [callbackUrl] = useQueryParam('callbackUrl')
 
   useEffect(() => {
     if (qid) {
@@ -68,14 +67,10 @@ export default function Page() {
           optionData,
           similarOptions: [],
         })
-        if (callbackUrl) {
-          push(callbackUrl)
-        } else {
-          push(`/class/${cid}?c=${condition}`)
-        }
+        push(`/class/${cid}?c=${condition}`)
       }
     })
-  }, [option, onSubmitHandleClick, cid, qid, isAnswer, callbackUrl, push, condition])
+  }, [option, onSubmitHandleClick, cid, qid, isAnswer, push, condition])
 
   return (
     <Sheet gap={0}>
