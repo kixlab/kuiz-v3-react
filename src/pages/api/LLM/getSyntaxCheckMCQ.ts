@@ -22,7 +22,7 @@ export default apiController<GetSyntaxCheckMCQParams, GetSyntaxCheckMCQResults>(
       prompt: CONSISTENCY_CHECK_PROMPT(stem, explanation, option, otherOptions),
     })
 
-    const syntaxChecked = openAIResponse.data.choices[0].text ?? ''
+    const syntaxChecked = openAIResponse.choices[0].message.content ?? ''
 
     await logService.add(user._id, 'getSyntaxCheck', cid, {
       option,

@@ -1,8 +1,8 @@
 import { Env } from '@utils/getEnv'
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
+import { Chat } from 'openai/resources'
 
 interface OpenAIData {
-  model?: 'text-davinci-003'
   prompt: string
   temperature?: number
   stop?: string
@@ -10,19 +10,16 @@ interface OpenAIData {
 }
 
 class OpenAIService {
-  private apiKey = Env.OPEN_AI_KEY
-  private openAI = new OpenAIApi(
-    new Configuration({
-      apiKey: this.apiKey,
-    })
-  )
+  openAI = new OpenAI({
+    apiKey: Env.OPEN_AI_KEY,
+  })
 
-  async complete({ prompt, maxTokens = 300, temperature = 1, model = 'text-davinci-003', stop = '---' }: OpenAIData) {
-    const openAIResponse = await this.openAI.createCompletion({
-      model,
-      prompt,
-      temperature,
+  async complete({ prompt, maxTokens = 300, temperature = 1, stop = '---' }: OpenAIData) {
+    const openAIResponse = await this.openAI.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
       max_tokens: maxTokens,
+      temperature,
       stop,
     })
 

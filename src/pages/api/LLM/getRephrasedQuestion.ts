@@ -22,7 +22,7 @@ export default apiController<GetRephrasedQuestionParams, GetRephrasedQuestionRes
       prompt: QUESTION_IMPROVE_PROMPT(question, learningObjective, explanation),
     })
 
-    const rephrasedQuestions = openAIResponse.data.choices[0].text?.split('\n')?.map(trim) ?? []
+    const rephrasedQuestions = openAIResponse.choices[0].message.content?.split('\n')?.map(trim) ?? []
 
     await logService.add(user._id, 'getRephrasedQuestion', cid, {
       question,

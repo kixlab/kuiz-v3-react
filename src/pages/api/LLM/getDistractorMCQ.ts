@@ -23,7 +23,7 @@ export default apiController<GetDistractorsMCQParams, GetDistractorsMCQResults>(
       prompt: OPTION_GENERATION_PROMPT(stem, learningObjective, explanation, isAnswer ? 'answer' : 'distractor'),
     })
 
-    const distractorKeywords = openAIResponse.data.choices[0].text?.split('\n').map(trim) ?? []
+    const distractorKeywords = openAIResponse.choices[0].message.content?.split('\n').map(trim) ?? []
 
     await logService.add(user._id, 'getDistractors', cid, {
       distractorKeywords,

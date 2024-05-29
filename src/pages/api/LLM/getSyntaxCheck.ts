@@ -25,7 +25,7 @@ export default apiController<GetSyntaxCheckParams, GetSyntaxCheckResults>(
         prompt: CONSISTENCY_CHECK_PROMPT(qStem.stem_text, qStem.explanation, option, otherOptions),
       })
 
-      const syntaxChecked = openAIResponse.data.choices[0].text ?? ''
+      const syntaxChecked = openAIResponse.choices[0].message.content ?? ''
 
       await logService.add(user._id, 'getSyntaxCheck', qStem.class.id.toString(), {
         qid,

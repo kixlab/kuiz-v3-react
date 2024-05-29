@@ -18,7 +18,7 @@ export default apiController<GetGrammarCheckParams, GetGrammarCheckResults>(asyn
     prompt: GRAMMAR_CHECK_PROMPT(sentence),
   })
 
-  const grammarChecked = openAIResponse.data.choices[0].text ?? ''
+  const grammarChecked = openAIResponse.choices[0].message.content ?? ''
 
   await logService.add(user._id, 'getSyntaxCheck', cid, {
     sentence,
