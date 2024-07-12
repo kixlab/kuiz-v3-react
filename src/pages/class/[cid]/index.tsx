@@ -1,6 +1,7 @@
 import { LoadClassInfoParams, LoadClassInfoResults } from '@api/loadClassInfo'
 import { LoadQuestionListParams, LoadQuestionListResults } from '@api/loadQuestionList'
 import { LoadUserActivityParams, LoadUserActivityResults } from '@api/loadUserActivity'
+import { ProgressBar } from '@components/ProgressBar'
 import { QuizListHeader } from '@components/QuizListHeader'
 import { QuizListItem } from '@components/QuizListItem'
 import { Sheet } from '@components/Sheet'
@@ -151,16 +152,16 @@ export default function Page() {
           </Label>
           <Progress>
             {userMadeQuestions} Questions
-            {/* <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
+            <ProgressBar percentage={(100 * userMadeQuestions) / (selectedTopic?.requiredQuestionNumber ?? 100)}>
               🎯 {selectedTopic?.requiredQuestionNumber ?? '-'}
-            </ProgressBar> */}
+            </ProgressBar>
           </Progress>
           {[CONDITION.ModularAI, CONDITION.ModularOnly].some(c => c === condition) && (
             <Progress>
               {userMadeOptions} Options
-              {/* <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
+              <ProgressBar percentage={(100 * userMadeOptions) / (selectedTopic?.requiredOptionNumber ?? 100)}>
                 🎯 {selectedTopic?.requiredOptionNumber ?? '-'}
-              </ProgressBar> */}
+              </ProgressBar>
             </Progress>
           )}
         </div>
