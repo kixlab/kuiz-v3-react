@@ -35,5 +35,5 @@ torchvision==0.14.1
 transformers==4.38.0
 tqdm==4.66.3
 typing_extensions==4.4.0
-urllib3==1.26.18
+urllib3==1.26.19
 wn==0.0.23
