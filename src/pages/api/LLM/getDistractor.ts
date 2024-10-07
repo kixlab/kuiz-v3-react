@@ -29,7 +29,7 @@ export default apiController<GetDistractorsParams, GetDistractorsResults>(async 
       ),
     })
 
-    const distractorKeywords = openAIResponse.data.choices[0].text?.split('\n').map(trim) ?? []
+    const distractorKeywords = openAIResponse.choices[0].message.content?.split('\n').map(trim) ?? []
 
     await logService.add(user._id, 'getDistractors', qStem.class._id.toString(), {
       qid,

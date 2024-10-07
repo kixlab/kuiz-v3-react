@@ -4,7 +4,7 @@ export const OPTION_GENERATION_PROMPT = (
   explanation: string,
   type: 'answer' | 'distractor'
 ) => `
-Give three possible options for a multiple choice question QUESTION regarding LEARNING_OBJECTIVE, TYPE, and EXPLANATION.
+Give three possible keywords for a multiple choice question QUESTION regarding LEARNING_OBJECTIVE, TYPE, and EXPLANATION.
 
 QUESTION:
 What is the correct way of writing error messages?
@@ -18,10 +18,10 @@ This question checks if a solver remembers the guidelines for good error message
 TYPE:
 answer
 
-OPTIONS:
-Restate user’s input
-Suggest possible reasons for the error
-Be polite and nonblaming
+KEYWORDS:
+Recovery
+Learnability
+Actionable
 
 ---
 
@@ -37,10 +37,10 @@ Better understanding for slips and lapses
 TYPE:
 distractor
 
-OPTIONS:
-Errors in problem solving or logical reasoning
-Forgetfulness or memory lapses in skilled behavior
-Success of control in human error
+KEYWORDS:
+Planning failures
+Error prevention strategies
+Fatigue
 
 ---
 
@@ -56,5 +56,5 @@ ${explanation}
 TYPE:
 ${type}
 
-OPTIONS:
+KEYWORDS:
 `

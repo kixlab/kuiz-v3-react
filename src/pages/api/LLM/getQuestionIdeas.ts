@@ -20,7 +20,7 @@ export default apiController<GetQuestionIdeasParams, GetQuestionIdeasResults>(as
     prompt: QUESTION_IDEA_GENERATION_PROMPT(materials),
   })
 
-  const ideas = openAIResponse.data.choices[0].text?.split('\n').map(trim) ?? []
+  const ideas = openAIResponse.choices[0].message.content?.split('\n').map(trim) ?? []
 
   await logService.add(user._id, 'getQuestionIdeas', cid, {
     topic,
